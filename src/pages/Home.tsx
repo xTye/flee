@@ -61,7 +61,7 @@ const Home: Component = () => {
               the article is shown.
             </div>
           </div>
-          <img src="./template.png" alt="Article image" />
+          <img src="./wanderingarmsnobg.png" alt="Article image" />
         </div>
       </div>
     </>
