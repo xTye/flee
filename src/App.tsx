@@ -5,11 +5,13 @@ import Home from "./pages/Home";
 import Characters from "./pages/Characters";
 import Map from "./pages/Map";
 import Calendar from "./pages/Calendar";
+import Navbar from "./components/Navbar";
 
 const App: Component = () => {
   return (
     <>
       <Router>
+        <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/characters" element={<Characters />} />
