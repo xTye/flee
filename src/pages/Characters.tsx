@@ -19,7 +19,7 @@ const Characters: Component = () => {
             mainAttackImage={"./logo-edited.png"}
           />
           <Character
-            image={"./character.png"}
+            image={"./instance.PNG"}
             name={"Instance Number 2"}
             class={"Psion 5 | Wizard 1"}
             title={"A jumpy grey boy"}
@@ -30,7 +30,7 @@ const Characters: Component = () => {
             mainAttackImage={"./logo-edited.png"}
           />
           <Character
-            image={"./character.png"}
+            image={"./nola.png"}
             name={"Nola"}
             class={"Paladin 6"}
             title={"A sassy woman"}
@@ -41,7 +41,7 @@ const Characters: Component = () => {
             mainAttackImage={"./logo-edited.png"}
           />
           <Character
-            image={"./character.png"}
+            image={"./eldawyn.PNG"}
             name={"Eldawyn"}
             class={"Warlock 6"}
             title={"A dead changling"}

@@ -38,7 +38,7 @@ const Home: Component = () => {
         </div>
         <div class="flex justify-between">
           <div class="flex flex-col gap-4 p-8 border-b-2">
-            <div class="text-8xl">The Wandering Eyes</div>
+            <div class="text-7xl">Flee</div>
             <div class="flex items-center gap-8">
               <div class="text-xl">
                 Situated on the tri-border of the Zushal, Orandi, and Cyroquil
