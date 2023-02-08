@@ -8,7 +8,7 @@ const Characters: Component = () => {
       <div class="min-h-screen bg-background text-text pt-10">
         <div class="flex justify-between">
           <Character
-            image={"./character.png"}
+            image={"./rashaga.png"}
             name={"Rashaga Taga"}
             class={"Sorcerer 5 | Bard 1"}
             title={"A feline menace"}
