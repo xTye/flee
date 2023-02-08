@@ -12,15 +12,28 @@ const buildMap = (div: HTMLDivElement) => {
 
   Leaflet.tileLayer("./maps/{z}/{x}/{y}.jpg", { attribution: "" }).addTo(map);
 
+  const icon = Leaflet.icon({
+    iconUrl: "marker.png",
+    iconSize: [32, 32],
+    iconAnchor: [16, 32],
+  });
+
   fetch("./markers.json")
     .then((res) => res.json())
     .then((json) => {
       for (const marker in json) {
         console.log(json[marker].x, json[marker].y);
 
+        const popupContent = Leaflet.popup().setContent(
+          json[marker].description
+        );
+
         Leaflet.marker([json[marker].x, json[marker].y], {
+          icon,
           title: json[marker].name,
-        }).addTo(map);
+        })
+          .bindPopup(popupContent)
+          .addTo(map);
       }
     });
 
