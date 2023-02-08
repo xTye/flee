@@ -1,10 +1,9 @@
 import type { Component } from "solid-js";
-import Navbar from "../components/Navbar";
 
 const Home: Component = () => {
   return (
     <>
-      <div class="flex flex-col gap-6 min-h-screen bg-background text-text pt-20">
+      <div class="flex flex-col gap-6 min-h-screen bg-background text-text pt-20 ">
         <div class="flex justify-between">
           <div class="flex flex-col gap-4 p-8 border-b-2">
             <div class="text-7xl">In Memoriam: Noc</div>
