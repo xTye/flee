@@ -49,16 +49,8 @@ const Home: Component = () => {
               </div>
             </div>
             <div class="text-xl">
-              This is where part of the article is shown. This is where part of
-              the article is shown. This is where part of the article is shown.
-              This is where part of the article is shown. This is where part of
-              the article is shown. This is where part of the article is shown.
-              This is where part of the article is shown. This is where part of
-              the article is shown. This is where part of the article is shown.
-              This is where part of the article is shown. This is where part of
-              the article is shown. This is where part of the article is shown.
-              This is where part of the article is shown. This is where part of
-              the article is shown.
+              Flee is a DnD 5e campaign DMed by Jo Evangelista, and played by
+              Connar Williams, Tyler Riley, Emma Sunderman, and Brennan Ober.
             </div>
           </div>
           <img src="./wanderingarmsnobg.png" alt="Article image" />

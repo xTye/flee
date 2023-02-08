@@ -6,6 +6,7 @@ const Characters: Component = () => {
   return (
     <>
       <div class="min-h-screen bg-background text-text pt-10">
+        <div class="text-7xl">The Wandering Eyes</div>
         <div class="flex justify-between">
           <Character
             image={"./rashaga.PNG"}
@@ -49,6 +50,31 @@ const Characters: Component = () => {
               "Eldawyn had just gotten to Dagger Falls when Rashaga Taga offered them work. While tending a farm wasn’t what they had in mind when they left Kurai Tayo, perhaps that voice in their head told them it was the best path forward. With their old family and mentor left behind them, Eldawyn (if that is their real name) seeks to uncover the mystery of the scythe they wield, and the Oracle preserved within it."
             }
             mainAttack={"Hexblades curse multiattack"}
+            mainAttackImage={"./logo-edited.png"}
+          />
+        </div>
+        <div class="text-7xl">Former Members</div>
+        <div class="flex justify-between">
+          <Character
+            image={"./takari.png"}
+            name={"Takari Eversoar"}
+            class={"Bard"}
+            title={"A jokey journalist"}
+            description={
+              "An Estoria local, Takari got tangled up in The Wandering Eyes' misadventures when she followed the party to the lair of the Ancient Golden Dragon, Izyldriss. After helping the group take down the night hag controlling the dam and poisoning the children of Estoria, Takari published her article on The Wandering Eyes in the newspaper. "
+            }
+            mainAttack={"Puns"}
+            mainAttackImage={"./logo-edited.png"}
+          />
+          <Character
+            image={"./scarlett.png"}
+            name={"Scarlett von Brand"}
+            class={"Druid"}
+            title={"A hot beast"}
+            description={
+              "Following her father's death in the escape from Dagger Falls, Scarlett struggled to manage her powers - and temper. In a fiery eruption, she was manipulated into hurting the people around her, and decided departing from the group was safest for everyone. Whereabouts unknown, Scarlett may be exploring her familial history to better understand her abilities."
+            }
+            mainAttack={"Wild shape"}
             mainAttackImage={"./logo-edited.png"}
           />
         </div>
