@@ -20,7 +20,7 @@ const Navbar: Component = () => {
           <A href="/map" class="hover:text-yellow">
             Map
           </A>
-          <A href="/map" class="hover:text-yellow">
+          <A href="/calendar" class="hover:text-yellow">
             Calendar
           </A>
           <div class="hover:text-yellow cursor-pointer">Login</div>
