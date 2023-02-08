@@ -56,6 +56,17 @@ const Characters: Component = () => {
         <div class="text-7xl">Former Members</div>
         <div class="flex justify-between">
           <Character
+            image={"./eldawyn.PNG"}
+            name={"Noc"}
+            class={"Warlock 6"}
+            title={"A dead changling"}
+            description={
+              "Eldawyn had just gotten to Dagger Falls when Rashaga Taga offered them work. While tending a farm wasn’t what they had in mind when they left Kurai Tayo, perhaps that voice in their head told them it was the best path forward. With their old family and mentor left behind them, Eldawyn (if that is their real name) seeks to uncover the mystery of the scythe they wield, and the Oracle preserved within it."
+            }
+            mainAttack={"Hexblades curse multiattack"}
+            mainAttackImage={"./logo-edited.png"}
+          />
+          <Character
             image={"./takari.png"}
             name={"Takari Eversoar"}
             class={"Bard"}
