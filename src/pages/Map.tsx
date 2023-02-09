@@ -24,8 +24,6 @@ const buildMap = (div: HTMLDivElement) => {
     .then((res) => res.json())
     .then((json) => {
       for (const marker in json) {
-        console.log(json[marker].x, json[marker].y);
-
         const popupContent = Leaflet.popup({
           content: json[marker].description,
         });

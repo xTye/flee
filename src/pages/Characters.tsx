@@ -5,8 +5,8 @@ import Character from "../components/Character";
 const Characters: Component = () => {
   return (
     <>
-      <div class="min-h-screen bg-background text-text pt-10">
-        <div class="text-7xl">The Wandering Eyes</div>
+      <div class="min-h-screen bg-background text-text text-justify pt-10">
+        <div class="pl-8 text-7xl">The Wandering Eyes</div>
         <div class="flex justify-between">
           <Character
             image={"./rashaga.PNG"}
@@ -53,7 +53,7 @@ const Characters: Component = () => {
             mainAttackImage={"./logo-edited.png"}
           />
         </div>
-        <div class="text-7xl">Former Members</div>
+        <div class="pl-8 text-7xl">Former Members</div>
         <div class="flex justify-between">
           <Character
             image={"./eldawyn.PNG"}
