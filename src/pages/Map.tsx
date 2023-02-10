@@ -10,9 +10,8 @@ const buildMap = (div: HTMLDivElement) => {
     maxZoom: 5,
   }).setView([10, 50], 4); //tes
 
-  Leaflet.tileLayer("./maps/{z}/{x}/{y}.jpg&{test}", {
+  const worldLayer = Leaflet.tileLayer("./maps/{z}/{x}/{y}.jpg", {
     attribution: "Al'ard Al'umu",
-    test: Math.random(),
   }).addTo(map);
 
   const icons: any = {
@@ -53,6 +52,8 @@ const buildMap = (div: HTMLDivElement) => {
           .bindPopup(popupContent)
           .addTo(map);
       }
+
+      worldLayer.redraw();
     });
 
   return map;
