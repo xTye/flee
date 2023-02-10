@@ -7,6 +7,10 @@ import App from "./App";
 import { initializeApp } from "firebase/app";
 import { getStorage } from "firebase/storage";
 
+import { GoogleAuthProvider } from "firebase/auth";
+
+const provider = new GoogleAuthProvider();
+
 const firebaseConfig = {
   apiKey: "AIzaSyASrzGbTJs9bJwzcLasfpOW1nbq7ymfsyE",
   authDomain: "flee-website.firebaseapp.com",

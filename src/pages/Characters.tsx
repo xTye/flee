@@ -34,7 +34,7 @@ const Characters: Component = () => {
             image={"./nola.png"}
             name={"Nola"}
             class={"Paladin 6"}
-            title={"A sassy woman"}
+            title={"A sassy satyr"}
             description={
               "Not even having been in Dagger Falls a full month, Nola fled the village and her blacksmithing job as the fiendish presence lurking in the shadows caught the attention of the Divine Council, and she got caught in the middle. On a journey of self-discovery far away from her feywild, Nola intends to wash away past misdeeds on her path of redemption."
             }
