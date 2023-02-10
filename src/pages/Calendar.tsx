@@ -77,16 +77,30 @@ const Calendar: Component = () => {
               <div class="flex">
                 <button
                   class="flex items-center justify-center bg-white h-10 w-10 rounded-l-full hover:bg-red"
-                  onClick={() =>
-                    changeDate({
-                      ...date(),
+                  onClick={() => {
+                    const date = {
+                      ...calendar().date,
                       day: 1,
-                      month:
-                        (calendar().month - 1) % 10 == 0
-                          ? 10
-                          : (calendar().month - 1) % 10,
-                    })
-                  }
+                    };
+
+                    if (date.month - 1 == 0) {
+                      date.month = FleeCalendar.MONTHS_PER_YEAR;
+
+                      if (date.year - 1 == 0) {
+                        date.year = FleeCalendar.YEARS_PER_ERA;
+
+                        if (date.era - 1 == 0) return;
+
+                        date.era--;
+                      } else {
+                        date.year--;
+                      }
+                    } else {
+                      date.month--;
+                    }
+
+                    changeDate(date);
+                  }}
                 >
                   <img
                     src="arrow.png"
@@ -97,16 +111,28 @@ const Calendar: Component = () => {
                 <div class="border-l-2 border-black"></div>
                 <button
                   class="flex items-center justify-center bg-white h-10 w-10 rounded-r-full hover:bg-red"
-                  onClick={() =>
-                    changeDate({
-                      ...date(),
+                  onClick={() => {
+                    const date = {
+                      ...calendar().date,
                       day: 1,
-                      month:
-                        (calendar().month + 1) % 10 == 0
-                          ? 10
-                          : (calendar().month + 1) % 10,
-                    })
-                  }
+                    };
+
+                    if (date.month % FleeCalendar.MONTHS_PER_YEAR == 0) {
+                      date.month = 1;
+
+                      if (date.year % FleeCalendar.YEARS_PER_ERA == 0) {
+                        date.year = 1;
+
+                        date.era++;
+                      } else {
+                        date.year++;
+                      }
+                    } else {
+                      date.month++;
+                    }
+
+                    changeDate(date);
+                  }}
                 >
                   <img
                     src="arrow.png"
