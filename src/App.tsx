@@ -1,4 +1,5 @@
-import type { Component } from "solid-js";
+import { Component } from "solid-js";
+import { createStore } from "solid-js/store";
 import { Router, Routes, Route } from "@solidjs/router";
 
 import Home from "./pages/Home";
@@ -11,6 +12,8 @@ import Event from "./pages/Event";
 import Dashboard from "./pages/Dashboard";
 
 const App: Component = () => {
+  //const [store, { pullUser }] = useStore();
+
   return (
     <>
       <Router>

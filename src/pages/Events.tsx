@@ -17,7 +17,7 @@ const Events: Component = () => {
 
   return (
     <>
-      <div class="flex flex-col min-h-screen bg-purple">
+      <div class="flex flex-col min-h-screen bg-purple pb-12">
         <div class="text-text text-4xl px-40 py-12">News</div>
         <div class="grid grid-cols-3 gap-4 px-32">
           <For each={events()}>

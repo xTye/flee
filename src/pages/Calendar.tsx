@@ -268,13 +268,13 @@ const Calendar: Component = () => {
             </div>
           </div>
 
-          <div class="grid grid-cols-10 grid-rows-3 gap-1 h-full text-sm p-2 select-none">
+          <div class="grid grid-cols-10 grid-rows-3 gap-1 h-full text-sm p-2 select-none overflow-hidden">
             <For each={dates()}>
               {(date) => (
                 <div
-                  class={`flex flex-col bg-${
+                  class={`relative flex flex-col bg-${
                     calendar().isCurrentDate(date) ? "yellow" : "white"
-                  } h-full rounded-md hover:bg-red p-2`}
+                  } h-full rounded-md hover:bg-red p-2 overflow-hidden hover:overflow-y-auto`}
                 >
                   <div>{date.day}</div>
                   <div>{FleeCalendar.getMoonPhase(date.day)}</div>
@@ -282,7 +282,7 @@ const Calendar: Component = () => {
                     <div>{date.holiday}</div>
                   </Show>
                   <Show when={date.events}>
-                    <div class="flex flex-col overflow-y-auto h-full">
+                    <div class="flex flex-col">
                       <For each={date.events}>
                         {(event) => (
                           <A
