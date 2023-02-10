@@ -6,6 +6,7 @@ import Characters from "./pages/Characters";
 import Map from "./pages/Map";
 import Calendar from "./pages/Calendar";
 import Navbar from "./components/Navbar";
+import Event from "./pages/Event";
 
 const App: Component = () => {
   return (
@@ -17,6 +18,7 @@ const App: Component = () => {
           <Route path="/characters" element={<Characters />} />
           <Route path="/map" element={<Map />} />
           <Route path="/calendar" element={<Calendar />} />
+          <Route path="/events/:id" element={<Event />} />
         </Routes>
       </Router>
     </>

@@ -1,5 +1,4 @@
 import type { Component } from "solid-js";
-import { A } from "@solidjs/router";
 
 const Character: Component<{
   image: string;
