@@ -4,5 +4,35 @@
     "description": "Home of the pirate lords who trade and kill people.",
     "x": 25,
     "y": 59
+  },
+  "2": {
+    "name": "Viridi",
+    "description": "Capitol of Cyroquil Kingdom; Chamber and Grounds of the Divine Council",
+    "x": -8.2,
+    "y": 66
+  },
+  "3": {
+    "name": "Dagger Falls",
+    "description": "Initial setting of the campaign; Occupied by the Divine Council; Rashaga Taga's home",
+    "x": -19,
+    "y": 75
+  },
+  "4": {
+    "name": "Estoria",
+    "description": "Tridev's Magic Shop; Last confirmed location of Scarlett",
+    "x": -18,
+    "y": 91
+  },
+  "5": {
+    "name": "Vortex Tarn",
+    "description": "Swirling lake bordering the slums of Estoria; Nearby Izyldriss's lair",
+    "x": -23,
+    "y": 86.5
+  },
+  "6": {
+    "name": "Yvule's Triangle",
+    "description": "The Beastlands; The Dusklands; The Mistlands; The King's Laboratory; Museum of ",
+    "x": -0.5,
+    "y": 67
   }
 }
