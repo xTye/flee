@@ -7,6 +7,7 @@ import Map from "./pages/Map";
 import Calendar from "./pages/Calendar";
 import Navbar from "./components/Navbar";
 import Event from "./pages/Event";
+import Dashboard from "./pages/Dashboard";
 
 const App: Component = () => {
   return (
@@ -19,6 +20,7 @@ const App: Component = () => {
           <Route path="/map" element={<Map />} />
           <Route path="/calendar" element={<Calendar />} />
           <Route path="/events/:id" element={<Event />} />
+          <Route path="/dashboard" element={<Dashboard />} />
         </Routes>
       </Router>
     </>

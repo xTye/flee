@@ -1,11 +1,13 @@
-import { Component, onMount } from "solid-js";
+import { Component, onMount, createSignal, Show } from "solid-js";
 import { createStore } from "solid-js/store";
 import { A } from "@solidjs/router";
+import Login from "./Login";
 
 export const [navbarHeight, setNavbarHeight] = createStore({ height: 0 });
 
 const Navbar: Component = () => {
   let parent: any;
+  const [loggedIn, setLoggedIn] = createSignal(false);
 
   onMount(() => {
     setNavbarHeight({ height: parent.getBoundingClientRect().height });
@@ -39,7 +41,17 @@ const Navbar: Component = () => {
           <A href="/calendar" class="hover:text-yellow">
             Calendar
           </A>
-          <div class="hover:text-yellow cursor-pointer">Login</div>
+          <Login loggedIn={loggedIn} setLoggedIn={setLoggedIn}>
+            <div class="hover:text-yellow cursor-pointer">
+              {loggedIn() ? (
+                <A href="/dashboard" class="hover:text-yellow">
+                  Dashbaord
+                </A>
+              ) : (
+                "Login"
+              )}
+            </div>
+          </Login>
         </div>
       </div>
     </>
