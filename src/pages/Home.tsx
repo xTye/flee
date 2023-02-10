@@ -1,42 +1,38 @@
-import type { Component } from "solid-js";
+import { Component, createResource } from "solid-js";
+import { useFetchEvent } from "../hooks/fetchEvent";
+import { A } from "@solidjs/router";
 
 const Home: Component = () => {
+  // TODO: Query for the most recent event
+  const id = "1";
+
+  const [event] = createResource(() => id, useFetchEvent);
+
   return (
     <>
       <div class="flex flex-col gap-6 min-h-screen bg-background text-text pt-20 ">
-        <div class="flex justify-between">
-          <div class="flex flex-col gap-4 p-8 border-b-2">
-            <div class="text-7xl">In Memoriam: Noc</div>
+        <div class="flex justify-between gap-4 p-8 border-b-2">
+          <div class="flex flex-col gap-4">
+            <div class="text-7xl">{event()?.name}</div>
             <div class="flex items-center gap-8">
-              <button class="w-96 h-10 bg-yellow text-center rounded-full hover:bg-red">
+              <A
+                class="flex items-center justify-center w-96 h-10 bg-yellow rounded-full hover:bg-red"
+                href={`/events/${id}`}
+              >
                 Read more!
-              </button>
-              <div class="text-xl">
-                This is where a small description goes. This is where a small
-                description goes. This is where a small description goes. This
-                is where a small description goes. This is where a small
-                description goes. This is where a small description goes. This
-                is where a small description goes. This is where a small
-                description goes. This is where a small description goes.
-              </div>
+              </A>
+              <div class="text-xl">{event()?.description}</div>
             </div>
-            <div class="text-xl">
-              This is where part of the article is shown. This is where part of
-              the article is shown. This is where part of the article is shown.
-              This is where part of the article is shown. This is where part of
-              the article is shown. This is where part of the article is shown.
-              This is where part of the article is shown. This is where part of
-              the article is shown. This is where part of the article is shown.
-              This is where part of the article is shown. This is where part of
-              the article is shown. This is where part of the article is shown.
-              This is where part of the article is shown. This is where part of
-              the article is shown.
-            </div>
+            <div class="text-xl">{event()?.html}</div>
           </div>
-          <img src="./template.png" alt="Article image" />
+          <img
+            class="object-cover w-96 h-96"
+            src={event()?.thumbnail}
+            alt="Article image"
+          />
         </div>
-        <div class="flex justify-between">
-          <div class="flex flex-col gap-4 p-8 border-b-2">
+        <div class="flex justify-between border-b-2">
+          <div class="flex flex-col gap-4 p-8">
             <div class="text-7xl">Flee</div>
             <div class="flex items-center gap-8">
               <div class="text-xl">
@@ -52,7 +48,7 @@ const Home: Component = () => {
               Connar Williams, Tyler Riley, Emma Sunderman, and Brennan Ober.
             </div>
           </div>
-          <img src="./wanderingarmsnobg.png" alt="Article image" />
+          <img src="/wanderingarmsnobg.png" alt="Article image" />
         </div>
       </div>
     </>

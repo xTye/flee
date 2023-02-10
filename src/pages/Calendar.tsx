@@ -13,6 +13,7 @@ import {
 } from "../classes/FleeCalendar";
 import { navbarHeight } from "../components/Navbar";
 import Modal from "../components/Modal";
+import { A } from "@solidjs/router";
 
 const generateArray = (n: number) => {
   const arr = [];
@@ -281,13 +282,18 @@ const Calendar: Component = () => {
                     <div>{date.holiday}</div>
                   </Show>
                   <Show when={date.events}>
-                    <For each={date.events}>
-                      {(event) => (
-                        <div class="font-bold rounded-md p-1 hover:bg-white">
-                          {event.name}
-                        </div>
-                      )}
-                    </For>
+                    <div class="flex flex-col overflow-y-auto h-full">
+                      <For each={date.events}>
+                        {(event) => (
+                          <A
+                            href={`/events/${event.id}`}
+                            class="font-bold rounded-md p-1 hover:bg-white truncate"
+                          >
+                            {event.name}
+                          </A>
+                        )}
+                      </For>
+                    </div>
                   </Show>
                 </div>
               )}

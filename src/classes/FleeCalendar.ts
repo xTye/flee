@@ -1,3 +1,5 @@
+import { FleeEvent, FleeEventMethods, FleeEvents } from "./FleeEvents";
+
 const moonPhases = [
   "🌑🌑",
   "🌑🌑",
@@ -62,13 +64,7 @@ export interface FleeDateDisplay extends FleeDate {
   holiday?: string;
 }
 
-export interface FleeEvent {
-  name: string;
-  description: string;
-  date: FleeDate;
-}
-
-export class FleeCalendar {
+export class FleeCalendar implements FleeEventMethods {
   public static YEARS_PER_ERA = 300;
   public static MONTHS_PER_YEAR = 10;
   public static DAYS_PER_MONTH = 30;
@@ -89,39 +85,14 @@ export class FleeCalendar {
 
   private selectedDate = FleeCalendar.CURRENT_DATE;
 
-  private events: any = {};
-  // Eleventh of Omsen
+  private events: FleeEvents;
 
-  constructor() {}
+  constructor() {
+    this.events = new FleeEvents();
+  }
 
   public async populateEvents() {
-    const res = await fetch("./events.json");
-    const json = await res.json();
-
-    for (const event in json) {
-      try {
-        const date = {
-          day: json[event].day,
-          month: json[event].month,
-          year: json[event].year,
-          era: json[event].era,
-        };
-
-        FleeCalendar.validDate(date);
-
-        if (!this.events[FleeCalendar.toString(date)])
-          this.events[FleeCalendar.toString(date)] = [];
-
-        this.events[FleeCalendar.toString(date)].push({
-          name: json[event].name,
-          description: json[event].description,
-          date,
-        });
-      } catch (e: any) {
-        console.error(e.message);
-        continue;
-      }
-    }
+    await this.events.populateEvents();
   }
 
   public static validDate(date: FleeDate, strict = true) {
@@ -165,7 +136,7 @@ export class FleeCalendar {
   }
 
   public getEvent(date: FleeDate) {
-    return this.events[FleeCalendar.toString(date)] || {};
+    return this.events.getEventFromDate(date);
   }
 
   // TODO: Query events from the database / events array
@@ -182,11 +153,10 @@ export class FleeCalendar {
         year: this.selectedDate.year,
         era: this.selectedDate.era,
         holiday: holidayObj[`${this.selectedDate.month}-${i + 1}`],
-        events: undefined,
+        events: [] as FleeEvent[],
       };
 
-      if (this.events[FleeCalendar.toString(date)])
-        date.events = this.events[FleeCalendar.toString(date)];
+      date.events = this.events.getEventFromDate(date);
 
       dates.push(date);
     }
@@ -219,6 +189,22 @@ export class FleeCalendar {
       date.year === FleeCalendar.CURRENT_DATE.year &&
       date.era === FleeCalendar.CURRENT_DATE.era
     );
+  }
+
+  public static formatDate(date: FleeDate | undefined) {
+    if (!date) return "";
+
+    try {
+      FleeCalendar.validDate(date);
+
+      return `${date.day} of ${monthNames[date.month - 1]} in ${
+        date.year
+      } years of the ${date.era} era`;
+    } catch (e: any) {
+      console.error(e.message);
+    }
+
+    return "";
   }
 
   public get day() {

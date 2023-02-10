@@ -10,7 +10,7 @@ const buildMap = (div: HTMLDivElement) => {
     maxZoom: 5,
   }).setView([10, 50], 4); //tes
 
-  const worldLayer = Leaflet.tileLayer("./maps/{z}/{x}/{y}.jpg", {
+  const worldLayer = Leaflet.tileLayer("/maps/{z}/{x}/{y}.jpg", {
     attribution: "Al'ard Al'umu",
   }).addTo(map);
 
@@ -37,7 +37,7 @@ const buildMap = (div: HTMLDivElement) => {
     }),
   };
 
-  fetch("./markers.json")
+  fetch("/markers.json")
     .then((res) => res.json())
     .then((json) => {
       for (const marker in json) {
