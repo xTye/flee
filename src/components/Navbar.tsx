@@ -24,7 +24,9 @@ const Navbar: Component = () => {
         class="sticky top-0 flex justify-between items-center h-32 text-text bg-purple px-12 z-[1000] select-none shadow-sm shadow-black"
       >
         <div class="flex items-center gap-4">
-          <img class="h-16 w-16" src="./logo-edited.png" alt="Logo" />
+          <A href="/">
+            <img class="h-16 w-16" src="./logo-edited.png" alt="Logo" />
+          </A>
           <div class="text-3xl">The Wandering Eyes</div>
         </div>
 
