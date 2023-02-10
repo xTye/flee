@@ -1,7 +1,7 @@
 {
   "1": {
     "name": "Shallowport",
-    "description": "Home of the pirate lords; Underwater casino feywild; Infernal Reckoning HQ; The Wandering Eyes HQ;",
+    "description": "Home of the pirate lords; Underwater casino feywild; Infernal Reckoning HQ; The Wandering Eyes HQ",
     "x": 25,
     "y": 59,
     "color": "red"
@@ -43,7 +43,7 @@
   },
   "7": {
     "name": "Candlekeep",
-    "description": "Library-fortress overrun by abberations; Controlled by Katleen Vvander, The Oracle;",
+    "description": "Library-fortress overrun by abberations; Controlled by Katleen Vvander, The Oracle",
     "x": 40,
     "y": 40,
     "color": "gold"
