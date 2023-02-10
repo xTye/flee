@@ -3,42 +3,49 @@
     "name": "Shallowport",
     "description": "Home of the pirate lords; Underwater casino feywild; Infernal Reckoning HQ; The Wandering Eyes HQ;",
     "x": 25,
-    "y": 59
+    "y": 59,
+    "color": "red"
   },
   "2": {
     "name": "Viridi",
     "description": "Capitol of Cyroquil Kingdom; Chamber and Grounds of the Divine Council",
     "x": -8.2,
-    "y": 66
+    "y": 66,
+    "color": "red"
   },
   "3": {
     "name": "Dagger Falls",
     "description": "Initial setting of the campaign; Occupied by the Divine Council; Rashaga Taga's home",
     "x": -19,
-    "y": 75
+    "y": 75,
+    "color": "red"
   },
   "4": {
     "name": "Estoria",
     "description": "Tridev's Magic Shop; Last confirmed location of Scarlett",
     "x": -18,
-    "y": 91
+    "y": 91,
+    "color": "red"
   },
   "5": {
     "name": "Vortex Tarn",
     "description": "Swirling lake bordering the slums of Estoria; Nearby Izyldriss's lair",
     "x": -23,
-    "y": 86.5
+    "y": 86.5,
+    "color": "red"
   },
   "6": {
     "name": "Yvule's Triangle",
     "description": "The Beastlands; The Dusklands; The Mistlands; The King's Laboratory; Brunag's Museum",
     "x": -0.5,
-    "y": 67
+    "y": 67,
+    "color": "red"
   },
   "7": {
     "name": "Candlekeep",
     "description": "Library-fortress overrun by abberations; Controlled by Katleen Vvander, The Oracle;",
     "x": 40,
-    "y": 40
+    "y": 40,
+    "color": "gold"
   }
 }

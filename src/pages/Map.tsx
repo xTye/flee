@@ -14,11 +14,28 @@ const buildMap = (div: HTMLDivElement) => {
     attribution: "Al'ard Al'umu",
   }).addTo(map);
 
-  const icon = Leaflet.icon({
-    iconUrl: "marker.png",
-    iconSize: [32, 32],
-    iconAnchor: [16, 32],
-  });
+  const icons: any = {
+    red: Leaflet.icon({
+      iconUrl: "marker-red.png",
+      iconSize: [32, 32],
+      iconAnchor: [16, 32],
+    }),
+    blue: Leaflet.icon({
+      iconUrl: "marker-blue.png",
+      iconSize: [32, 32],
+      iconAnchor: [16, 32],
+    }),
+    gold: Leaflet.icon({
+      iconUrl: "marker-gold.png",
+      iconSize: [32, 32],
+      iconAnchor: [16, 32],
+    }),
+    black: Leaflet.icon({
+      iconUrl: "marker-black.png",
+      iconSize: [32, 32],
+      iconAnchor: [16, 32],
+    }),
+  };
 
   fetch("./markers.json")
     .then((res) => res.json())
@@ -29,7 +46,7 @@ const buildMap = (div: HTMLDivElement) => {
         });
 
         Leaflet.marker([json[marker].x, json[marker].y], {
-          icon,
+          icon: icons[json[marker].color ? json[marker].color : "black"],
           title: json[marker].name,
         })
           .bindPopup(popupContent)
