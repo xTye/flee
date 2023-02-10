@@ -1,7 +1,7 @@
 {
   "1": {
     "name": "Shallowport",
-    "description": "Home of the pirate lords who trade and kill people.",
+    "description": "Home of the pirate lords; Underwater casino feywild; Infernal Reckoning HQ; The Wandering Eyes HQ;",
     "x": 25,
     "y": 59
   },
@@ -34,5 +34,11 @@
     "description": "The Beastlands; The Dusklands; The Mistlands; The King's Laboratory; Brunag's Museum",
     "x": -0.5,
     "y": 67
+  },
+  "7": {
+    "name": "Candlekeep",
+    "description": "Library-fortress overrun by abberations; Controlled by Katleen Vvander, The Oracle;",
+    "x": 40,
+    "y": 40
   }
 }
