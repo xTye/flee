@@ -33,7 +33,7 @@ const Home: Component = () => {
               the article is shown.
             </div>
           </div>
-          <img src="./nocdeceased.png" alt="Article image" />
+          <img src="./template.png" alt="Article image" />
         </div>
         <div class="flex justify-between">
           <div class="flex flex-col gap-4 p-8 border-b-2">
