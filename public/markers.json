@@ -2,13 +2,13 @@
   "1": {
     "name": "Shallowport",
     "description": "Home of the pirate lords; Underwater casino feywild; Infernal Reckoning HQ; The Wandering Eyes HQ",
-    "x": 25,
-    "y": 59,
+    "x": 22,
+    "y": 60,
     "color": "red"
   },
   "2": {
     "name": "Viridi",
-    "description": "Capitol of Cyroquil Kingdom; Chamber and Grounds of the Divine Council",
+    "description": "Capital of Cyroquil Kingdom; Chamber and Grounds of the Divine Council",
     "x": -8.2,
     "y": 66,
     "color": "red"
@@ -37,7 +37,7 @@
   "6": {
     "name": "Yvule's Triangle",
     "description": "The Beastlands; The Dusklands; The Mistlands; The King's Laboratory; Brunag's Museum",
-    "x": -0.5,
+    "x": 6,
     "y": 67,
     "color": "red"
   },
@@ -47,5 +47,26 @@
     "x": 40,
     "y": 40,
     "color": "gold"
+  },
+  "8": {
+    "name": "Vernac",
+    "description": "Divine Council HQ; Governed by the Eyes of the Flame; Portal to the Nine Hells",
+    "x": 28,
+    "y": 84,
+    "color": "blue"
+  },
+  "9": {
+    "name": "Nezumi",
+    "description": "Capital of the Orandi Kingdom",
+    "x": -10.25,
+    "y": 104.25,
+    "color": "blue"
+  },
+  "10": {
+    "name": "Kurai Taiyō",
+    "description": "Capital of the Zushal Kingdom",
+    "x": -47,
+    "y": 96.725,
+    "color": "blue"
   }
 }
