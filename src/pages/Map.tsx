@@ -10,8 +10,9 @@ const buildMap = (div: HTMLDivElement) => {
     maxZoom: 5,
   }).setView([10, 50], 4); //tes
 
-  Leaflet.tileLayer("./maps/{z}/{x}/{y}.jpg", {
+  Leaflet.tileLayer("./maps/{z}/{x}/{y}.jpg&{test}", {
     attribution: "Al'ard Al'umu",
+    test: Math.random(),
   }).addTo(map);
 
   const icons: any = {
