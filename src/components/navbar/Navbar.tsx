@@ -1,4 +1,4 @@
-import { Component, onMount, createSignal, Show } from "solid-js";
+import { Component, onMount } from "solid-js";
 import { createStore } from "solid-js/store";
 import { A } from "@solidjs/router";
 import Login from "./Login";

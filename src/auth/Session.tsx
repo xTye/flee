@@ -1,12 +1,4 @@
-import {
-  createSignal,
-  Accessor,
-  useContext,
-  createContext,
-  JSX,
-  Component,
-  Context,
-} from "solid-js";
+import { createSignal, JSX, Component } from "solid-js";
 import {
   GoogleAuthProvider,
   User,
@@ -15,11 +7,15 @@ import {
   signInWithRedirect,
   signOut,
 } from "firebase/auth";
+import { collection, getDocs, query, where } from "firebase/firestore";
+import { firebaseStore } from "..";
+import { SessionContext } from ".";
 
 export interface SessionState {
   status: "loading" | "unauthenticated" | "authenticated";
-  token: string | undefined;
-  user: User | undefined;
+  token?: string;
+  user?: User;
+  admin?: boolean;
 }
 
 export interface SessionActions {
@@ -29,13 +25,6 @@ export interface SessionActions {
   redirect: () => Promise<void>;
 }
 
-export type SessionStore = {
-  session: Accessor<SessionState>;
-  actions: SessionActions;
-};
-
-const SessionContext = createContext<SessionStore>() as Context<SessionStore>;
-
 interface SessionProviderProps {
   children: JSX.Element;
 }
@@ -43,8 +32,6 @@ interface SessionProviderProps {
 export const SessionProvider: Component<SessionProviderProps> = (props) => {
   const [state, setState] = createSignal<SessionState>({
     status: "loading",
-    token: undefined,
-    user: undefined,
   });
 
   const actions: SessionActions = {
@@ -52,6 +39,7 @@ export const SessionProvider: Component<SessionProviderProps> = (props) => {
       setState({ ...state(), isLoading: true });
       const token = localStorage.getItem("token");
       const userString = localStorage.getItem("user");
+      const admin = localStorage.getItem("admin") ? true : undefined;
 
       if (!userString) {
         setState({ ...state(), status: "unauthenticated" });
@@ -65,7 +53,7 @@ export const SessionProvider: Component<SessionProviderProps> = (props) => {
         return;
       }
 
-      setState({ token, user, status: "authenticated" });
+      setState({ token, user, status: "authenticated", admin });
     },
 
     login: async () => {
@@ -83,6 +71,7 @@ export const SessionProvider: Component<SessionProviderProps> = (props) => {
 
       localStorage.removeItem("token");
       localStorage.removeItem("user");
+      localStorage.removeItem("admin");
       localStorage.removeItem("redirect");
       setState({
         token: undefined,
@@ -104,10 +93,23 @@ export const SessionProvider: Component<SessionProviderProps> = (props) => {
         } else return undefined;
         const user = result.user;
         const token = await user.getIdToken();
+        let admin: boolean | undefined = undefined;
 
         localStorage.setItem("token", token);
         localStorage.setItem("user", JSON.stringify(user));
-        setState({ ...state(), token, user });
+
+        const res = await getDocs(
+          query(
+            collection(firebaseStore, "admins"),
+            where("email", "==", user.email)
+          )
+        );
+
+        res.forEach(() => (admin = true));
+
+        if (admin) localStorage.setItem("admin", "true");
+
+        setState({ status: "authenticated", token, user, admin });
       } catch (error: any) {
         console.log(error);
       }
@@ -124,13 +126,11 @@ export const SessionProvider: Component<SessionProviderProps> = (props) => {
     actions.init();
   }
 
+  const session = state;
+
   return (
-    <SessionContext.Provider value={{ session: state, actions }}>
+    <SessionContext.Provider value={[session, actions]}>
       {props.children}
     </SessionContext.Provider>
   );
-};
-
-export const useSession = () => {
-  return useContext(SessionContext);
 };

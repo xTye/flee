@@ -1,13 +1,14 @@
-import { Component, createEffect, createSignal, onMount } from "solid-js";
+import { Component } from "solid-js";
 import { Router, Routes, Route } from "@solidjs/router";
 
 import { SessionProvider } from "./auth/Session";
+
+import Navbar from "./components/navbar/Navbar";
 
 import Home from "./pages/Home";
 import Characters from "./pages/Characters";
 import Map from "./pages/Map";
 import Calendar from "./pages/Calendar";
-import Navbar from "./components/Navbar";
 import Events from "./pages/Events";
 import Event from "./pages/Event";
 import Dashboard from "./pages/Dashboard";

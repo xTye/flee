@@ -1,6 +1,6 @@
 import { Component, onMount, createMemo } from "solid-js";
 import { useNavigate } from "@solidjs/router";
-import { navbarHeight } from "../components/Navbar";
+import { navbarHeight } from "../components/navbar/Navbar";
 
 const Dashboard: Component = () => {
   let docsDiv: HTMLDivElement = document.createElement("div") as HTMLDivElement;

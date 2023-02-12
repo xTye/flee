@@ -5,7 +5,7 @@ import "./index.css";
 import App from "./App";
 
 import { initializeApp } from "firebase/app";
-import { getStorage } from "firebase/storage";
+import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyASrzGbTJs9bJwzcLasfpOW1nbq7ymfsyE",
@@ -18,7 +18,7 @@ const firebaseConfig = {
 };
 
 export const firebaseApp = initializeApp(firebaseConfig);
-export const firebaseStore = getStorage();
+export const firebaseStore = getFirestore();
 
 const root = document.getElementById("root");
 

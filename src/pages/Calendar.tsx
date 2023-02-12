@@ -11,7 +11,7 @@ import {
   FleeDate,
   FleeDateDisplay,
 } from "../classes/FleeCalendar";
-import { navbarHeight } from "../components/Navbar";
+import { navbarHeight } from "../components/navbar/Navbar";
 import Modal from "../components/Modal";
 import { A } from "@solidjs/router";
 
@@ -22,9 +22,7 @@ const generateArray = (n: number) => {
 };
 
 const Calendar: Component = () => {
-  let calendarDiv: HTMLDivElement = document.createElement(
-    "div"
-  ) as HTMLDivElement;
+  let calendarDiv = document.createElement("div") as HTMLDivElement;
 
   const [calendar, setCalendar] = createSignal<FleeCalendar>(
     new FleeCalendar()
