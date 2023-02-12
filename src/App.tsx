@@ -1,6 +1,7 @@
-import { Component } from "solid-js";
-import { createStore } from "solid-js/store";
+import { Component, createEffect, createSignal, onMount } from "solid-js";
 import { Router, Routes, Route } from "@solidjs/router";
+
+import { SessionProvider } from "./auth/Session";
 
 import Home from "./pages/Home";
 import Characters from "./pages/Characters";
@@ -10,24 +11,26 @@ import Navbar from "./components/Navbar";
 import Events from "./pages/Events";
 import Event from "./pages/Event";
 import Dashboard from "./pages/Dashboard";
+import EventEditor from "./pages/EventEditor";
 
 const App: Component = () => {
-  //const [store, { pullUser }] = useStore();
-
   return (
     <>
-      <Router>
-        <Navbar />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/characters" element={<Characters />} />
-          <Route path="/map" element={<Map />} />
-          <Route path="/calendar" element={<Calendar />} />
-          <Route path="/events" element={<Events />} />
-          <Route path="/events/:id" element={<Event />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-        </Routes>
-      </Router>
+      <SessionProvider>
+        <Router>
+          <Navbar />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/characters" element={<Characters />} />
+            <Route path="/map" element={<Map />} />
+            <Route path="/calendar" element={<Calendar />} />
+            <Route path="/events" element={<Events />} />
+            <Route path="/events/:id" element={<Event />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/event-editor" element={<EventEditor />} />
+          </Routes>
+        </Router>
+      </SessionProvider>
     </>
   );
 };

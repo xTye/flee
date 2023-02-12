@@ -7,7 +7,6 @@ export const [navbarHeight, setNavbarHeight] = createStore({ height: 0 });
 
 const Navbar: Component = () => {
   let parent: any;
-  const [loggedIn, setLoggedIn] = createSignal(false);
 
   onMount(() => {
     setNavbarHeight({ height: parent.getBoundingClientRect().height });
@@ -43,17 +42,9 @@ const Navbar: Component = () => {
           <A href="/calendar" class="hover:text-yellow">
             Calendar
           </A>
-          <Login loggedIn={loggedIn} setLoggedIn={setLoggedIn}>
-            <div class="hover:text-yellow cursor-pointer">
-              {loggedIn() ? (
-                <A href="/dashboard" class="hover:text-yellow">
-                  Dashbaord
-                </A>
-              ) : (
-                "Login"
-              )}
-            </div>
-          </Login>
+          <div class="cursor-pointer hover:text-yellow">
+            <Login />
+          </div>
         </div>
       </div>
     </>

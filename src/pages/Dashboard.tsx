@@ -19,10 +19,7 @@ const Dashboard: Component = () => {
   return (
     <>
       <div ref={docsDiv} class="h-screen">
-        <iframe
-          class="w-full h-full"
-          src="https://app.roll20.net/editor/"
-        ></iframe>
+        <embed class="w-full h-full" src="https://app.roll20.net"></embed>
         {/* <iframe
           class="w-full h-full"
           src="https://docs.google.com/document/d/1uWklHax7C7BIgkzBYWZw-9Mv56K0Nphkg72SSM6Maj8/edit?usp=sharing"
