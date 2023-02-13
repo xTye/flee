@@ -1,4 +1,5 @@
 import { Component, Show, createSignal, onMount } from "solid-js";
+import { A } from "@solidjs/router";
 import { useSession } from "../../auth";
 import { clickOutside } from "../../utils/clickOutside";
 
@@ -36,7 +37,21 @@ const Login: Component = () => {
           <div ref={panelDiv}>
             <Show when={panel()}>
               <Panel>
-                <div></div>
+                <div class="flex flex-col gap-2 text-black bg-white p-4 rounded-md shadow-md">
+                  <A href="/dashboard" class="hover:text-yellow">
+                    Dashboard
+                  </A>
+                  <div class="border-b-2 border-lightWhite"></div>
+                  <div class="hover:text-yellow">
+                    <button
+                      onClick={() => {
+                        actions.logout();
+                      }}
+                    >
+                      Flee
+                    </button>
+                  </div>
+                </div>
               </Panel>
             </Show>
           </div>
@@ -44,7 +59,9 @@ const Login: Component = () => {
       </Show>
 
       <Show when={!session().user}>
-        <button onClick={() => actions.login()}></button>
+        <button class="hover:text-yellow" onClick={() => actions.login()}>
+          Login
+        </button>
       </Show>
     </>
   );

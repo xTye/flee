@@ -4,7 +4,9 @@ import {
   User,
   getAuth,
   getRedirectResult,
+  setPersistence,
   signInWithRedirect,
+  browserLocalPersistence,
   signOut,
 } from "firebase/auth";
 import { collection, getDocs, query, where } from "firebase/firestore";
@@ -61,6 +63,8 @@ export const SessionProvider: Component<SessionProviderProps> = (props) => {
       const provider = new GoogleAuthProvider();
       const auth = getAuth();
 
+      await setPersistence(auth, browserLocalPersistence);
+
       signInWithRedirect(auth, provider);
     },
 
@@ -89,11 +93,12 @@ export const SessionProvider: Component<SessionProviderProps> = (props) => {
         if (!result) return;
         // This gives you a Google Access Token. You can use it to access Google APIs.
         const credential = GoogleAuthProvider.credentialFromResult(result);
-        if (credential) {
-        } else return undefined;
+        if (!credential) return undefined;
         const user = result.user;
         const token = await user.getIdToken();
         let admin: boolean | undefined = undefined;
+
+        console.log(credential);
 
         localStorage.setItem("token", token);
         localStorage.setItem("user", JSON.stringify(user));

@@ -18,7 +18,7 @@ const firebaseConfig = {
 };
 
 export const firebaseApp = initializeApp(firebaseConfig);
-export const firebaseStore = getFirestore();
+export const firebaseStore = getFirestore(firebaseApp);
 
 const root = document.getElementById("root");
 

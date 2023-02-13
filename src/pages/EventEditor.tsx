@@ -17,9 +17,7 @@ const EventEditor: Component = () => {
 
   return (
     <>
-      <div class="min-h-screen bg-background text-text">
-        Test {session().user ? "Logged in" : "Not logged in"}
-      </div>
+      <div class="min-h-screen bg-background text-text"></div>
     </>
   );
 };

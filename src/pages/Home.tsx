@@ -1,6 +1,9 @@
 import { Component, createResource } from "solid-js";
 import { useFetchEvent } from "../hooks/fetchEvent";
 import { A } from "@solidjs/router";
+import { addDoc, collection } from "firebase/firestore";
+import { firebaseStore } from "..";
+import { getAuth } from "firebase/auth";
 
 const Home: Component = () => {
   // TODO: Query for the most recent event
@@ -11,6 +14,16 @@ const Home: Component = () => {
   return (
     <>
       <div class="flex flex-col gap-6 min-h-screen bg-background text-text pt-20 ">
+        <button
+          class="flex items-center justify-center w-48 h-10 bg-yellow rounded-full hover:bg-red text-text"
+          onClick={() => {
+            addDoc(collection(firebaseStore, "events"), {
+              name: "Test Event",
+            });
+          }}
+        >
+          Test Post
+        </button>
         <div class="flex justify-between gap-4 p-8 border-b-2">
           <div class="flex flex-col gap-4">
             <div class="text-7xl">{event()?.name}</div>
