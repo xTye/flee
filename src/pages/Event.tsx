@@ -40,7 +40,7 @@ const Event: Component = () => {
               <div class="text-sm text-justify">{event()?.description}</div>
             </div>
             <div
-              class="text-xl text-justify break-words"
+              class="flex flex-col gap-4 text-xl text-justify break-words"
               innerHTML={event()?.contents}
             />
           </div>

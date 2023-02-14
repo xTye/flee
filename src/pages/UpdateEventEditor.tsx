@@ -1,6 +1,6 @@
 import { Component, createSignal, onMount, Show } from "solid-js";
 import { useSession } from "../auth";
-import { useNavigate, useParams } from "@solidjs/router";
+import { useNavigate, useParams, A } from "@solidjs/router";
 
 import EventEditor from "../components/events/EventEditor";
 import { FleeEvent } from "../classes/FleeEvents";
@@ -61,12 +61,20 @@ const UpdateEventEditor: Component = () => {
       <div class="flex flex-col gap-4 min-h-screen bg-background text-text p-20">
         <div class="flex justify-between items-center">
           <div class="text-4xl">Update Event</div>
-          <button
-            onClick={() => updateEvent()}
-            class="flex items-center justify-center w-32 h-10 bg-yellow rounded-full hover:bg-red"
-          >
-            Update Event
-          </button>
+          <div class="flex gap-4">
+            <A
+              href={`/events/${params.id}`}
+              class="flex items-center justify-center w-32 h-10 bg-yellow rounded-full hover:bg-red"
+            >
+              Go to Event
+            </A>
+            <button
+              onClick={() => updateEvent()}
+              class="flex items-center justify-center w-32 h-10 bg-yellow rounded-full hover:bg-red"
+            >
+              Update Event
+            </button>
+          </div>
         </div>
         <Show when={event() != undefined}>
           <EventEditor
