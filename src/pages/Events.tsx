@@ -3,19 +3,15 @@ import { FleeCalendar } from "../classes/FleeCalendar";
 import { FleeEvent, FleeEvents } from "../classes/FleeEvents";
 import { A } from "@solidjs/router";
 import { useSession } from "../auth";
+import { useFetchEvents } from "../hooks/event";
 
 const Events: Component = () => {
   const [session, actions] = useSession();
 
-  const [eventsClass, setEventsClass] = createSignal<FleeEvents>(
-    new FleeEvents()
-  );
   const [events, setEvents] = createSignal<FleeEvent[]>([]);
 
-  onMount(async () => {
-    await eventsClass().populateEvents();
-
-    setEvents(eventsClass().getEvents());
+  onMount(() => {
+    useFetchEvents().then((events) => (events ? setEvents(events) : null));
   });
 
   return (
@@ -41,14 +37,12 @@ const Events: Component = () => {
                       "flex flex-col bg-white transition-all hover:scale-105 h-72"
                     }
                   >
-                    <Show when={event.thumbnail}>
-                      <img
-                        class="object-cover w-full h-32"
-                        src={event.thumbnail}
-                      />
-                    </Show>
+                    <img
+                      class="object-cover w-full h-32"
+                      src={event.thumbnail}
+                    />
                     <div class="text-black font-bold h-full text-4xl">
-                      {event.name}
+                      {event.title}
                     </div>
                   </div>
                 </A>

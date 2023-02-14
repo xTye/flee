@@ -12,7 +12,8 @@ import Calendar from "./pages/Calendar";
 import Events from "./pages/Events";
 import Event from "./pages/Event";
 import Dashboard from "./pages/Dashboard";
-import EventEditor from "./pages/EventEditor";
+import CreateEventEditor from "./pages/CreateEventEditor";
+import UpdateEventEditor from "./pages/UpdateEventEditor";
 
 const App: Component = () => {
   return (
@@ -28,7 +29,8 @@ const App: Component = () => {
             <Route path="/events" element={<Events />} />
             <Route path="/events/:id" element={<Event />} />
             <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/event-editor" element={<EventEditor />} />
+            <Route path="/event-editor" element={<CreateEventEditor />} />
+            <Route path="/event-editor/:id" element={<UpdateEventEditor />} />
           </Routes>
         </Router>
       </SessionProvider>

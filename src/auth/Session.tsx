@@ -8,14 +8,15 @@ import {
   signInWithRedirect,
   browserLocalPersistence,
   signOut,
+  Auth,
 } from "firebase/auth";
-import { collection, getDocs, query, where } from "firebase/firestore";
+import { collection, doc, getDoc, query, where } from "firebase/firestore";
 import { firebaseStore } from "..";
 import { SessionContext } from ".";
 
 export interface SessionState {
   status: "loading" | "unauthenticated" | "authenticated";
-  token?: string;
+  auth?: Auth;
   user?: User;
   admin?: boolean;
 }
@@ -38,8 +39,8 @@ export const SessionProvider: Component<SessionProviderProps> = (props) => {
 
   const actions: SessionActions = {
     init: () => {
+      const auth = getAuth();
       setState({ ...state(), isLoading: true });
-      const token = localStorage.getItem("token");
       const userString = localStorage.getItem("user");
       const admin = localStorage.getItem("admin") ? true : undefined;
 
@@ -50,12 +51,12 @@ export const SessionProvider: Component<SessionProviderProps> = (props) => {
 
       const user = JSON.parse(userString);
 
-      if (!token || !user) {
+      if (!user) {
         setState({ ...state(), status: "unauthenticated" });
         return;
       }
 
-      setState({ token, user, status: "authenticated", admin });
+      setState({ status: "authenticated", auth, user, admin });
     },
 
     login: async () => {
@@ -69,52 +70,39 @@ export const SessionProvider: Component<SessionProviderProps> = (props) => {
     },
 
     logout: async () => {
-      setState({ ...state(), isLoading: true });
-      let auth = getAuth();
+      const auth = state().auth;
+      if (!auth) return;
+
       await signOut(auth);
 
-      localStorage.removeItem("token");
       localStorage.removeItem("user");
       localStorage.removeItem("admin");
       localStorage.removeItem("redirect");
       setState({
-        token: undefined,
+        auth: undefined,
         user: undefined,
         status: "unauthenticated",
       });
     },
 
     redirect: async () => {
-      let auth = getAuth();
+      const auth = getAuth();
 
       try {
         const result = await getRedirectResult(auth);
-
         if (!result) return;
-        // This gives you a Google Access Token. You can use it to access Google APIs.
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        if (!credential) return undefined;
+
         const user = result.user;
-        const token = await user.getIdToken();
         let admin: boolean | undefined = undefined;
 
-        console.log(credential);
-
-        localStorage.setItem("token", token);
         localStorage.setItem("user", JSON.stringify(user));
 
-        const res = await getDocs(
-          query(
-            collection(firebaseStore, "admins"),
-            where("email", "==", user.email)
-          )
-        );
+        const res = await getDoc(doc(firebaseStore, "admins", user.uid));
 
-        res.forEach(() => (admin = true));
-
+        res.exists() ? (admin = true) : (admin = false);
         if (admin) localStorage.setItem("admin", "true");
 
-        setState({ status: "authenticated", token, user, admin });
+        setState({ status: "authenticated", auth, user, admin });
       } catch (error: any) {
         console.log(error);
       }
@@ -123,13 +111,8 @@ export const SessionProvider: Component<SessionProviderProps> = (props) => {
     },
   };
 
-  if (localStorage.getItem("redirect") === "true") {
-    console.log("redirecting");
-    actions.redirect();
-  } else {
-    console.log("initializing");
-    actions.init();
-  }
+  if (localStorage.getItem("redirect") === "true") actions.redirect();
+  else actions.init();
 
   const session = state;
 
