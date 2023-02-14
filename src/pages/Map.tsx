@@ -1,14 +1,14 @@
-import { Component, onMount, createSignal } from "solid-js";
+import { Component, onMount } from "solid-js";
 import { createMemo } from "solid-js";
 import Leaflet from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { navbarHeight } from "../components/Navbar";
+import { navbarHeight } from "../components/navbar/Navbar";
 
 const buildMap = (div: HTMLDivElement) => {
   const map = Leaflet.map(div, {
     minZoom: 2,
     maxZoom: 5,
-  }).setView([10, 50], 4); //tes
+  }).setView([10, 50], 4);
 
   const worldLayer = Leaflet.tileLayer("/maps/{z}/{x}/{y}.jpg", {
     attribution: "Al'ard Al'umu",
@@ -61,7 +61,7 @@ const buildMap = (div: HTMLDivElement) => {
 
 const Map: Component = () => {
   let map: Leaflet.Map;
-  let mapDiv: HTMLDivElement = document.createElement("div") as HTMLDivElement;
+  let mapDiv = document.createElement("div") as HTMLDivElement;
 
   createMemo(() => {
     mapDiv.style.height = window.innerHeight - navbarHeight.height + "px";

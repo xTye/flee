@@ -68,6 +68,7 @@ export class FleeCalendar implements FleeEventMethods {
   public static YEARS_PER_ERA = 300;
   public static MONTHS_PER_YEAR = 10;
   public static DAYS_PER_MONTH = 30;
+  public static ERA_CAP = 10;
 
   public static START_DATE = {
     day: 1,
@@ -138,9 +139,6 @@ export class FleeCalendar implements FleeEventMethods {
   public getEvent(date: FleeDate) {
     return this.events.getEventFromDate(date);
   }
-
-  // TODO: Query events from the database / events array
-  public queryEvents() {}
 
   public getDates(): FleeDateDisplay[] {
     let dates = [];

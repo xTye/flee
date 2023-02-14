@@ -5,9 +5,7 @@ const Modal: Component<{
   children?: JSX.Element;
   setModal: (modal: boolean) => void;
 }> = ({ children, setModal }) => {
-  let contentsDiv: HTMLDivElement = document.createElement(
-    "div"
-  ) as HTMLDivElement;
+  let contentsDiv = document.createElement("div") as HTMLDivElement;
 
   return (
     <>

@@ -1,4 +1,4 @@
-import { Component, onMount, createSignal, Show } from "solid-js";
+import { Component, onMount } from "solid-js";
 import { createStore } from "solid-js/store";
 import { A } from "@solidjs/router";
 import Login from "./Login";
@@ -42,7 +42,7 @@ const Navbar: Component = () => {
           <A href="/calendar" class="hover:text-yellow">
             Calendar
           </A>
-          <div class="cursor-pointer hover:text-yellow">
+          <div class="cursor-pointer">
             <Login />
           </div>
         </div>

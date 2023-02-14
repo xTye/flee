@@ -1,25 +1,24 @@
-import {
-  createSignal,
-  Accessor,
-  useContext,
-  createContext,
-  JSX,
-  Component,
-  Context,
-} from "solid-js";
+import { createSignal, JSX, Component } from "solid-js";
 import {
   GoogleAuthProvider,
   User,
   getAuth,
   getRedirectResult,
+  setPersistence,
   signInWithRedirect,
+  browserLocalPersistence,
   signOut,
+  Auth,
 } from "firebase/auth";
+import { collection, doc, getDoc, query, where } from "firebase/firestore";
+import { firebaseStore } from "..";
+import { SessionContext } from ".";
 
 export interface SessionState {
   status: "loading" | "unauthenticated" | "authenticated";
-  token: string | undefined;
-  user: User | undefined;
+  auth?: Auth;
+  user?: User;
+  admin?: boolean;
 }
 
 export interface SessionActions {
@@ -29,13 +28,6 @@ export interface SessionActions {
   redirect: () => Promise<void>;
 }
 
-export type SessionStore = {
-  session: Accessor<SessionState>;
-  actions: SessionActions;
-};
-
-const SessionContext = createContext<SessionStore>() as Context<SessionStore>;
-
 interface SessionProviderProps {
   children: JSX.Element;
 }
@@ -43,15 +35,14 @@ interface SessionProviderProps {
 export const SessionProvider: Component<SessionProviderProps> = (props) => {
   const [state, setState] = createSignal<SessionState>({
     status: "loading",
-    token: undefined,
-    user: undefined,
   });
 
   const actions: SessionActions = {
     init: () => {
+      const auth = getAuth();
       setState({ ...state(), isLoading: true });
-      const token = localStorage.getItem("token");
       const userString = localStorage.getItem("user");
+      const admin = localStorage.getItem("admin") ? true : undefined;
 
       if (!userString) {
         setState({ ...state(), status: "unauthenticated" });
@@ -60,12 +51,12 @@ export const SessionProvider: Component<SessionProviderProps> = (props) => {
 
       const user = JSON.parse(userString);
 
-      if (!token || !user) {
+      if (!user) {
         setState({ ...state(), status: "unauthenticated" });
         return;
       }
 
-      setState({ token, user, status: "authenticated" });
+      setState({ status: "authenticated", auth, user, admin });
     },
 
     login: async () => {
@@ -73,41 +64,45 @@ export const SessionProvider: Component<SessionProviderProps> = (props) => {
       const provider = new GoogleAuthProvider();
       const auth = getAuth();
 
+      await setPersistence(auth, browserLocalPersistence);
+
       signInWithRedirect(auth, provider);
     },
 
     logout: async () => {
-      setState({ ...state(), isLoading: true });
-      let auth = getAuth();
+      const auth = state().auth;
+      if (!auth) return;
+
       await signOut(auth);
 
-      localStorage.removeItem("token");
       localStorage.removeItem("user");
+      localStorage.removeItem("admin");
       localStorage.removeItem("redirect");
       setState({
-        token: undefined,
+        auth: undefined,
         user: undefined,
         status: "unauthenticated",
       });
     },
 
     redirect: async () => {
-      let auth = getAuth();
+      const auth = getAuth();
 
       try {
         const result = await getRedirectResult(auth);
-
         if (!result) return;
-        // This gives you a Google Access Token. You can use it to access Google APIs.
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        if (credential) {
-        } else return undefined;
-        const user = result.user;
-        const token = await user.getIdToken();
 
-        localStorage.setItem("token", token);
+        const user = result.user;
+        let admin: boolean | undefined = undefined;
+
         localStorage.setItem("user", JSON.stringify(user));
-        setState({ ...state(), token, user });
+
+        const res = await getDoc(doc(firebaseStore, "admins", user.uid));
+
+        res.exists() ? (admin = true) : (admin = false);
+        if (admin) localStorage.setItem("admin", "true");
+
+        setState({ status: "authenticated", auth, user, admin });
       } catch (error: any) {
         console.log(error);
       }
@@ -116,21 +111,14 @@ export const SessionProvider: Component<SessionProviderProps> = (props) => {
     },
   };
 
-  if (localStorage.getItem("redirect") === "true") {
-    console.log("redirecting");
-    actions.redirect();
-  } else {
-    console.log("initializing");
-    actions.init();
-  }
+  if (localStorage.getItem("redirect") === "true") actions.redirect();
+  else actions.init();
+
+  const session = state;
 
   return (
-    <SessionContext.Provider value={{ session: state, actions }}>
+    <SessionContext.Provider value={[session, actions]}>
       {props.children}
     </SessionContext.Provider>
   );
-};
-
-export const useSession = () => {
-  return useContext(SessionContext);
 };

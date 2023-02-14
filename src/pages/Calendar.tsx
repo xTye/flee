@@ -11,20 +11,14 @@ import {
   FleeDate,
   FleeDateDisplay,
 } from "../classes/FleeCalendar";
-import { navbarHeight } from "../components/Navbar";
-import Modal from "../components/Modal";
+import { navbarHeight } from "../components/navbar/Navbar";
 import { A } from "@solidjs/router";
 
-const generateArray = (n: number) => {
-  const arr = [];
-  for (let i = 0; i < n; i++) arr.push(i + 1);
-  return arr;
-};
+import Modal from "../components/Modal";
+import DatePicker from "../components/DatePicker";
 
 const Calendar: Component = () => {
-  let calendarDiv: HTMLDivElement = document.createElement(
-    "div"
-  ) as HTMLDivElement;
+  let calendarDiv = document.createElement("div") as HTMLDivElement;
 
   const [calendar, setCalendar] = createSignal<FleeCalendar>(
     new FleeCalendar()
@@ -32,15 +26,6 @@ const Calendar: Component = () => {
   const [date, setDate] = createSignal<FleeDate>(FleeCalendar.CURRENT_DATE);
   const [dates, setDates] = createSignal<FleeDateDisplay[]>([]);
   const [modal, setModal] = createSignal<boolean>(false);
-  const [modalContent, setModalContent] = createSignal<{
-    era: number;
-    year: number;
-    month: number;
-  }>({
-    era: FleeCalendar.CURRENT_DATE.era,
-    year: FleeCalendar.CURRENT_DATE.year,
-    month: FleeCalendar.CURRENT_DATE.month,
-  });
 
   const changeDate = (date: FleeDate) => {
     calendar().setSelectedDate(date);
@@ -104,7 +89,7 @@ const Calendar: Component = () => {
                   }}
                 >
                   <img
-                    src="arrow.png"
+                    src="/arrow.png"
                     alt="Arrow pointing left"
                     class="object-fit h-8 w-8 rotate-180"
                   />
@@ -155,107 +140,15 @@ const Calendar: Component = () => {
                   <Modal setModal={setModal}>
                     <div class="flex flex-col items-center h-full text-2xl text-white p-5 gap-6">
                       <div class="text-3xl">Enter A Custom Date</div>
-                      <div class="flex h-full w-full">
-                        <div class="flex flex-col items-start h-full w-32 gap-6">
-                          <div>Month</div>
-                          <div>Year</div>
-                          <div>Era</div>
-                        </div>
-                        <div class="flex flex-col gap-6 h-full w-full text-black">
-                          <select
-                            class="rounded-sm"
-                            onChange={(e) => {
-                              const date = {
-                                ...modalContent(),
-                                month: e.currentTarget.value
-                                  ? parseInt(e.currentTarget.value)
-                                  : modalContent().month,
-                              };
-
-                              setModalContent(date);
-                              changeDate({ ...date, day: 1 });
-                            }}
-                          >
-                            <For each={generateArray(10)}>
-                              {(month) => (
-                                <option
-                                  selected={month === calendar().month}
-                                  value={month}
-                                >
-                                  {FleeCalendar.getMonthName(month)}
-                                </option>
-                              )}
-                            </For>
-                          </select>
-
-                          <select
-                            class="rounded-sm"
-                            onChange={(e) => {
-                              const date = {
-                                ...modalContent(),
-                                year: e.currentTarget.value
-                                  ? parseInt(e.currentTarget.value)
-                                  : modalContent().year,
-                              };
-
-                              setModalContent(date);
-                              changeDate({ ...date, day: 1 });
-                            }}
-                          >
-                            <For each={generateArray(300)}>
-                              {(year) => (
-                                <option
-                                  selected={year === calendar().year}
-                                  value={year}
-                                >
-                                  {year}
-                                </option>
-                              )}
-                            </For>
-                          </select>
-
-                          <select
-                            class="rounded-sm"
-                            onChange={(e) => {
-                              const date = {
-                                ...modalContent(),
-                                era: e.currentTarget.value
-                                  ? parseInt(e.currentTarget.value)
-                                  : modalContent().era,
-                              };
-
-                              setModalContent(date);
-                              changeDate({ ...date, day: 1 });
-                            }}
-                          >
-                            <For each={generateArray(10)}>
-                              {(era) => (
-                                <option
-                                  selected={era === calendar().era}
-                                  value={era}
-                                >
-                                  {era}
-                                </option>
-                              )}
-                            </For>
-                          </select>
-                        </div>
-                      </div>
+                      <DatePicker
+                        defaultDate={calendar().date}
+                        date={date}
+                        setDate={changeDate}
+                      />
                       <button
                         class="w-2/5 bg-white rounded-full text-black hover:bg-red"
                         onClick={() => {
-                          const date = {
-                            month: FleeCalendar.CURRENT_DATE.month,
-                            year: FleeCalendar.CURRENT_DATE.year,
-                            era: FleeCalendar.CURRENT_DATE.era,
-                          };
-
-                          setModalContent(date);
-                          changeDate({
-                            ...date,
-                            day: FleeCalendar.CURRENT_DATE.day,
-                          });
-
+                          changeDate(FleeCalendar.CURRENT_DATE);
                           setModal(false);
                         }}
                       >
@@ -289,7 +182,7 @@ const Calendar: Component = () => {
                             href={`/events/${event.id}`}
                             class="font-bold rounded-md p-1 hover:bg-white truncate"
                           >
-                            {event.name}
+                            {event.title}
                           </A>
                         )}
                       </For>
