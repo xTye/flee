@@ -42,6 +42,9 @@ const Navbar: Component = () => {
           <A href="/calendar" class="hover:text-yellow">
             Calendar
           </A>
+          <A href="/events" class="hover:text-yellow">
+            Events
+          </A>
           <div class="cursor-pointer">
             <Login />
           </div>
