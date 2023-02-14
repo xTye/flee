@@ -19,12 +19,14 @@ const Events: Component = () => {
       <div class="flex flex-col min-h-screen bg-purple pb-12">
         <div class="flex justify-between items-center px-40 py-12">
           <div class="text-text text-4xl">News</div>
-          <A
-            href="/event-editor"
-            class="flex items-center justify-center w-48 h-10 bg-yellow rounded-full hover:bg-red text-text"
-          >
-            New Event
-          </A>
+          <Show when={session().admin}>
+            <A
+              href="/event-editor"
+              class="flex items-center justify-center w-48 h-10 bg-yellow rounded-full hover:bg-red text-text"
+            >
+              New Event
+            </A>
+          </Show>
         </div>
 
         <div class="grid grid-cols-3 gap-4 px-32">
