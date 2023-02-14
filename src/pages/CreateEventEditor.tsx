@@ -7,6 +7,7 @@ import { FleeEvent } from "../classes/FleeEvents";
 import { FleeCalendar } from "../classes/FleeCalendar";
 import { addDoc, collection } from "firebase/firestore";
 import { firebaseStore } from "..";
+import { Editor } from "@tiptap/core";
 
 const CreateEventEditor: Component = () => {
   const [session, actions] = useSession();
@@ -18,14 +19,13 @@ const CreateEventEditor: Component = () => {
     thumbnail: "",
     date: FleeCalendar.CURRENT_DATE,
   });
+  const [editor, setEditor] = createSignal<Editor>();
 
-  if (session().status === "loading") <div>Loading</div>;
+  if (session().status === "loading") return <div>Loading</div>;
 
-  if (session().status === "unauthenticated") <div>Not logged in</div>;
-
-  if (!session().admin) {
-    <div>Not admin</div>;
+  if (!session().admin || session().status === "unauthenticated") {
     navigate("/", { replace: true });
+    return <div>Not admin</div>;
   }
 
   const postEvent = async () => {
@@ -33,7 +33,7 @@ const CreateEventEditor: Component = () => {
     const res = await addDoc(collection(firebaseStore, "events"), {
       title: event().title,
       description: event().description,
-      contents: event().contents,
+      contents: editor()?.getHTML() || "",
       thumbnail: event().thumbnail,
       day: event().date.day,
       month: event().date.month,
@@ -57,7 +57,7 @@ const CreateEventEditor: Component = () => {
             Post Event
           </button>
         </div>
-        <EventEditor event={event} setEvent={setEvent} />
+        <EventEditor setEditor={setEditor} event={event} setEvent={setEvent} />
       </div>
     </>
   );

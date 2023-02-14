@@ -1,9 +1,19 @@
 import { Component, onMount, createMemo } from "solid-js";
 import { useNavigate } from "@solidjs/router";
 import { navbarHeight } from "../components/navbar/Navbar";
+import { useSession } from "../auth";
 
 const Dashboard: Component = () => {
+  const [session, actions] = useSession();
+  const navigate = useNavigate();
   let docsDiv: HTMLDivElement = document.createElement("div") as HTMLDivElement;
+
+  if (session().status === "loading") return <div>Loading</div>;
+
+  if (session().status === "unauthenticated") {
+    navigate("/", { replace: true });
+    return <div>Not logged in</div>;
+  }
 
   createMemo(() => {
     docsDiv.style.height = window.innerHeight - navbarHeight.height + "px";
@@ -19,11 +29,10 @@ const Dashboard: Component = () => {
   return (
     <>
       <div ref={docsDiv} class="h-screen">
-        <embed class="w-full h-full" src="https://app.roll20.net"></embed>
-        {/* <iframe
+        <iframe
           class="w-full h-full"
           src="https://docs.google.com/document/d/1uWklHax7C7BIgkzBYWZw-9Mv56K0Nphkg72SSM6Maj8/edit?usp=sharing"
-        ></iframe> */}
+        ></iframe>
       </div>
     </>
   );

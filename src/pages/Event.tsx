@@ -15,7 +15,7 @@ const Event: Component = () => {
     <>
       <div class="flex flex-col gap-4 min-h-screen bg-background text-text p-20">
         <div class="flex justify-between items-center">
-          <div class="text-7xl">{event()?.title}</div>
+          <div class="text-7xl w-3/5">{event()?.title}</div>
           <div class="flex gap-4">
             <A
               href="/events"
@@ -34,12 +34,15 @@ const Event: Component = () => {
           </div>
         </div>
         <div class="flex justify-between">
-          <div class="flex flex-col gap-4 p-8 w-full">
+          <div class="relative flex flex-col gap-4 p-8 w-full overflow-hidden">
             <div class="text-sm">{FleeCalendar.formatDate(event()?.date)}</div>
             <div class="flex items-center gap-8">
               <div class="text-sm text-justify">{event()?.description}</div>
             </div>
-            <div class="text-xl text-justify" innerHTML={event()?.contents} />
+            <div
+              class="text-xl text-justify break-words"
+              innerHTML={event()?.contents}
+            />
           </div>
           <img
             class="object-cover aspect-square h-96 w-96 float-right"

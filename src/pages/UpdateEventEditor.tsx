@@ -8,6 +8,7 @@ import { FleeCalendar } from "../classes/FleeCalendar";
 import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
 import { firebaseStore } from "..";
 import { useFetchEvent } from "../hooks/event";
+import { Editor } from "@tiptap/core";
 
 const UpdateEventEditor: Component = () => {
   const [session, actions] = useSession();
@@ -15,19 +16,21 @@ const UpdateEventEditor: Component = () => {
   const params = useParams();
 
   const [event, setEvent] = createSignal<FleeEvent | undefined>();
+  const [editor, setEditor] = createSignal<Editor>();
+  // const [editorDefaultContent, setEditorDefaultContent] =
+  //   createSignal<string>("");
+  let editorDefaultContent = "";
 
-  if (session().status === "loading") <div>Loading</div>;
+  if (session().status === "loading") return <div>Loading</div>;
 
-  if (session().status === "unauthenticated") <div>Not logged in</div>;
-
-  if (!session().admin) {
-    <div>Not admin</div>;
+  if (!session().admin || session().status === "unauthenticated") {
     navigate("/", { replace: true });
+    return <div>Not admin</div>;
   }
 
   onMount(() => {
     useFetchEvent(params.id).then((event) => {
-      console.log(event);
+      editorDefaultContent = event?.contents || "";
       event ? setEvent(event) : navigate("/");
     });
   });
@@ -36,11 +39,13 @@ const UpdateEventEditor: Component = () => {
     const insEvent = event();
     if (!insEvent || !insEvent.id) return;
 
+    console.log(editor()?.getHTML());
+
     console.log("Updating event...");
     const res = await updateDoc(doc(firebaseStore, "events", insEvent.id), {
       title: insEvent.title,
       description: insEvent.description,
-      contents: insEvent.contents,
+      contents: editor()?.getHTML() || "",
       thumbnail: insEvent.thumbnail,
       day: insEvent.date.day,
       month: insEvent.date.month,
@@ -64,8 +69,13 @@ const UpdateEventEditor: Component = () => {
           </button>
         </div>
         <Show when={event() != undefined}>
-          {/* @ts-ignore */}
-          <EventEditor event={event} setEvent={setEvent} />
+          <EventEditor
+            setEditor={setEditor}
+            editorDefaultContent={editorDefaultContent}
+            // @ts-ignore
+            event={event}
+            setEvent={setEvent}
+          />
         </Show>
       </div>
     </>

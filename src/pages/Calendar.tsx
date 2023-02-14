@@ -89,7 +89,7 @@ const Calendar: Component = () => {
                   }}
                 >
                   <img
-                    src="arrow.png"
+                    src="/arrow.png"
                     alt="Arrow pointing left"
                     class="object-fit h-8 w-8 rotate-180"
                   />

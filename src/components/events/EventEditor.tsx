@@ -1,11 +1,13 @@
-import { Accessor, Component, createSignal } from "solid-js";
-import { FleeCalendar, FleeDate } from "../../classes/FleeCalendar";
+import { Accessor, Component, onMount } from "solid-js";
+import { FleeEvent } from "../../classes/FleeEvents";
 
 import DatePicker from "../DatePicker";
 import Tiptap from "./Tiptap";
-import { FleeEvent } from "../../classes/FleeEvents";
+import { Editor } from "@tiptap/core";
 
 interface EventEditorProps {
+  setEditor: (editor?: Editor) => void;
+  editorDefaultContent?: string;
   event: Accessor<FleeEvent>;
   setEvent: (event: FleeEvent) => void;
 }
@@ -56,10 +58,8 @@ const EventEditor: Component<EventEditorProps> = (props) => {
           <div class="relative flex flex-col justify-center gap-2">
             <div>Contents</div>
             <Tiptap
-              defualtContent={props.event().contents}
-              onChange={(contents) => {
-                props.setEvent({ ...props.event(), contents });
-              }}
+              defaultContent={props.editorDefaultContent}
+              setEditor={props.setEditor}
             />
           </div>
         </div>

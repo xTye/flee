@@ -14,8 +14,8 @@ const Home: Component = () => {
     <>
       <div class="flex flex-col gap-6 min-h-screen bg-background text-text pt-20 ">
         <div class="flex justify-between gap-4 p-8 border-b-2">
-          <div class="flex flex-col gap-4">
-            <div class="text-7xl">{event()?.title}</div>
+          <div class="relative flex flex-col gap-4 overflow-hidden">
+            <div class="text-7xl w-3/5">{event()?.title}</div>
             <div class="flex items-center gap-8">
               <A
                 class="flex items-center justify-center w-32 h-10 bg-yellow rounded-full hover:bg-red"
@@ -25,7 +25,10 @@ const Home: Component = () => {
               </A>
               <div class="text-xl">{event()?.description}</div>
             </div>
-            <div class="text-xl" innerHTML={event()?.contents} />
+            <div
+              class="h-64 text-xl break-words"
+              innerHTML={event()?.contents}
+            />
           </div>
           <img
             class="object-cover w-96 h-96"

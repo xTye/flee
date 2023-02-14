@@ -1,9 +1,5 @@
-import { Component, Show, createEffect, untrack } from "solid-js";
-import {
-  createEditorTransaction,
-  createTiptapEditor,
-  useEditorHTML,
-} from "solid-tiptap";
+import { Component, onMount } from "solid-js";
+import { createTiptapEditor } from "solid-tiptap";
 import { Editor } from "@tiptap/core";
 
 import StarterKit from "@tiptap/starter-kit";
@@ -16,8 +12,8 @@ import Superscript from "@tiptap/extension-superscript";
 import TiptapMenu from "./TiptapMenu";
 
 interface TiptapProps {
-  defualtContent?: string;
-  onChange: (content: string) => void;
+  setEditor?: (editor?: Editor) => void;
+  defaultContent?: string;
 }
 
 const Tiptap: Component<TiptapProps> = (props) => {
@@ -33,7 +29,7 @@ const Tiptap: Component<TiptapProps> = (props) => {
       Subscript,
       Superscript,
     ],
-    content: props.defualtContent || "",
+    content: props.defaultContent || "",
     editorProps: {
       attributes: {
         class:
@@ -41,9 +37,13 @@ const Tiptap: Component<TiptapProps> = (props) => {
       },
     },
     onUpdate: ({ editor }) => {
-      props.onChange(editor.getHTML());
+      localStorage.setItem("content", editor.getHTML());
     },
   }));
+
+  onMount(() => {
+    if (props.setEditor) props.setEditor(editor());
+  });
 
   return (
     <>
