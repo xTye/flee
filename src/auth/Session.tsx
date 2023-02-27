@@ -10,7 +10,7 @@ import {
   signOut,
   Auth,
 } from "firebase/auth";
-import { collection, doc, getDoc, query, where } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import { firebaseStore } from "..";
 import { SessionContext } from ".";
 

@@ -81,7 +81,7 @@ const EventEditor: Component<EventEditorProps> = (props) => {
             class="object-cover aspect-square"
             src={
               props.event().thumbnail === ""
-                ? "/instance.PNG"
+                ? "/character/character-images/instance.PNG"
                 : props.event().thumbnail
             }
             alt="Article image"

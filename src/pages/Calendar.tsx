@@ -89,7 +89,7 @@ const Calendar: Component = () => {
                   }}
                 >
                   <img
-                    src="/arrow.png"
+                    src="/util-images/arrow.png"
                     alt="Arrow pointing left"
                     class="object-fit h-8 w-8 rotate-180"
                   />
@@ -121,7 +121,7 @@ const Calendar: Component = () => {
                   }}
                 >
                   <img
-                    src="/arrow.png"
+                    src="/util-images/arrow.png"
                     alt="Arrow pointing right"
                     class="object-fit h-8 w-8"
                   />
@@ -132,7 +132,7 @@ const Calendar: Component = () => {
                 onClick={() => setModal(true)}
               >
                 <img
-                  src="/arrow.png"
+                  src="/util-images/arrow.png"
                   alt="Arrow pointing right"
                   class="object-fit h-8 w-8 rotate-90"
                 />

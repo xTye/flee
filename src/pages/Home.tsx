@@ -53,7 +53,10 @@ const Home: Component = () => {
               Connar Williams, Tyler Riley, Emma Sunderman, and Brennan Ober.
             </div>
           </div>
-          <img src="/wanderingarmsnobg.png" alt="Article image" />
+          <img
+            src="/campaign-images/wanderingarmsnobg.png"
+            alt="Article image"
+          />
         </div>
       </div>
     </>

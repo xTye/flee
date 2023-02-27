@@ -18,7 +18,8 @@
     "description": "Initial setting of the campaign; Occupied by the Divine Council; Rashaga Taga's home",
     "x": -19,
     "y": 75,
-    "color": "red"
+    "color": "red",
+    "map": "/lowres-maps/Daggerfalls.jpg,/lowres-maps/DaggerfallsArea.png"
   },
   "4": {
     "name": "Estoria",

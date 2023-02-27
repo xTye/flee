@@ -16,7 +16,7 @@ const Events: Component = () => {
 
   return (
     <>
-      <div class="flex flex-col min-h-screen bg-purple pb-12">
+      <div class="flex flex-col min-h-screen bg-blue pb-12">
         <div class="flex justify-between items-center px-40 py-12">
           <div class="text-text text-4xl">News</div>
           <Show when={session().admin}>
