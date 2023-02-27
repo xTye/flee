@@ -45,7 +45,7 @@ const Characters: Component = () => {
             image={"/ravyn.PNG"}
             name={"Ravyn"}
             class={"Occultist 5 | Cleric 1"}
-            title={"A oracle of death"}
+            title={"A spooky witch"}
             description={
               "As the newest inductee to the Wandering Eyes' network of allies, not much is known of Ravyn's background or motivations. Her first encounter with the party was as a guest at the Infernal Reckoning's guild hall, after which she aided in the defense of The Measured's flotilla without hesitation. Ravyn and her owl companion Darwa form a duo whose links to the world are yet to be uncovered."
             }
@@ -81,7 +81,7 @@ const Characters: Component = () => {
             image={"/scarlett.png"}
             name={"Scarlett von Brand"}
             class={"Druid"}
-            title={"A firey beast"}
+            title={"A fiery beast"}
             description={
               "Following her father's death in the escape from Dagger Falls, Scarlett struggled to manage her powers - and temper. In a fiery eruption, she was manipulated into hurting the people around her, and decided departing from the group was safest for everyone. Whereabouts unknown, Scarlett may be exploring her familial history to better understand her abilities."
             }
