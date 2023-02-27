@@ -21,7 +21,7 @@ const Dashboard: Component = () => {
   });
 
   onMount(() => {
-    useAdobe("/instance.pdf", "instance.pdf");
+    useAdobe("/characters/instance.pdf", "instance.pdf");
   });
 
   return (
