@@ -12,13 +12,13 @@ const Home: Component = () => {
 
   return (
     <>
-      <div class="flex flex-col gap-6 min-h-screen bg-background text-text pt-20 ">
-        <div class="flex justify-between gap-4 p-8 border-b-2">
-          <div class="relative flex flex-col gap-4 overflow-hidden">
+      <div class="flex flex-col gap-6 min-h-screen bg-background text-text pt-20">
+        <div class="flex justify-between gap-4 p-8 border-b-2 h-96 w-full">
+          <div class="flex flex-col gap-4 overflow-hidden">
             <div class="text-7xl w-3/5">{event()?.title}</div>
             <div class="flex items-center gap-8">
               <A
-                class="flex items-center justify-center w-32 h-10 bg-yellow rounded-full hover:bg-red"
+                class="flex items-center justify-center w-60 h-10 bg-yellow text-center rounded-full hover:bg-red"
                 href={`/events/${event()?.id}`}
               >
                 Read more!
@@ -31,7 +31,7 @@ const Home: Component = () => {
             />
           </div>
           <img
-            class="object-cover w-96 h-96"
+            class="w-1/5 aspect-square object-cover"
             src={event()?.thumbnail}
             alt="Article image"
           />

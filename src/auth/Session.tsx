@@ -40,7 +40,6 @@ export const SessionProvider: Component<SessionProviderProps> = (props) => {
   const actions: SessionActions = {
     init: () => {
       const auth = getAuth();
-      setState({ ...state(), isLoading: true });
       const userString = localStorage.getItem("user");
       const admin = localStorage.getItem("admin") ? true : undefined;
 

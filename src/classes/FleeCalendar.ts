@@ -78,7 +78,7 @@ export class FleeCalendar implements FleeEventMethods {
   };
 
   public static CURRENT_DATE = {
-    day: 11,
+    day: 20,
     month: 2,
     year: 1,
     era: 8,
