@@ -4,7 +4,7 @@
     "description": "Home of the pirate lords; Underwater casino feywild; Infernal Reckoning HQ; The Wandering Eyes HQ",
     "x": 22,
     "y": 60,
-    "color": "red"
+    "color": "gold"
   },
   "2": {
     "name": "Viridi",
@@ -46,7 +46,7 @@
     "description": "Library-fortress overrun by abberations; Controlled by Katleen Vvander, The Oracle",
     "x": 40,
     "y": 40,
-    "color": "gold"
+    "color": "red"
   },
   "8": {
     "name": "Vernac",
