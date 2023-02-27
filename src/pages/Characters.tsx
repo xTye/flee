@@ -42,7 +42,7 @@ const Characters: Component = () => {
             mainAttackImage={"/logo-edited.png"}
           />
           <Character
-            image={"/ravyn.PNG"}
+            image={"/Ravyn.png"}
             name={"Ravyn"}
             class={"Occultist 5 | Cleric 1"}
             title={"A spooky witch"}
