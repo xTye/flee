@@ -42,12 +42,12 @@ const Characters: Component = () => {
             mainAttackImage={"/logo-edited.png"}
           />
           <Character
-            image={"/eldawyn.PNG"}
-            name={"Eldawyn"}
-            class={"Warlock 6"}
+            image={"/ravyn.PNG"}
+            name={"Ravyn"}
+            class={"Occultist 5 | Cleric 1"}
             title={"A oracle of death"}
             description={
-              "Eldawyn had just gotten to Dagger Falls when Rashaga Taga offered them work. While tending a farm wasn’t what they had in mind when they left Kurai Tayo, perhaps that voice in their head told them it was the best path forward. With their old family and mentor left behind them, Eldawyn (if that is their real name) seeks to uncover the mystery of the scythe they wield, and the Oracle preserved within it."
+              "As the newest inductee to the Wandering Eyes' network of allies, not much is known of Ravyn's background or motivations. Her first encounter with the party was as a guest at the Infernal Reckoning's guild hall, after which she aided in the defense of The Measured's flotilla without hesitation. Ravyn and her owl companion Darwa form a duo whose links to the world are yet to be uncovered."
             }
             mainAttack={"Hexblades curse multiattack"}
             mainAttackImage={"/logo-edited.png"}
