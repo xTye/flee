@@ -47,7 +47,7 @@ const Characters: Component = () => {
             class={"Occultist 5 | Cleric 1"}
             title={"A spooky witch"}
             description={
-              "As the newest inductee to the Wandering Eyes' network of allies, not much is known of Ravyn's background or motivations. Her first encounter with the party was as a guest at the Infernal Reckoning's guild hall, after which she aided in the defense of The Measured's flotilla without hesitation. Ravyn and her owl companion Darwa form a duo whose links to the world are yet to be uncovered."
+              "As the newest inductee to the Wandering Eyes' network of allies, not much is known of Ravyn's background or motivations. Her first encounter with the party was as a guest at the Infernal Reckoning's guild hall, after which she aided in the defense of the flotilla of The Measured without hesitation. Ravyn and her owl companion Darwa form a duo whose links to the world are yet to be uncovered."
             }
             mainAttack={"Hexblades curse multiattack"}
             mainAttackImage={"/logo-edited.png"}
