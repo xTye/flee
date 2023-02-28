@@ -7,6 +7,7 @@ import Navbar from "./components/navbar/Navbar";
 
 import Home from "./pages/Home";
 import Characters from "./pages/Characters";
+import Character from "./pages/Character";
 import Map from "./pages/Map";
 import Calendar from "./pages/Calendar";
 import Events from "./pages/Events";
@@ -24,6 +25,7 @@ const App: Component = () => {
           <Routes>
             <Route path="/" component={Home} />
             <Route path="/characters" component={Characters} />
+            <Route path="/characters/:id" component={Character} />
             <Route path="/map" component={Map} />
             <Route path="/calendar" component={Calendar} />
             <Route path="/events" component={Events} />

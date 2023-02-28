@@ -1,6 +1,8 @@
+import { A } from "@solidjs/router";
 import type { Component } from "solid-js";
 
 const Character: Component<{
+  id: string;
   image: string;
   name: string;
   class: string;
@@ -28,9 +30,12 @@ const Character: Component<{
           <img class="w-1/5" src={props.mainAttackImage} alt="main attack" />
         </div>
         <div class="flex justify-center">
-          <button class="w-3/5 h-10 bg-yellow text-center rounded-full hover:bg-red">
+          <A
+            href={`/characters/${props.id}`}
+            class="w-3/5 h-10 bg-yellow text-center rounded-full hover:bg-red"
+          >
             Read more!
-          </button>
+          </A>
         </div>
       </div>
     </>
