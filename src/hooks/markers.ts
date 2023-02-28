@@ -15,6 +15,7 @@ export interface Marker {
   color: string;
   createdAt?: Date;
   updatedAt?: Date;
+  previousData?: Marker;
 }
 
 export const useFetchMarkers = async () => {

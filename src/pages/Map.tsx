@@ -1,11 +1,4 @@
-import {
-  Component,
-  createSignal,
-  onCleanup,
-  onMount,
-  Setter,
-  Show,
-} from "solid-js";
+import { Component, createSignal, onCleanup, onMount, Show } from "solid-js";
 import { createMemo } from "solid-js";
 
 import Leaflet from "leaflet";
@@ -13,12 +6,11 @@ import "leaflet/dist/leaflet.css";
 
 import {
   useMap,
-  icons,
   useCreateEditMarker,
   useRemoveEditMarker,
   useUpdateEditMarker,
 } from "../utils/useMap";
-import { Marker, useCreateMarker } from "../hooks/markers";
+import { Marker } from "../hooks/markers";
 import { navbarHeight } from "../components/navbar/Navbar";
 import { useSession } from "../auth";
 
@@ -49,8 +41,8 @@ const Map: Component = () => {
 
   onCleanup(() => {
     const insLeafletEditMarker = leafletEditMarker();
-    if (insLeafletEditMarker) rmc(map, insLeafletEditMarker, setEditMarker);
-    map.remove();
+    if (insLeafletEditMarker)
+      rmc(map, editMarker(), insLeafletEditMarker, setEditMarker);
   });
 
   return (
@@ -100,25 +92,42 @@ const Map: Component = () => {
             <Show when={session().admin}>
               <div class="flex gap-2 justify-end">
                 {/* Plus and trash icons when editing */}
-                <Show when={editMarker()}>
-                  <button class="p-1 hover:bg-red rounded-md">
-                    <img src="/util-images/plus.svg" class="w-4 h-4 " />
-                  </button>
-                  <button
-                    class="p-1 hover:bg-red rounded-md"
-                    onClick={() => {
-                      const insLeafletEditMarker = leafletEditMarker();
-                      if (!insLeafletEditMarker) return;
-
-                      useRemoveEditMarker(
-                        map,
-                        insLeafletEditMarker,
-                        setEditMarker
-                      );
-                    }}
-                  >
-                    <img src="/util-images/trash.svg" class="w-4 h-4 " />
-                  </button>
+                <Show when={leafletEditMarker()} keyed>
+                  {(insLeafletEditMarker: Leaflet.Marker) => (
+                    <Show when={editMarker()} keyed>
+                      {(insEditMarker: Marker) => (
+                        <>
+                          <button
+                            class="p-1 hover:bg-red rounded-md"
+                            onClick={() => {
+                              console.log(insEditMarker);
+                            }}
+                          >
+                            <img
+                              src="/util-images/check.svg"
+                              class="w-4 h-4 "
+                            />
+                          </button>
+                          <button
+                            class="p-1 hover:bg-red rounded-md"
+                            onClick={() => {
+                              useRemoveEditMarker(
+                                map,
+                                insEditMarker,
+                                insLeafletEditMarker,
+                                setEditMarker
+                              );
+                            }}
+                          >
+                            <img
+                              src="/util-images/trash.svg"
+                              class="w-4 h-4 "
+                            />
+                          </button>
+                        </>
+                      )}
+                    </Show>
+                  )}
                 </Show>
 
                 <Show when={!editMarker()}>
@@ -139,7 +148,7 @@ const Map: Component = () => {
                   <Show when={leafletEditMarker()} keyed>
                     {(insLeafletEditMarker: Leaflet.Marker) => (
                       <Show when={marker()} keyed>
-                        {(value: Marker) => (
+                        {(insMarker: Marker) => (
                           <button class="p-1 hover:bg-red rounded-md">
                             <img
                               src="/util-images/edit.svg"
@@ -147,10 +156,10 @@ const Map: Component = () => {
                               onClick={() => {
                                 useUpdateEditMarker(
                                   map,
-                                  value,
+                                  insMarker,
+                                  editMarker,
                                   setEditMarker,
-                                  leafletEditMarker,
-                                  setLeafletEditMarker
+                                  insLeafletEditMarker
                                 );
                               }}
                             />

@@ -53,15 +53,17 @@ export const useMap = async (
     })
       .addTo(map)
       .addEventListener("click", () => {
-        setMarker({
-          name: marker.name,
-          description: marker.description,
-          x: marker.x,
-          y: marker.y,
-          color: marker.color,
-        });
+        if (!editMarker()) {
+          setMarker({
+            name: marker.name,
+            description: marker.description,
+            x: marker.x,
+            y: marker.y,
+            color: marker.color,
+          });
 
-        if (!editMarker()) setLeafletEditMarker(leafletMarker);
+          setLeafletEditMarker(leafletMarker);
+        }
 
         map.flyTo([marker.x, marker.y], 4);
       });
@@ -88,7 +90,16 @@ export const useCreateEditMarker = (
 
   map.flyTo([center.lat, center.lng], 4);
 
+  setEditMarker({
+    name: "",
+    description: "",
+    x: leafletMarker.getLatLng().lat,
+    y: leafletMarker.getLatLng().lng,
+    color: "",
+  });
+
   leafletMarker.addEventListener("drag", () => {
+    // Accessor because editMarker() is undefined
     const insEditMarker = editMarker();
     if (!insEditMarker) return;
 
@@ -99,63 +110,86 @@ export const useCreateEditMarker = (
     });
   });
 
-  setEditMarker({
-    name: "",
-    description: "",
-    x: leafletMarker.getLatLng().lat,
-    y: leafletMarker.getLatLng().lng,
-    color: "",
-  });
-
   setLeafletEditMarker(leafletMarker);
 };
 
 export const useUpdateEditMarker = (
   map: Leaflet.Map,
-  editMarker: Marker,
+  marker: Marker,
+  editMarker: Accessor<Marker | undefined>,
   setEditMarker: Setter<Marker>,
-  leafletEditMarker: Accessor<Leaflet.Marker | undefined>,
-  setLeafletEditMarker: Setter<Leaflet.Marker>
+  leafletEditMarker: Leaflet.Marker
 ) => {
-  const insLeafletEditMarker = leafletEditMarker();
-  if (!insLeafletEditMarker) return;
-
-  insLeafletEditMarker.options.draggable = true;
-  insLeafletEditMarker.options.autoPan = true;
+  leafletEditMarker.dragging?.enable();
 
   map.flyTo(
-    [
-      insLeafletEditMarker.getLatLng().lat,
-      insLeafletEditMarker.getLatLng().lng,
-    ],
+    [leafletEditMarker.getLatLng().lat, leafletEditMarker.getLatLng().lng],
     4
   );
 
-  insLeafletEditMarker.addEventListener("drag", () => {
+  setEditMarker({
+    name: marker.name,
+    description: marker.description,
+    x: leafletEditMarker.getLatLng().lat,
+    y: leafletEditMarker.getLatLng().lng,
+    color: marker.color,
+    previousData: {
+      name: marker.name,
+      description: marker.description,
+      x: leafletEditMarker.getLatLng().lat,
+      y: leafletEditMarker.getLatLng().lng,
+      color: marker.color,
+    },
+  });
+
+  leafletEditMarker.addEventListener("drag", () => {
+    const insEditMarker = editMarker();
+    if (!insEditMarker) return;
+
     setEditMarker({
-      ...editMarker,
-      x: insLeafletEditMarker.getLatLng().lat,
-      y: insLeafletEditMarker.getLatLng().lng,
+      ...insEditMarker,
+      x: leafletEditMarker.getLatLng().lat,
+      y: leafletEditMarker.getLatLng().lng,
     });
   });
-
-  setEditMarker({
-    name: editMarker.name,
-    description: editMarker.description,
-    x: insLeafletEditMarker.getLatLng().lat,
-    y: insLeafletEditMarker.getLatLng().lng,
-    color: editMarker.color,
-  });
-
-  //setLeafletEditMarker(leafletEditMarker);
 };
 
 export const useRemoveEditMarker = (
   map: Leaflet.Map,
+  editMarker: Marker | undefined,
   leafletEditMarker: Leaflet.Marker,
   setEditMarker: Setter<Marker | undefined>
 ) => {
   leafletEditMarker.removeEventListener("drag");
-  leafletEditMarker.removeFrom(map);
+
+  if (!editMarker?.previousData) leafletEditMarker.removeFrom(map);
+  else {
+    leafletEditMarker.setLatLng(
+      new Leaflet.LatLng(editMarker.previousData.x, editMarker.previousData.y)
+    );
+  }
+
+  leafletEditMarker.dragging?.disable();
+
+  setEditMarker(undefined);
+};
+
+export const useComfirmEditMarker = (
+  map: Leaflet.Map,
+  editMarker: Marker | undefined,
+  leafletEditMarker: Leaflet.Marker,
+  setEditMarker: Setter<Marker | undefined>
+) => {
+  leafletEditMarker.removeEventListener("drag");
+
+  if (!editMarker?.previousData) leafletEditMarker.removeFrom(map);
+  else {
+    leafletEditMarker.setLatLng(
+      new Leaflet.LatLng(editMarker.previousData.x, editMarker.previousData.y)
+    );
+  }
+
+  leafletEditMarker.dragging?.disable();
+
   setEditMarker(undefined);
 };
