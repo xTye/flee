@@ -39,8 +39,6 @@ const UpdateEventEditor: Component = () => {
     const insEvent = event();
     if (!insEvent || !insEvent.id) return;
 
-    console.log(editor()?.getHTML());
-
     console.log("Updating event...");
     const res = await updateDoc(doc(firebaseStore, "events", insEvent.id), {
       title: insEvent.title,

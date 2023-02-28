@@ -8,7 +8,7 @@ import {
   query,
 } from "firebase/firestore";
 import { FleeCalendar } from "../classes/FleeCalendar";
-import { FleeEvent, FleeEvents } from "../classes/FleeEvents";
+import { FleeEvent } from "../classes/FleeEvents";
 import { firebaseStore } from "..";
 
 export const useFetchEvent = async (id?: string) => {
