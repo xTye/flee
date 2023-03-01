@@ -12,7 +12,7 @@ export const useAdobe = (url: string, fileName: string) => {
     try {
       let adobeDCView = new AdobeDC.View({
         clientId: `${
-          import.meta.env.DEV
+          import.meta.env.MODE === "development"
             ? import.meta.env.VITE_ADOBE_PDF_LOCAL
             : import.meta.env.VITE_ADOBE_PDF
         }`,
