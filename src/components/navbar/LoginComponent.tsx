@@ -36,7 +36,7 @@ const LoginComponent: Component = () => {
           />
           <div ref={panelDiv}>
             <Show when={panel()}>
-              <Panel>
+              <PanelComponent>
                 <div class="flex flex-col gap-2 text-black bg-white p-4 rounded-md shadow-md">
                   <A href="/dashboard" class="hover:text-yellow">
                     Dashboard
@@ -52,7 +52,7 @@ const LoginComponent: Component = () => {
                     </button>
                   </div>
                 </div>
-              </Panel>
+              </PanelComponent>
             </Show>
           </div>
         </div>

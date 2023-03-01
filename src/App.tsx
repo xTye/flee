@@ -7,6 +7,7 @@ import NavbarComponent from "./components/navbar/NavbarComponent";
 
 import HomePage from "./pages/HomePage";
 import CharactersPage from "./pages/CharactersPage";
+import CharacterPage from "./pages/CharacterPage";
 import MapPage from "./pages/MapPage";
 import CalendarPage from "./pages/CalendarPage";
 import EventsPage from "./pages/EventsPage";
@@ -24,6 +25,7 @@ const App: Component = () => {
           <Routes>
             <Route path="/" component={HomePage} />
             <Route path="/characters" component={CharactersPage} />
+            <Route path="/characters/:id" component={CharacterPage} />
             <Route path="/map" component={MapPage} />
             <Route path="/calendar" component={CalendarPage} />
             <Route path="/events" component={EventsPage} />
