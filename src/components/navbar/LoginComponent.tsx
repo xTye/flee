@@ -3,9 +3,9 @@ import { A } from "@solidjs/router";
 import { useSession } from "../../auth";
 import { clickOutside } from "../../utils/clickOutside";
 
-import Panel from "./Panel";
+import PanelComponent from "./PanelComponent";
 
-const Login: Component = () => {
+const LoginComponent: Component = () => {
   const [session, actions] = useSession();
 
   let panelDiv = document.createElement("div") as HTMLDivElement;
@@ -36,7 +36,7 @@ const Login: Component = () => {
           />
           <div ref={panelDiv}>
             <Show when={panel()}>
-              <Panel>
+              <PanelComponent>
                 <div class="flex flex-col gap-2 text-black bg-white p-4 rounded-md shadow-md">
                   <A href="/dashboard" class="hover:text-yellow">
                     Dashboard
@@ -52,7 +52,7 @@ const Login: Component = () => {
                     </button>
                   </div>
                 </div>
-              </Panel>
+              </PanelComponent>
             </Show>
           </div>
         </div>
@@ -67,4 +67,4 @@ const Login: Component = () => {
   );
 };
 
-export default Login;
+export default LoginComponent;

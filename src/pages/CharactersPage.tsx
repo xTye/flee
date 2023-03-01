@@ -1,12 +1,13 @@
 import { Component, For, createSignal, onMount } from "solid-js";
 
-import Character from "../components/Character";
+import Character from "../components/CharacterComponent";
 import {
   Character as CharacterType,
   useFetchCharacters,
 } from "../hooks/character";
+import CharacterComponent from "../components/CharacterComponent";
 
-const Characters: Component = () => {
+const CharactersPage: Component = () => {
   const [characters, setCharacters] = createSignal<CharacterType[]>([]);
 
   onMount(() => {
@@ -25,7 +26,7 @@ const Characters: Component = () => {
             {(character) =>
               character.type === "active" ? (
                 <>
-                  <Character
+                  <CharacterComponent
                     id={character.id}
                     image={character.image}
                     name={character.name}
@@ -70,4 +71,4 @@ const Characters: Component = () => {
   );
 };
 
-export default Characters;
+export default CharactersPage;

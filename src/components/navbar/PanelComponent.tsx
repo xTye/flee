@@ -1,6 +1,6 @@
 import { Component, JSX } from "solid-js";
 
-const Panel: Component<{
+const PanelComponent: Component<{
   children?: JSX.Element;
 }> = ({ children }) => {
   return (
@@ -12,4 +12,4 @@ const Panel: Component<{
   );
 };
 
-export default Panel;
+export default PanelComponent;

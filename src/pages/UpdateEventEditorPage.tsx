@@ -2,20 +2,19 @@ import { Component, createSignal, onMount, Show } from "solid-js";
 import { useSession } from "../auth";
 import { useNavigate, useParams, A } from "@solidjs/router";
 
-import EventEditor from "../components/events/EventEditor";
-import { FleeEvent } from "../classes/FleeEvents";
-import { FleeCalendar } from "../classes/FleeCalendar";
-import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
+import EventEditorComponent from "../components/events/EventEditorComponent";
+import { doc, updateDoc } from "firebase/firestore";
 import { firebaseStore } from "..";
-import { useFetchEvent } from "../hooks/event";
 import { Editor } from "@tiptap/core";
+import { EventInterface } from "../types/EventType";
+import { useFetchEvent } from "../services/EventService";
 
-const UpdateEventEditor: Component = () => {
+const UpdateEventEditorPage: Component = () => {
   const [session, actions] = useSession();
   const navigate = useNavigate();
   const params = useParams();
 
-  const [event, setEvent] = createSignal<FleeEvent | undefined>();
+  const [event, setEvent] = createSignal<EventInterface | undefined>();
   const [editor, setEditor] = createSignal<Editor>();
   // const [editorDefaultContent, setEditorDefaultContent] =
   //   createSignal<string>("");
@@ -38,8 +37,6 @@ const UpdateEventEditor: Component = () => {
   const updateEvent = async () => {
     const insEvent = event();
     if (!insEvent || !insEvent.id) return;
-
-    console.log(editor()?.getHTML());
 
     console.log("Updating event...");
     const res = await updateDoc(doc(firebaseStore, "events", insEvent.id), {
@@ -77,7 +74,7 @@ const UpdateEventEditor: Component = () => {
           </div>
         </div>
         <Show when={event() != undefined}>
-          <EventEditor
+          <EventEditorComponent
             setEditor={setEditor}
             editorDefaultContent={editorDefaultContent}
             // @ts-ignore
@@ -90,4 +87,4 @@ const UpdateEventEditor: Component = () => {
   );
 };
 
-export default UpdateEventEditor;
+export default UpdateEventEditorPage;

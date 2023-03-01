@@ -1,24 +1,15 @@
 import { collection, getDocs } from "firebase/firestore";
-import { FleeDate, FleeCalendar } from "./FleeCalendar";
+import { EventInterface } from "../types/EventType";
 import { firebaseStore } from "..";
+import { DateInterface } from "../types/DateType";
+import { CalendarClass } from "./CalendarClass";
 
-export interface FleeEvent {
-  id?: string;
-  title: string;
-  description: string;
-  contents: string;
-  thumbnail: string;
-  date: FleeDate;
-  createdAt?: Date;
-  updatedAt?: Date;
-}
-
-export interface FleeEventMethods {
+export interface EventClassMethods {
   populateEvents(): Promise<void>;
 }
 
-export class FleeEvents implements FleeEventMethods {
-  public static DEFAULT_EVENT: FleeEvent = {
+export class EventClass implements EventClassMethods {
+  public static DEFAULT_EVENT: EventInterface = {
     id: "",
     title: "",
     description: "",
@@ -34,12 +25,12 @@ export class FleeEvents implements FleeEventMethods {
     updatedAt: new Date(),
   };
 
-  private events: Map<string, FleeEvent>;
-  private eventsDate: Map<string, FleeEvent[]>;
+  private events: Map<string, EventInterface>;
+  private eventsDate: Map<string, EventInterface[]>;
 
   constructor() {
-    this.events = new Map<string, FleeEvent>();
-    this.eventsDate = new Map<string, FleeEvent[]>();
+    this.events = new Map<string, EventInterface>();
+    this.eventsDate = new Map<string, EventInterface[]>();
   }
 
   public async populateEvents() {
@@ -55,8 +46,8 @@ export class FleeEvents implements FleeEventMethods {
         };
 
         // Validation checking. Throw errors if invalid.
-        FleeCalendar.validDate(date);
-        FleeEvents.validEvent(doc.id, this.events);
+        CalendarClass.validDate(date);
+        EventClass.validEvent(doc.id, this.events);
 
         const event = {
           id: doc.id,
@@ -69,17 +60,17 @@ export class FleeEvents implements FleeEventMethods {
 
         this.events.set(doc.id, event);
 
-        if (!this.eventsDate.has(FleeCalendar.toString(date)))
-          this.eventsDate.set(FleeCalendar.toString(date), []);
+        if (!this.eventsDate.has(CalendarClass.toString(date)))
+          this.eventsDate.set(CalendarClass.toString(date), []);
 
-        this.eventsDate.get(FleeCalendar.toString(date))?.push(event);
+        this.eventsDate.get(CalendarClass.toString(date))?.push(event);
       } catch (e: any) {
         console.error(e.message);
       }
     });
   }
 
-  public static validEvent(id: string, events: Map<string, FleeEvent>) {
+  public static validEvent(id: string, events: Map<string, EventInterface>) {
     if (typeof id !== "string") throw new Error("Event ID must be a string");
     if (events.has(id)) throw new Error("Event duplicate ID");
     return true;
@@ -93,7 +84,7 @@ export class FleeEvents implements FleeEventMethods {
     return this.events.get(id) || [];
   }
 
-  public getEventFromDate(date: FleeDate) {
-    return this.eventsDate.get(FleeCalendar.toString(date)) || [];
+  public getEventFromDate(date: DateInterface) {
+    return this.eventsDate.get(CalendarClass.toString(date)) || [];
   }
 }

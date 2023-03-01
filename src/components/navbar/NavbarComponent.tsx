@@ -1,11 +1,11 @@
 import { Component, onMount } from "solid-js";
 import { createStore } from "solid-js/store";
 import { A } from "@solidjs/router";
-import Login from "./Login";
+import LoginComponent from "./LoginComponent";
 
 export const [navbarHeight, setNavbarHeight] = createStore({ height: 0 });
 
-const Navbar: Component = () => {
+const NavbarComponent: Component = () => {
   let parent: any;
 
   onMount(() => {
@@ -50,7 +50,7 @@ const Navbar: Component = () => {
             Events
           </A>
           <div class="cursor-pointer">
-            <Login />
+            <LoginComponent />
           </div>
         </div>
       </div>
@@ -58,4 +58,4 @@ const Navbar: Component = () => {
   );
 };
 
-export default Navbar;
+export default NavbarComponent;

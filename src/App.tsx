@@ -3,36 +3,36 @@ import { Router, Routes, Route } from "@solidjs/router";
 
 import { SessionProvider } from "./auth/Session";
 
-import Navbar from "./components/navbar/Navbar";
+import NavbarComponent from "./components/navbar/NavbarComponent";
 
-import Home from "./pages/Home";
-import Characters from "./pages/Characters";
-import Character from "./pages/Character";
-import Map from "./pages/Map";
-import Calendar from "./pages/Calendar";
-import Events from "./pages/Events";
-import Event from "./pages/Event";
-import Dashboard from "./pages/Dashboard";
-import CreateEventEditor from "./pages/CreateEventEditor";
-import UpdateEventEditor from "./pages/UpdateEventEditor";
+import HomePage from "./pages/HomePage";
+import CharactersPage from "./pages/CharactersPage";
+import CharacterPage from "./pages/CharacterPage";
+import MapPage from "./pages/MapPage";
+import CalendarPage from "./pages/CalendarPage";
+import EventsPage from "./pages/EventsPage";
+import EventPage from "./pages/EventPage";
+import DashboardPage from "./pages/DashboardPage";
+import CreateEventEditorPage from "./pages/CreateEventEditorPage";
+import UpdateEventEditorPage from "./pages/UpdateEventEditorPage";
 
 const App: Component = () => {
   return (
     <>
       <SessionProvider>
         <Router>
-          <Navbar />
+          <NavbarComponent />
           <Routes>
-            <Route path="/" component={Home} />
-            <Route path="/characters" component={Characters} />
-            <Route path="/characters/:id" component={Character} />
-            <Route path="/map" component={Map} />
-            <Route path="/calendar" component={Calendar} />
-            <Route path="/events" component={Events} />
-            <Route path="/events/:id" component={Event} />
-            <Route path="/dashboard" component={Dashboard} />
-            <Route path="/event-editor" component={CreateEventEditor} />
-            <Route path="/event-editor/:id" component={UpdateEventEditor} />
+            <Route path="/" component={HomePage} />
+            <Route path="/characters" component={CharactersPage} />
+            <Route path="/characters/:id" component={CharacterPage} />
+            <Route path="/map" component={MapPage} />
+            <Route path="/calendar" component={CalendarPage} />
+            <Route path="/events" component={EventsPage} />
+            <Route path="/events/:id" component={EventPage} />
+            <Route path="/dashboard" component={DashboardPage} />
+            <Route path="/event-editor" component={CreateEventEditorPage} />
+            <Route path="/event-editor/:id" component={UpdateEventEditorPage} />
           </Routes>
         </Router>
       </SessionProvider>

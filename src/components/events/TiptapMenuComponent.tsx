@@ -6,7 +6,7 @@ interface TiptapMenuProps {
   editor?: Editor;
 }
 
-const TiptapMenu: Component<TiptapMenuProps> = (props) => {
+const TiptapMenuComponent: Component<TiptapMenuProps> = (props) => {
   return (
     <>
       <div class="flex justify-left w-full 2xl:justify-between h-12 px-2 bg-white border-x-2 border-t-2 border-black rounded-t-md overflow-y-hidden overflow-x-auto">
@@ -378,4 +378,4 @@ const TiptapMenu: Component<TiptapMenuProps> = (props) => {
   );
 };
 
-export default TiptapMenu;
+export default TiptapMenuComponent;

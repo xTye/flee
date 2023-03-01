@@ -6,28 +6,27 @@ import {
   For,
   Show,
 } from "solid-js";
-import {
-  FleeCalendar,
-  FleeDate,
-  FleeDateDisplay,
-} from "../classes/FleeCalendar";
-import { navbarHeight } from "../components/navbar/Navbar";
+import { CalendarClass } from "../classes/CalendarClass";
+import { DateInterface } from "../types/DateType";
+import { navbarHeight } from "../components/navbar/NavbarComponent";
 import { A } from "@solidjs/router";
 
-import Modal from "../components/Modal";
-import DatePicker from "../components/DatePicker";
+import Modal from "../components/ModalComponent";
+import DatePickerComponent from "../components/DatePickerComponent";
 
-const Calendar: Component = () => {
+const CalendarPage: Component = () => {
   let calendarDiv = document.createElement("div") as HTMLDivElement;
 
-  const [calendar, setCalendar] = createSignal<FleeCalendar>(
-    new FleeCalendar()
+  const [calendar, setCalendar] = createSignal<CalendarClass>(
+    new CalendarClass()
   );
-  const [date, setDate] = createSignal<FleeDate>(FleeCalendar.CURRENT_DATE);
-  const [dates, setDates] = createSignal<FleeDateDisplay[]>([]);
+  const [date, setDate] = createSignal<DateInterface>(
+    CalendarClass.CURRENT_DATE
+  );
+  const [dates, setDates] = createSignal<DateInterface[]>([]);
   const [modal, setModal] = createSignal<boolean>(false);
 
-  const changeDate = (date: FleeDate) => {
+  const changeDate = (date: DateInterface) => {
     calendar().setSelectedDate(date);
 
     setDates(calendar().getDates());
@@ -58,7 +57,7 @@ const Calendar: Component = () => {
           <div class="flex justify-between items-center bg-purple h-20 px-20">
             <div class="text-text">{`Era: ${date().era} | Year: ${
               date().year
-            } | Month: ${FleeCalendar.getMonthName(date().month)} `}</div>
+            } | Month: ${CalendarClass.getMonthName(date().month)} `}</div>
             <div class="flex gap-4">
               <div class="flex">
                 <button
@@ -70,10 +69,10 @@ const Calendar: Component = () => {
                     };
 
                     if (date.month - 1 == 0) {
-                      date.month = FleeCalendar.MONTHS_PER_YEAR;
+                      date.month = CalendarClass.MONTHS_PER_YEAR;
 
                       if (date.year - 1 == 0) {
-                        date.year = FleeCalendar.YEARS_PER_ERA;
+                        date.year = CalendarClass.YEARS_PER_ERA;
 
                         if (date.era - 1 == 0) return;
 
@@ -103,10 +102,10 @@ const Calendar: Component = () => {
                       day: 1,
                     };
 
-                    if (date.month % FleeCalendar.MONTHS_PER_YEAR == 0) {
+                    if (date.month % CalendarClass.MONTHS_PER_YEAR == 0) {
                       date.month = 1;
 
-                      if (date.year % FleeCalendar.YEARS_PER_ERA == 0) {
+                      if (date.year % CalendarClass.YEARS_PER_ERA == 0) {
                         date.year = 1;
 
                         date.era++;
@@ -140,7 +139,7 @@ const Calendar: Component = () => {
                   <Modal setModal={setModal}>
                     <div class="flex flex-col items-center h-full text-2xl text-white p-5 gap-6">
                       <div class="text-3xl">Enter A Custom Date</div>
-                      <DatePicker
+                      <DatePickerComponent
                         defaultDate={calendar().date}
                         date={date}
                         setDate={changeDate}
@@ -148,7 +147,7 @@ const Calendar: Component = () => {
                       <button
                         class="w-2/5 bg-white rounded-full text-black hover:bg-red"
                         onClick={() => {
-                          changeDate(FleeCalendar.CURRENT_DATE);
+                          changeDate(CalendarClass.CURRENT_DATE);
                           setModal(false);
                         }}
                       >
@@ -170,7 +169,7 @@ const Calendar: Component = () => {
                   } h-full rounded-md hover:bg-red p-2 overflow-hidden hover:overflow-y-auto`}
                 >
                   <div>{date.day}</div>
-                  <div>{FleeCalendar.getMoonPhase(date.day)}</div>
+                  <div>{CalendarClass.getMoonPhase(date.day)}</div>
                   <Show when={date.holiday}>
                     <div>{date.holiday}</div>
                   </Show>
@@ -198,4 +197,4 @@ const Calendar: Component = () => {
   );
 };
 
-export default Calendar;
+export default CalendarPage;

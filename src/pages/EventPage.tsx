@@ -1,11 +1,11 @@
 import { Component, Show, createResource } from "solid-js";
 import { useParams } from "@solidjs/router";
-import { useFetchEvent } from "../hooks/event";
-import { FleeCalendar } from "../classes/FleeCalendar";
 import { A } from "@solidjs/router";
 import { useSession } from "../auth";
+import { useFetchEvent } from "../services/EventService";
+import { CalendarClass } from "../classes/CalendarClass";
 
-const Event: Component = () => {
+const EventPage: Component = () => {
   const [session, actions] = useSession();
   const params = useParams();
 
@@ -35,7 +35,7 @@ const Event: Component = () => {
         </div>
         <div class="flex justify-between">
           <div class="relative flex flex-col gap-4 p-8 w-full overflow-hidden">
-            <div class="text-sm">{FleeCalendar.formatDate(event()?.date)}</div>
+            <div class="text-sm">{CalendarClass.formatDate(event()?.date)}</div>
             <div class="flex items-center gap-8">
               <div class="text-sm text-justify">{event()?.description}</div>
             </div>
@@ -55,4 +55,4 @@ const Event: Component = () => {
   );
 };
 
-export default Event;
+export default EventPage;

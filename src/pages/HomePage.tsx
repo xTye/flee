@@ -1,10 +1,13 @@
 import { Component, createSignal, onMount } from "solid-js";
-import { useFetchEvent } from "../hooks/event";
 import { A } from "@solidjs/router";
-import { FleeEvents, FleeEvent } from "../classes/FleeEvents";
+import { EventInterface } from "../types/EventType";
+import { EventClass } from "../classes/EventClass";
+import { useFetchEvent } from "../services/EventService";
 
-const Home: Component = () => {
-  const [event, setEvent] = createSignal<FleeEvent>(FleeEvents.DEFAULT_EVENT);
+const HomePage: Component = () => {
+  const [event, setEvent] = createSignal<EventInterface>(
+    EventClass.DEFAULT_EVENT
+  );
 
   onMount(() => {
     useFetchEvent().then((event) => (event ? setEvent(event) : null));
@@ -63,4 +66,4 @@ const Home: Component = () => {
   );
 };
 
-export default Home;
+export default HomePage;

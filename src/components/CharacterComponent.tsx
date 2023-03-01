@@ -1,7 +1,7 @@
 import { A } from "@solidjs/router";
 import type { Component } from "solid-js";
 
-const Character: Component<{
+const CharacterComponent: Component<{
   id: string;
   image: string;
   name: string;
@@ -42,4 +42,4 @@ const Character: Component<{
   );
 };
 
-export default Character;
+export default CharacterComponent;

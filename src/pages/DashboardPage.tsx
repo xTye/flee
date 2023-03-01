@@ -1,10 +1,10 @@
 import { Component, onMount, createMemo, onCleanup } from "solid-js";
 import { useNavigate } from "@solidjs/router";
-import { navbarHeight } from "../components/navbar/Navbar";
+import { navbarHeight } from "../components/navbar/NavbarComponent";
 import { useSession } from "../auth";
-import { useAdobe } from "../utils/useAdobe";
+import { useAdobe } from "../hooks/AdobeHook";
 
-const Dashboard: Component = () => {
+const DashboardPage: Component = () => {
   const [session, actions] = useSession();
   const navigate = useNavigate();
   let docsDiv: HTMLDivElement = document.createElement("div") as HTMLDivElement;
@@ -51,4 +51,4 @@ const Dashboard: Component = () => {
   );
 };
 
-export default Dashboard;
+export default DashboardPage;

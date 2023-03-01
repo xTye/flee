@@ -1,4 +1,6 @@
-import { FleeEvent, FleeEventMethods, FleeEvents } from "./FleeEvents";
+import { DateInterface } from "../types/DateType";
+import { EventInterface } from "../types/EventType";
+import { EventClass, EventClassMethods } from "./EventClass";
 
 const moonPhases = [
   "🌑🌑",
@@ -52,19 +54,7 @@ const holidays = {
   "10-1": "Beginning of Months of Dreams",
 };
 
-export interface FleeDate {
-  day: number;
-  month: number;
-  year: number;
-  era: number;
-  events?: FleeEvent[];
-}
-
-export interface FleeDateDisplay extends FleeDate {
-  holiday?: string;
-}
-
-export class FleeCalendar implements FleeEventMethods {
+export class CalendarClass implements EventClassMethods {
   public static YEARS_PER_ERA = 300;
   public static MONTHS_PER_YEAR = 10;
   public static DAYS_PER_MONTH = 30;
@@ -84,19 +74,19 @@ export class FleeCalendar implements FleeEventMethods {
     era: 8,
   };
 
-  private selectedDate = FleeCalendar.CURRENT_DATE;
+  private selectedDate = CalendarClass.CURRENT_DATE;
 
-  private events: FleeEvents;
+  private events: EventClass;
 
   constructor() {
-    this.events = new FleeEvents();
+    this.events = new EventClass();
   }
 
   public async populateEvents() {
     await this.events.populateEvents();
   }
 
-  public static validDate(date: FleeDate, strict = true) {
+  public static validDate(date: DateInterface, strict = true) {
     if (
       date.day <= 0 ||
       date.day > 30 ||
@@ -112,7 +102,7 @@ export class FleeCalendar implements FleeEventMethods {
     return true;
   }
 
-  public static toString(date: FleeDate) {
+  public static toString(date: DateInterface) {
     return `${date.day}-${date.month}-${date.year}-${date.era}`;
   }
 
@@ -126,7 +116,7 @@ export class FleeCalendar implements FleeEventMethods {
         era: parseInt(parse[3]),
       };
 
-      FleeCalendar.validDate(date);
+      CalendarClass.validDate(date);
 
       return date;
     } catch (e: any) {
@@ -136,12 +126,12 @@ export class FleeCalendar implements FleeEventMethods {
     return null;
   }
 
-  public getEvent(date: FleeDate) {
+  public getEvent(date: DateInterface) {
     return this.events.getEventFromDate(date);
   }
 
-  public getDates(): FleeDateDisplay[] {
-    let dates = [];
+  public getDates(): DateInterface[] {
+    let dates: DateInterface[] = [];
     const holidayObj = Object.create(holidays);
 
     for (let i = 0; i < 30; i++) {
@@ -150,8 +140,8 @@ export class FleeCalendar implements FleeEventMethods {
         month: this.selectedDate.month,
         year: this.selectedDate.year,
         era: this.selectedDate.era,
+        events: [] as EventInterface[],
         holiday: holidayObj[`${this.selectedDate.month}-${i + 1}`],
-        events: [] as FleeEvent[],
       };
 
       date.events = this.events.getEventFromDate(date);
@@ -162,8 +152,8 @@ export class FleeCalendar implements FleeEventMethods {
     return dates;
   }
 
-  public setSelectedDate(date: FleeDate) {
-    FleeCalendar.validDate(date);
+  public setSelectedDate(date: DateInterface) {
+    CalendarClass.validDate(date);
 
     this.selectedDate = date;
   }
@@ -180,20 +170,20 @@ export class FleeCalendar implements FleeEventMethods {
     return monthNames[month - 1];
   }
 
-  public isCurrentDate(date: FleeDate) {
+  public isCurrentDate(date: DateInterface) {
     return (
-      date.day === FleeCalendar.CURRENT_DATE.day &&
-      date.month === FleeCalendar.CURRENT_DATE.month &&
-      date.year === FleeCalendar.CURRENT_DATE.year &&
-      date.era === FleeCalendar.CURRENT_DATE.era
+      date.day === CalendarClass.CURRENT_DATE.day &&
+      date.month === CalendarClass.CURRENT_DATE.month &&
+      date.year === CalendarClass.CURRENT_DATE.year &&
+      date.era === CalendarClass.CURRENT_DATE.era
     );
   }
 
-  public static formatDate(date: FleeDate | undefined) {
+  public static formatDate(date: DateInterface | undefined) {
     if (!date) return "";
 
     try {
-      FleeCalendar.validDate(date);
+      CalendarClass.validDate(date);
 
       return `${date.day} of ${monthNames[date.month - 1]} in ${
         date.year
