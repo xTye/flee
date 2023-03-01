@@ -1,4 +1,11 @@
-import { Component, createSignal, onCleanup, onMount, Show } from "solid-js";
+import {
+  Component,
+  createSignal,
+  For,
+  onCleanup,
+  onMount,
+  Show,
+} from "solid-js";
 import { createMemo } from "solid-js";
 
 import Leaflet from "leaflet";
@@ -11,12 +18,13 @@ import {
   useUpdateEditMarker,
   useComfirmEditMarker,
   removeAllLeafletListeners,
-} from "../hooks/MapHook";
+} from "../hooks/MapHooks";
 import { MarkerInterface } from "../types/MarkerType";
 import { navbarHeight } from "../components/navbar/NavbarComponent";
 import { useSession } from "../auth";
 
 import MarkerEditorComponent from "../components/map/MarkerEditorComponent";
+import ModalComponent from "../components/ModalComponent";
 import { useNavigate } from "@solidjs/router";
 
 const MapPage: Component = () => {
@@ -26,12 +34,11 @@ const MapPage: Component = () => {
   let map: Leaflet.Map;
   let mapDiv = document.createElement("div") as HTMLDivElement;
 
-  const rmc = removeAllLeafletListeners;
-
   const [marker, setMarker] = createSignal<MarkerInterface>();
   const [editMarker, setEditMarker] = createSignal<MarkerInterface>();
   const [leafletEditMarker, setLeafletEditMarker] =
     createSignal<Leaflet.Marker>();
+  const [smallMapModal, setSmallMapModal] = createSignal(false);
 
   createMemo(() => {
     mapDiv.style.height = window.innerHeight - navbarHeight.height + "px";
@@ -43,9 +50,13 @@ const MapPage: Component = () => {
     map = await useMap(mapDiv, editMarker, setMarker, setLeafletEditMarker);
   });
 
-  onCleanup(() => {
-    rmc(map);
-  });
+  const rmc = removeAllLeafletListeners;
+
+  // TODO: Fix this
+  // onCleanup(() => {
+  //   console.log(map);
+  //   rmc(map);
+  // });
 
   return (
     <>
@@ -56,8 +67,8 @@ const MapPage: Component = () => {
         }}
         class="relative"
       >
-        <div class="absolute top-0 z-[2000]">
-          <div class="relative flex flex-col gap-3 w-72 h-96 m-4 p-4 bg-white rounded-md overflow-hidden">
+        <div class="absolute top-0 z-[5000]">
+          <div class="flex flex-col gap-1 w-72 h-96 m-4 p-4 bg-white rounded-md overflow-hidden">
             <div class="flex font-bold items-center justify-center pb-2 gap-4 border-b-2 border-purple">
               <div class="text-lg">Legend</div>
               <div class="flex flex-col gap-1">
@@ -113,10 +124,7 @@ const MapPage: Component = () => {
                               );
                             }}
                           >
-                            <img
-                              src="/util-images/check.svg"
-                              class="w-4 h-4 "
-                            />
+                            <img src="/util-images/check.svg" class="w-4 h-4" />
                           </button>
                           <button
                             class="p-1 hover:bg-red rounded-md"
@@ -129,10 +137,7 @@ const MapPage: Component = () => {
                               );
                             }}
                           >
-                            <img
-                              src="/util-images/trash.svg"
-                              class="w-4 h-4 "
-                            />
+                            <img src="/util-images/trash.svg" class="w-4 h-4" />
                           </button>
                         </>
                       )}
@@ -197,9 +202,32 @@ const MapPage: Component = () => {
             </Show>
 
             <Show when={marker() && !editMarker()}>
-              <div class="text-3xl">{marker()?.name}</div>
-              <div class="overflow-y-auto break-words h-full">
-                {marker()?.description}
+              <div class="flex flex-col h-full justify-between">
+                <div class="flex flex-col h-full">
+                  <div class="text-3xl">{marker()?.name}</div>
+                  <div class="break-words h-full overflow-y-auto">
+                    {marker()?.description}
+                  </div>
+                </div>
+
+                <div class="flex shrink-0 gap-1 h-24 w-full items-center hover:overflow-x-auto overflow-y-hidden">
+                  <For each={marker()?.maps}>
+                    {(map: string) => (
+                      <>
+                        <Show when={smallMapModal()}>
+                          <ModalComponent setModal={setSmallMapModal}>
+                            <img src={map} class="w-full object-cover" />
+                          </ModalComponent>
+                        </Show>
+                        <img
+                          src={map}
+                          class="h-20"
+                          onClick={() => setSmallMapModal(!smallMapModal())}
+                        />
+                      </>
+                    )}
+                  </For>
+                </div>
               </div>
             </Show>
 

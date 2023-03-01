@@ -11,7 +11,7 @@ import { DateInterface } from "../types/DateType";
 import { navbarHeight } from "../components/navbar/NavbarComponent";
 import { A } from "@solidjs/router";
 
-import Modal from "../components/ModalComponent";
+import ModalComponent from "../components/ModalComponent";
 import DatePickerComponent from "../components/DatePickerComponent";
 
 const CalendarPage: Component = () => {
@@ -51,7 +51,7 @@ const CalendarPage: Component = () => {
           height: (calendarDiv.style.height =
             window.innerHeight - navbarHeight.height + "px"),
         }}
-        class="bg-background p-12"
+        class="relative bg-background p-12"
       >
         <div class="flex flex-col bg-lightPurple h-full rounded-b-md">
           <div class="flex justify-between items-center bg-purple h-20 px-20">
@@ -136,7 +136,7 @@ const CalendarPage: Component = () => {
                   class="object-fit h-8 w-8 rotate-90"
                 />
                 <Show when={modal()}>
-                  <Modal setModal={setModal}>
+                  <ModalComponent setModal={setModal}>
                     <div class="flex flex-col items-center h-full text-2xl text-white p-5 gap-6">
                       <div class="text-3xl">Enter A Custom Date</div>
                       <DatePickerComponent
@@ -145,7 +145,7 @@ const CalendarPage: Component = () => {
                         setDate={changeDate}
                       />
                       <button
-                        class="w-2/5 bg-white rounded-full text-black hover:bg-red"
+                        class="bg-white px-4 rounded-full text-black hover:bg-red"
                         onClick={() => {
                           changeDate(CalendarClass.CURRENT_DATE);
                           setModal(false);
@@ -154,7 +154,7 @@ const CalendarPage: Component = () => {
                         Go to current date
                       </button>
                     </div>
-                  </Modal>
+                  </ModalComponent>
                 </Show>
               </button>
             </div>

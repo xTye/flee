@@ -2,7 +2,7 @@ import { Component, onMount, createMemo, onCleanup } from "solid-js";
 import { useNavigate } from "@solidjs/router";
 import { navbarHeight } from "../components/navbar/NavbarComponent";
 import { useSession } from "../auth";
-import { useAdobe } from "../hooks/AdobeHook";
+import { useAdobe } from "../hooks/AdobeHooks";
 
 const DashboardPage: Component = () => {
   const [session, actions] = useSession();

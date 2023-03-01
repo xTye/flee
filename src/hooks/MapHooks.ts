@@ -1,5 +1,5 @@
 import Leaflet from "leaflet";
-import { Accessor, Setter } from "solid-js";
+import { Accessor, Setter, onCleanup } from "solid-js";
 import { Navigator } from "@solidjs/router";
 
 import { MarkerInterface } from "../types/MarkerType";
@@ -128,6 +128,8 @@ export const useUpdateEditMarker = (
     4
   );
 
+  console.log(marker);
+
   setEditMarker({
     ...marker,
     x: leafletEditMarker.getLatLng().lat,
@@ -173,6 +175,7 @@ export const useRemoveEditMarker = (
 };
 
 export const removeAllLeafletListeners = (map: Leaflet.Map) => {
+  console.log(map);
   map.eachLayer((marker) => {
     if (marker instanceof Leaflet.Marker) {
       marker.off();
