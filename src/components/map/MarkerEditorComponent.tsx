@@ -9,7 +9,7 @@ interface Props {
   setMarker: (marker: MarkerInterface) => void;
 }
 
-const EditMarkerComponent: Component<Props> = (props) => {
+const MarkerEditorComponent: Component<Props> = (props) => {
   return (
     <>
       <div class="flex gap-1">
@@ -81,4 +81,4 @@ const EditMarkerComponent: Component<Props> = (props) => {
   );
 };
 
-export default EditMarkerComponent;
+export default MarkerEditorComponent;

@@ -16,7 +16,7 @@ import { MarkerInterface } from "../types/MarkerType";
 import { navbarHeight } from "../components/navbar/NavbarComponent";
 import { useSession } from "../auth";
 
-import EditMarkerComponent from "../components/map/EditMarkerComponent";
+import MarkerEditorComponent from "../components/map/MarkerEditorComponent";
 import { useNavigate } from "@solidjs/router";
 
 const MapPage: Component = () => {
@@ -185,7 +185,7 @@ const MapPage: Component = () => {
                 {(insLeafletEditMarker: Leaflet.Marker) => (
                   <Show when={editMarker()} keyed>
                     {(insMarker: MarkerInterface) => (
-                      <EditMarkerComponent
+                      <MarkerEditorComponent
                         marker={insMarker}
                         leafletMarker={insLeafletEditMarker}
                         setMarker={setEditMarker}
