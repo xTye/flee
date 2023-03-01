@@ -38,7 +38,10 @@ const MapPage: Component = () => {
   const [editMarker, setEditMarker] = createSignal<MarkerInterface>();
   const [leafletEditMarker, setLeafletEditMarker] =
     createSignal<Leaflet.Marker>();
-  const [smallMapModal, setSmallMapModal] = createSignal(false);
+  const [smallMapModal, setSmallMapModal] = createSignal({
+    show: false,
+    i: 0,
+  });
 
   createMemo(() => {
     mapDiv.style.height = window.innerHeight - navbarHeight.height + "px";
@@ -212,17 +215,27 @@ const MapPage: Component = () => {
 
                 <div class="flex shrink-0 gap-1 h-24 w-full items-center hover:overflow-x-auto overflow-y-hidden">
                   <For each={marker()?.maps}>
-                    {(map: string) => (
+                    {(map, i) => (
                       <>
-                        <Show when={smallMapModal()}>
-                          <ModalComponent setModal={setSmallMapModal}>
+                        <Show
+                          when={
+                            smallMapModal().show && i() === smallMapModal().i
+                          }
+                        >
+                          <ModalComponent
+                            setModal={(show: boolean) =>
+                              setSmallMapModal({ i: 0, show })
+                            }
+                          >
                             <img src={map} class="w-full object-cover" />
                           </ModalComponent>
                         </Show>
                         <img
                           src={map}
                           class="h-20"
-                          onClick={() => setSmallMapModal(!smallMapModal())}
+                          onClick={() =>
+                            setSmallMapModal({ i: i(), show: true })
+                          }
                         />
                       </>
                     )}
