@@ -21,7 +21,7 @@ const EventPage: Component = () => {
 
   onMount(async () => {
     const event = await useFetchEvent(params.id);
-    event ? setEvent(event) : navigate("/");
+    event ? setEvent(event) : navigate("/events");
   });
 
   return (

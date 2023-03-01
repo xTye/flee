@@ -17,7 +17,7 @@ export const useFetchCharacter = async (id: string) => {
     const data = doc.data();
     if (!data) throw new Error("No data found for character.");
 
-    const character = {
+    const character: CharacterInterface = {
       id: doc.id,
       userId: data.userId,
       name: data.name,

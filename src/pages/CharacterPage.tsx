@@ -1,15 +1,43 @@
-import { Component, Show, createResource } from "solid-js";
-import { useParams } from "@solidjs/router";
+import {
+  Component,
+  Show,
+  createResource,
+  createSignal,
+  onMount,
+} from "solid-js";
+import { useNavigate, useParams } from "@solidjs/router";
 import { A } from "@solidjs/router";
 import { useSession } from "../auth";
 
 import { useFetchCharacter } from "../services/CharacterService";
+import { CharacterInterface } from "../types/CharacterType";
+import { useAdobe } from "../hooks/AdobeHooks";
 
 const Character: Component = () => {
   const [session, actions] = useSession();
+  const navigate = useNavigate();
   const params = useParams();
 
-  const [character] = createResource(() => params.id, useFetchCharacter);
+  const [character, setCharacter] = createSignal<CharacterInterface>();
+
+  onMount(async () => {
+    const character = await useFetchCharacter(params.id);
+    if (character) setCharacter(character);
+    else return navigate("/characters");
+
+    if (character.sheetType === "pdf") {
+      const arr = character.sheetType.split("/");
+
+      useAdobe(character.sheet, arr[arr.length - 1]);
+    } else if (character.sheetType === "embed") {
+      const div = document.getElementById("character-sheet");
+      const embed = document.createElement("embed");
+      embed.src = character.sheet;
+      embed.style.height = "100%";
+
+      div?.appendChild(embed);
+    }
+  });
 
   return (
     <>
@@ -43,8 +71,8 @@ const Character: Component = () => {
               />
             </div>
             <div
-              class="flex flex-col gap-4 text-xl text-justify break-words"
-              innerHTML={character()?.sheet}
+              class="flex flex-col gap-4 h-[600px] text-xl text-justify break-words"
+              id="character-sheet"
             />
           </div>
           <img

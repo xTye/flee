@@ -10,13 +10,13 @@ export const useAdobe = (url: string, fileName: string) => {
 
   const cb = async () => {
     try {
-      var adobeDCView = new AdobeDC.View({
+      let adobeDCView = new AdobeDC.View({
         clientId: `${
           import.meta.env.DEV
             ? import.meta.env.VITE_ADOBE_PDF_LOCAL
             : import.meta.env.VITE_ADOBE_PDF
         }`,
-        divId: "adobe-dc-view",
+        divId: "character-sheet",
       });
 
       await adobeDCView.previewFile(

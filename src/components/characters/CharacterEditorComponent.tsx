@@ -27,7 +27,7 @@ const CharacterEditorComponent: Component<{
               <div>Home</div>
               <div>Moves</div>
             </div>
-            <div class="flex flex-col justify-center w-full h-full gap-6">
+            <div class="flex flex-col justify-between w-full h-full">
               <input
                 value={props.character().name}
                 class="w-2/5 text-black rounded-sm"
