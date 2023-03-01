@@ -189,11 +189,11 @@ const MapPage: Component = () => {
               <Show when={leafletEditMarker()} keyed>
                 {(insLeafletEditMarker: Leaflet.Marker) => (
                   <Show when={editMarker()} keyed>
-                    {(insMarker: MarkerInterface) => (
+                    {(insEditMarker: MarkerInterface) => (
                       <MarkerEditorComponent
-                        marker={insMarker}
+                        insEditMarker={insEditMarker}
                         leafletMarker={insLeafletEditMarker}
-                        setMarker={setEditMarker}
+                        setEditMarker={setEditMarker}
                       />
                     )}
                   </Show>
@@ -230,13 +230,6 @@ const MapPage: Component = () => {
                 </div>
               </div>
             </Show>
-
-            {/* <Show when={!location()}>
-              <div class="text-3xl">{location().title}</div>
-              <div class="overflow-y-auto break-words h-full">
-                {location().description}
-              </div>
-            </Show> */}
           </div>
         </div>
         <div ref={mapDiv}></div>

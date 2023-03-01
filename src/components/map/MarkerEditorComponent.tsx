@@ -4,9 +4,9 @@ import { MarkerInterface } from "../../types/MarkerType";
 import { icons } from "../../hooks/MapHooks";
 
 interface Props {
-  marker: MarkerInterface;
+  insEditMarker: MarkerInterface;
   leafletMarker: Leaflet.Marker;
-  setMarker: (marker: MarkerInterface) => void;
+  setEditMarker: (marker: MarkerInterface) => void;
 }
 
 const MarkerEditorComponent: Component<Props> = (props) => {
@@ -23,29 +23,29 @@ const MarkerEditorComponent: Component<Props> = (props) => {
         </div>
         <div class="flex flex-col gap-1">
           <input
-            value={props.marker.name}
+            value={props.insEditMarker.name}
             class="w-full bg-lightWhite focus:outline-none"
             onChange={(e) => {
-              props.setMarker({
-                ...props.marker,
+              props.setEditMarker({
+                ...props.insEditMarker,
                 name: e.currentTarget.value,
               });
             }}
           />
 
           <input
-            value={props.marker.description}
+            value={props.insEditMarker.description}
             class="w-full bg-lightWhite focus:outline-none"
             onChange={(e) => {
-              props.setMarker({
-                ...props.marker,
+              props.setEditMarker({
+                ...props.insEditMarker,
                 description: e.currentTarget.value,
               });
             }}
           />
 
-          <div>{props.marker.x}</div>
-          <div>{props.marker.y}</div>
+          <div>{props.insEditMarker.x}</div>
+          <div>{props.insEditMarker.y}</div>
 
           <select
             class="rounded-sm"
@@ -54,30 +54,42 @@ const MarkerEditorComponent: Component<Props> = (props) => {
 
               props.leafletMarker.setIcon(icons[color]);
 
-              props.setMarker({
-                ...props.marker,
+              props.setEditMarker({
+                ...props.insEditMarker,
                 color,
               });
             }}
           >
             <option
-              selected={!props.marker.color || props.marker.color === "black"}
+              selected={
+                !props.insEditMarker.color ||
+                props.insEditMarker.color === "black"
+              }
               value={"black"}
             >
               Black
             </option>
-            <option selected={props.marker.color === "red"} value={"red"}>
+            <option
+              selected={props.insEditMarker.color === "red"}
+              value={"red"}
+            >
               Red
             </option>
-            <option selected={props.marker.color === "blue"} value={"blue"}>
+            <option
+              selected={props.insEditMarker.color === "blue"}
+              value={"blue"}
+            >
               Blue
             </option>
-            <option selected={props.marker.color === "gold"} value={"gold"}>
+            <option
+              selected={props.insEditMarker.color === "gold"}
+              value={"gold"}
+            >
               Gold
             </option>
           </select>
 
-          <For each={props.marker.maps}>
+          <For each={props.insEditMarker.maps}>
             {(map, i) => (
               <>
                 <div class="flex">
@@ -85,9 +97,9 @@ const MarkerEditorComponent: Component<Props> = (props) => {
                     value={map}
                     class="w-full bg-lightWhite focus:outline-none"
                     onChange={(e) => {
-                      props.marker.maps[i()] = e.currentTarget.value;
+                      props.insEditMarker.maps[i()] = e.currentTarget.value;
 
-                      props.setMarker(props.marker);
+                      props.setEditMarker(props.insEditMarker);
                     }}
                   />
                   <button class="p-1 hover:bg-red rounded-md">
@@ -97,11 +109,15 @@ const MarkerEditorComponent: Component<Props> = (props) => {
                       onClick={() => {
                         const maps: string[] = [];
 
-                        for (let j = 0; j < props.marker.maps.length; j++)
-                          if (j !== i()) maps.push(props.marker.maps[j]);
+                        for (
+                          let j = 0;
+                          j < props.insEditMarker.maps.length;
+                          j++
+                        )
+                          if (j !== i()) maps.push(props.insEditMarker.maps[j]);
 
-                        props.setMarker({
-                          ...props.marker,
+                        props.setEditMarker({
+                          ...props.insEditMarker,
                           maps,
                         });
                       }}
@@ -118,9 +134,10 @@ const MarkerEditorComponent: Component<Props> = (props) => {
                 src="/util-images/plus.svg"
                 class="w-4 h-4"
                 onClick={() => {
-                  props.marker.maps.push("");
+                  const maps: string[] = [...props.insEditMarker.maps];
+                  maps.push("");
 
-                  props.setMarker({ ...props.marker });
+                  props.setEditMarker({ ...props.insEditMarker, maps });
                 }}
               />
             </button>
