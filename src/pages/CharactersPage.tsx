@@ -1,14 +1,12 @@
 import { Component, For, createSignal, onMount } from "solid-js";
 
 import Character from "../components/CharacterComponent";
-import {
-  Character as CharacterType,
-  useFetchCharacters,
-} from "../hooks/character";
 import CharacterComponent from "../components/CharacterComponent";
+import { useFetchCharacters } from "../services/CharacterService";
+import { CharacterInterface } from "../types/CharacterType";
 
 const CharactersPage: Component = () => {
-  const [characters, setCharacters] = createSignal<CharacterType[]>([]);
+  const [characters, setCharacters] = createSignal<CharacterInterface[]>([]);
 
   onMount(() => {
     useFetchCharacters().then((characters) => {

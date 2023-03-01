@@ -8,22 +8,7 @@ import {
   query,
 } from "firebase/firestore";
 import { firebaseStore } from "..";
-
-export interface Character {
-  id: string;
-  userId?: string;
-  name: string;
-  title: string;
-  class: string;
-  sheet: string;
-  sheetType: string;
-  home?: string;
-  description: string;
-  image: string;
-  moves: string;
-  movesImage: string;
-  type: string;
-}
+import { CharacterInterface } from "../types/CharacterType";
 
 export const useFetchCharacter = async (id: string) => {
   try {
@@ -58,7 +43,7 @@ export const useFetchCharacters = async () => {
   try {
     const docs = await getDocs(collection(firebaseStore, "characters"));
 
-    const characters: Character[] = [];
+    const characters: CharacterInterface[] = [];
 
     docs.forEach((doc) => {
       const data = doc.data();

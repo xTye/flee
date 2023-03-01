@@ -1,10 +1,9 @@
 import { Component, Show, createResource } from "solid-js";
 import { useParams } from "@solidjs/router";
-import { useFetchEvent } from "../hooks/event";
-import { FleeCalendar } from "../classes/FleeCalendar";
 import { A } from "@solidjs/router";
 import { useSession } from "../auth";
-import { useFetchCharacter } from "../hooks/character";
+
+import { useFetchCharacter } from "../services/CharacterService";
 
 const Character: Component = () => {
   const [session, actions] = useSession();
