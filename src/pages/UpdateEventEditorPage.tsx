@@ -27,30 +27,34 @@ const UpdateEventEditorPage: Component = () => {
     return <div>Not admin</div>;
   }
 
-  onMount(() => {
-    useFetchEvent(params.id).then((event) => {
-      editorDefaultContent = event?.contents || "";
-      event ? setEvent(event) : navigate("/");
-    });
+  onMount(async () => {
+    const event = await useFetchEvent(params.id);
+    editorDefaultContent = event?.contents || "";
+    event ? setEvent(event) : navigate("/");
   });
 
   const updateEvent = async () => {
-    const insEvent = event();
-    if (!insEvent || !insEvent.id) return;
+    try {
+      const insEvent = event();
+      if (!insEvent || !insEvent.id) throw new Error("Event is not defined");
 
-    console.log("Updating event...");
-    const res = await updateDoc(doc(firebaseStore, "events", insEvent.id), {
-      title: insEvent.title,
-      description: insEvent.description,
-      contents: editor()?.getHTML() || "",
-      thumbnail: insEvent.thumbnail,
-      day: insEvent.date.day,
-      month: insEvent.date.month,
-      year: insEvent.date.year,
-      era: insEvent.date.era,
-      updatedAt: new Date(),
-    });
-    console.log("Updated event", res);
+      console.log("Updating event...");
+      const res = await updateDoc(doc(firebaseStore, "events", insEvent.id), {
+        title: insEvent.title,
+        description: insEvent.description,
+        contents: editor()?.getHTML() || "",
+        thumbnail: insEvent.thumbnail,
+        day: insEvent.date.day,
+        month: insEvent.date.month,
+        year: insEvent.date.year,
+        era: insEvent.date.era,
+        updatedAt: new Date(),
+      });
+      console.log("Updated event", res);
+      navigate(`/events/${insEvent.id}`);
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   return (

@@ -37,9 +37,10 @@ const Character: Component = () => {
           <div class="relative flex flex-col gap-4 p-3 w-full overflow-hidden">
             <div class="text-base">{character()?.type}</div>
             <div class="flex items-center gap-8">
-              <div class="text-base text-justify">
-                {character()?.description}
-              </div>
+              <div
+                class="text-base text-justify"
+                innerHTML={character()?.description}
+              />
             </div>
             <div
               class="flex flex-col gap-4 text-xl text-justify break-words"

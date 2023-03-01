@@ -10,7 +10,6 @@ const CharactersPage: Component = () => {
 
   onMount(() => {
     useFetchCharacters().then((characters) => {
-      console.log(characters);
       characters ? setCharacters(characters) : null;
     });
   });

@@ -30,20 +30,25 @@ const CreateEventEditorPage: Component = () => {
   }
 
   const postEvent = async () => {
-    console.log("Posting event...");
-    const res = await addDoc(collection(firebaseStore, "events"), {
-      title: event().title,
-      description: event().description,
-      contents: editor()?.getHTML() || "",
-      thumbnail: event().thumbnail,
-      day: event().date.day,
-      month: event().date.month,
-      year: event().date.year,
-      era: event().date.era,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    });
-    console.log("Posted event", res);
+    try {
+      console.log("Posting event...");
+      const res = await addDoc(collection(firebaseStore, "events"), {
+        title: event().title,
+        description: event().description,
+        contents: editor()?.getHTML() || "",
+        thumbnail: event().thumbnail,
+        day: event().date.day,
+        month: event().date.month,
+        year: event().date.year,
+        era: event().date.era,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      });
+      console.log("Posted event", res);
+      navigate(`/events/${res.id}`);
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   return (

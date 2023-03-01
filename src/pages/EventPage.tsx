@@ -1,15 +1,28 @@
-import { Component, Show, createResource } from "solid-js";
-import { useParams } from "@solidjs/router";
+import {
+  Component,
+  Show,
+  createResource,
+  createSignal,
+  onMount,
+} from "solid-js";
+import { useNavigate, useParams } from "@solidjs/router";
 import { A } from "@solidjs/router";
 import { useSession } from "../auth";
 import { useFetchEvent } from "../services/EventService";
 import { CalendarClass } from "../classes/CalendarClass";
+import { EventInterface } from "../types/EventType";
 
 const EventPage: Component = () => {
   const [session, actions] = useSession();
+  const navigate = useNavigate();
   const params = useParams();
 
-  const [event] = createResource(() => params.id, useFetchEvent);
+  const [event, setEvent] = createSignal<EventInterface | undefined>();
+
+  onMount(async () => {
+    const event = await useFetchEvent(params.id);
+    event ? setEvent(event) : navigate("/");
+  });
 
   return (
     <>

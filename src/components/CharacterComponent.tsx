@@ -32,7 +32,7 @@ const CharacterComponent: Component<{
         <div class="flex justify-center">
           <A
             href={`/characters/${props.id}`}
-            class="w-3/5 h-10 bg-yellow text-center rounded-full hover:bg-red"
+            class="flex items-center justify-center w-3/5 h-10 bg-yellow text-center rounded-full hover:bg-red"
           >
             Read more!
           </A>

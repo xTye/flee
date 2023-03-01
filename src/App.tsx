@@ -15,6 +15,8 @@ import EventPage from "./pages/EventPage";
 import DashboardPage from "./pages/DashboardPage";
 import CreateEventEditorPage from "./pages/CreateEventEditorPage";
 import UpdateEventEditorPage from "./pages/UpdateEventEditorPage";
+import CreateCharacterEditorPage from "./pages/CreateCharacterEditorPage";
+import UpdateCharacterEditorPage from "./pages/UpdateCharacterEditorPage";
 
 const App: Component = () => {
   return (
@@ -33,6 +35,14 @@ const App: Component = () => {
             <Route path="/dashboard" component={DashboardPage} />
             <Route path="/event-editor" component={CreateEventEditorPage} />
             <Route path="/event-editor/:id" component={UpdateEventEditorPage} />
+            <Route
+              path="/character-editor"
+              component={CreateCharacterEditorPage}
+            />
+            <Route
+              path="/character-editor/:id"
+              component={UpdateCharacterEditorPage}
+            />
           </Routes>
         </Router>
       </SessionProvider>

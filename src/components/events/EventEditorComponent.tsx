@@ -1,7 +1,7 @@
 import { Accessor, Component } from "solid-js";
 
 import DatePickerComponent from "../DatePickerComponent";
-import TiptapComponent from "./TiptapComponent";
+import TiptapComponent from "../TiptapComponent";
 import { Editor } from "@tiptap/core";
 import { EventInterface } from "../../types/EventType";
 

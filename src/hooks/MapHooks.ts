@@ -247,11 +247,10 @@ const leafletClickListener = (
   leafletMarker.removeEventListener("click");
 
   leafletMarker.addEventListener("click", () => {
-    if (!editMarker()) {
-      setMarker(marker);
-      setLeafletEditMarker(leafletMarker);
-    }
+    if (editMarker()) return;
 
+    setMarker(marker);
+    setLeafletEditMarker(leafletMarker);
     map.flyTo([marker.x, marker.y], 4);
   });
 };
