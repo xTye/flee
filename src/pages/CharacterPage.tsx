@@ -71,7 +71,7 @@ const Character: Component = () => {
               />
             </div>
             <div
-              class="flex flex-col gap-4 h-[600px] text-xl text-justify break-words"
+              class="flex flex-col gap-4 h-[800px] text-xl text-justify break-words"
               id="character-sheet"
             />
           </div>

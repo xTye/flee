@@ -23,7 +23,7 @@ const CharacterComponent: Component<{
           <div>{props.name}</div>
           <div>{props.class}</div>
         </div>
-        <div class="text-sm text-yellow">{props.title}</div>
+        <div class="text-base text-yellow">{props.title}</div>
         <div class="text-sm h-52">{props.description}</div>
         <div class="flex justify-between gap-2 items-center">
           <div class="text-sm">{props.mainAttack}</div>
