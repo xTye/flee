@@ -1,14 +1,15 @@
 import { Accessor, Component, createSignal, For } from "solid-js";
 import { generateArray } from "../utils/generateArray";
-import { FleeCalendar, FleeDate } from "../classes/FleeCalendar";
+import { DateInterface } from "../types/DateType";
+import { CalendarClass } from "../classes/CalendarClass";
 
 interface DatePickerProps {
-  defaultDate: FleeDate;
-  date: Accessor<FleeDate>;
-  setDate: (date: FleeDate) => void;
+  defaultDate: DateInterface;
+  date: Accessor<DateInterface>;
+  setDate: (date: DateInterface) => void;
 }
 
-const DatePicker: Component<DatePickerProps> = (props) => {
+const DatePickerComponent: Component<DatePickerProps> = (props) => {
   return (
     <>
       <div class="flex h-full w-full">
@@ -30,7 +31,7 @@ const DatePicker: Component<DatePickerProps> = (props) => {
               });
             }}
           >
-            <For each={generateArray(FleeCalendar.DAYS_PER_MONTH)}>
+            <For each={generateArray(CalendarClass.DAYS_PER_MONTH)}>
               {(day) => (
                 <option selected={day === props.defaultDate.day} value={day}>
                   {day}
@@ -50,13 +51,13 @@ const DatePicker: Component<DatePickerProps> = (props) => {
               });
             }}
           >
-            <For each={generateArray(FleeCalendar.MONTHS_PER_YEAR)}>
+            <For each={generateArray(CalendarClass.MONTHS_PER_YEAR)}>
               {(month) => (
                 <option
                   selected={month === props.defaultDate.month}
                   value={month}
                 >
-                  {FleeCalendar.getMonthName(month)}
+                  {CalendarClass.getMonthName(month)}
                 </option>
               )}
             </For>
@@ -73,7 +74,7 @@ const DatePicker: Component<DatePickerProps> = (props) => {
               });
             }}
           >
-            <For each={generateArray(FleeCalendar.YEARS_PER_ERA)}>
+            <For each={generateArray(CalendarClass.YEARS_PER_ERA)}>
               {(year) => (
                 <option selected={year === props.defaultDate.year} value={year}>
                   {year}
@@ -93,7 +94,7 @@ const DatePicker: Component<DatePickerProps> = (props) => {
               });
             }}
           >
-            <For each={generateArray(FleeCalendar.ERA_CAP)}>
+            <For each={generateArray(CalendarClass.ERA_CAP)}>
               {(era) => (
                 <option selected={era === props.defaultDate.era} value={era}>
                   {era}
@@ -107,4 +108,4 @@ const DatePicker: Component<DatePickerProps> = (props) => {
   );
 };
 
-export default DatePicker;
+export default DatePickerComponent;

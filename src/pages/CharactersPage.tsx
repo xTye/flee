@@ -1,14 +1,14 @@
 import type { Component } from "solid-js";
 
-import Character from "../components/Character";
+import CharacterComponent from "../components/CharacterComponent";
 
-const Characters: Component = () => {
+const CharactersPage: Component = () => {
   return (
     <>
       <div class="min-h-screen bg-background text-text text-justify pt-10">
         <div class="pl-8 text-7xl">The Wandering Eyes</div>
         <div class="flex justify-between">
-          <Character
+          <CharacterComponent
             image={"/characters/character-images/rashaga.PNG"}
             name={"Rashaga Taga"}
             class={"Sorcerer 5 | Bard 1"}
@@ -19,7 +19,7 @@ const Characters: Component = () => {
             mainAttack={"Twin spell haste"}
             mainAttackImage={"/campaign-images/logo-edited.png"}
           />
-          <Character
+          <CharacterComponent
             image={"/characters/character-images/instance.PNG"}
             name={"Instance Number 2"}
             class={"Psion 5 | Wizard 1"}
@@ -30,7 +30,7 @@ const Characters: Component = () => {
             mainAttack={"Phase rift into phase shot, for a transpostion bolt"}
             mainAttackImage={"/campaign-images/logo-edited.png"}
           />
-          <Character
+          <CharacterComponent
             image={"/characters/character-images/nola.png"}
             name={"Nola"}
             class={"Paladin 6"}
@@ -41,7 +41,7 @@ const Characters: Component = () => {
             mainAttack={"Darkhand divine smite"}
             mainAttackImage={"/campaign-images/logo-edited.png"}
           />
-          <Character
+          <CharacterComponent
             image={"/characters/character-images/Ravyn.png"}
             name={"Ravyn"}
             class={"Occultist 5 | Cleric 1"}
@@ -55,7 +55,7 @@ const Characters: Component = () => {
         </div>
         <div class="pl-8 text-7xl">Former Members</div>
         <div class="flex justify-between">
-          <Character
+          <CharacterComponent
             image={"/characters/character-images/eldawyn.PNG"}
             name={"Noc (Deceased)"}
             class={"Warlock 6"}
@@ -66,7 +66,7 @@ const Characters: Component = () => {
             mainAttack={"Being dead"}
             mainAttackImage={"/campaign-images/logo-edited.png"}
           />
-          <Character
+          <CharacterComponent
             image={"/characters/character-images/takari.png"}
             name={"Takari Eversoar"}
             class={"Bard"}
@@ -77,7 +77,7 @@ const Characters: Component = () => {
             mainAttack={"Puns"}
             mainAttackImage={"/campaign-images/logo-edited.png"}
           />
-          <Character
+          <CharacterComponent
             image={"/characters/character-images/scarlett.png"}
             name={"Scarlett von Brand"}
             class={"Druid"}
@@ -94,4 +94,4 @@ const Characters: Component = () => {
   );
 };
 
-export default Characters;
+export default CharactersPage;

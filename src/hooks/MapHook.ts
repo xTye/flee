@@ -1,6 +1,13 @@
 import Leaflet from "leaflet";
-import { Accessor, Setter, onCleanup } from "solid-js";
-import { useFetchMarkers, Marker } from "../hooks/markers";
+import { Accessor, Setter } from "solid-js";
+import { Navigator } from "@solidjs/router";
+
+import { MarkerInterface } from "../types/MarkerType";
+import {
+  useUpdateMarker,
+  useCreateMarker,
+  useFetchMarkers,
+} from "../services/MarkerService";
 
 export const icons: any = {
   red: Leaflet.icon({
@@ -27,8 +34,8 @@ export const icons: any = {
 
 export const useMap = async (
   div: HTMLDivElement,
-  editMarker: Accessor<Marker | undefined>,
-  setMarker: Setter<Marker>,
+  editMarker: Accessor<MarkerInterface | undefined>,
+  setMarker: Setter<MarkerInterface | undefined>,
   setLeafletEditMarker: Setter<Leaflet.Marker>
 ) => {
   const map = Leaflet.map(div, {
@@ -43,30 +50,22 @@ export const useMap = async (
   }).addTo(map);
 
   const markers = await useFetchMarkers();
-
   if (!markers) return map;
 
   for (const marker of markers) {
     const leafletMarker = Leaflet.marker([marker.x, marker.y], {
       icon: icons[marker.color],
       title: marker.name,
-    })
-      .addTo(map)
-      .addEventListener("click", () => {
-        if (!editMarker()) {
-          setMarker({
-            name: marker.name,
-            description: marker.description,
-            x: marker.x,
-            y: marker.y,
-            color: marker.color,
-          });
+    }).addTo(map);
 
-          setLeafletEditMarker(leafletMarker);
-        }
-
-        map.flyTo([marker.x, marker.y], 4);
-      });
+    leafletClickListener(
+      map,
+      leafletMarker,
+      marker,
+      setMarker,
+      editMarker,
+      setLeafletEditMarker
+    );
   }
 
   worldLayer.redraw();
@@ -76,8 +75,8 @@ export const useMap = async (
 
 export const useCreateEditMarker = (
   map: Leaflet.Map,
-  editMarker: Accessor<Marker | undefined>,
-  setEditMarker: Setter<Marker>,
+  editMarker: Accessor<MarkerInterface | undefined>,
+  setEditMarker: Setter<MarkerInterface>,
   setLeafletEditMarker: Setter<Leaflet.Marker>
 ) => {
   const center = map.getCenter();
@@ -91,11 +90,13 @@ export const useCreateEditMarker = (
   map.flyTo([center.lat, center.lng], 4);
 
   setEditMarker({
+    id: "",
     name: "",
     description: "",
     x: leafletMarker.getLatLng().lat,
     y: leafletMarker.getLatLng().lng,
-    color: "",
+    color: "black",
+    maps: [],
   });
 
   leafletMarker.addEventListener("drag", () => {
@@ -115,9 +116,9 @@ export const useCreateEditMarker = (
 
 export const useUpdateEditMarker = (
   map: Leaflet.Map,
-  marker: Marker,
-  editMarker: Accessor<Marker | undefined>,
-  setEditMarker: Setter<Marker>,
+  marker: MarkerInterface,
+  editMarker: Accessor<MarkerInterface | undefined>,
+  setEditMarker: Setter<MarkerInterface>,
   leafletEditMarker: Leaflet.Marker
 ) => {
   leafletEditMarker.dragging?.enable();
@@ -128,21 +129,18 @@ export const useUpdateEditMarker = (
   );
 
   setEditMarker({
-    name: marker.name,
-    description: marker.description,
+    ...marker,
     x: leafletEditMarker.getLatLng().lat,
     y: leafletEditMarker.getLatLng().lng,
-    color: marker.color,
     previousData: {
-      name: marker.name,
-      description: marker.description,
+      ...marker,
       x: leafletEditMarker.getLatLng().lat,
       y: leafletEditMarker.getLatLng().lng,
-      color: marker.color,
     },
   });
 
   leafletEditMarker.addEventListener("drag", () => {
+    // Accessor because editMarker() is undefined
     const insEditMarker = editMarker();
     if (!insEditMarker) return;
 
@@ -156,12 +154,11 @@ export const useUpdateEditMarker = (
 
 export const useRemoveEditMarker = (
   map: Leaflet.Map,
-  editMarker: Marker | undefined,
+  editMarker: MarkerInterface | undefined,
   leafletEditMarker: Leaflet.Marker,
-  setEditMarker: Setter<Marker | undefined>
+  setEditMarker: Setter<MarkerInterface | undefined>
 ) => {
-  leafletEditMarker.removeEventListener("drag");
-
+  // Previous Data is undefined when the marker is new
   if (!editMarker?.previousData) leafletEditMarker.removeFrom(map);
   else {
     leafletEditMarker.setLatLng(
@@ -169,27 +166,89 @@ export const useRemoveEditMarker = (
     );
   }
 
+  leafletEditMarker.removeEventListener("drag");
   leafletEditMarker.dragging?.disable();
 
   setEditMarker(undefined);
 };
 
-export const useComfirmEditMarker = (
+export const removeAllLeafletListeners = (map: Leaflet.Map) => {
+  map.eachLayer((marker) => {
+    if (marker instanceof Leaflet.Marker) {
+      marker.off();
+    }
+  });
+};
+
+export const useComfirmEditMarker = async (
   map: Leaflet.Map,
-  editMarker: Marker | undefined,
+  editMarker: Accessor<MarkerInterface | undefined>,
   leafletEditMarker: Leaflet.Marker,
-  setEditMarker: Setter<Marker | undefined>
+  setLeafletEditMarker: Setter<Leaflet.Marker>,
+  setEditMarker: Setter<MarkerInterface | undefined>,
+  setMarker: Setter<MarkerInterface | undefined>,
+  navigator: Navigator
 ) => {
-  leafletEditMarker.removeEventListener("drag");
+  try {
+    const insEditMarker = editMarker();
+    if (!insEditMarker) throw new Error("Edit Marker is undefined");
 
-  if (!editMarker?.previousData) leafletEditMarker.removeFrom(map);
-  else {
-    leafletEditMarker.setLatLng(
-      new Leaflet.LatLng(editMarker.previousData.x, editMarker.previousData.y)
+    const marker: MarkerInterface = {
+      name: insEditMarker.name,
+      description: insEditMarker.description,
+      x: insEditMarker.x,
+      y: insEditMarker.y,
+      color: insEditMarker.color,
+      maps: insEditMarker.maps,
+    };
+
+    // Call services
+    let id = "";
+
+    if (insEditMarker.id && insEditMarker.previousData) {
+      await useUpdateMarker(insEditMarker.id, marker);
+      id = insEditMarker.id;
+    } else id = await useCreateMarker(marker);
+
+    // Update click listener
+    leafletClickListener(
+      map,
+      leafletEditMarker,
+      { ...marker, id },
+      setMarker,
+      editMarker,
+      setLeafletEditMarker
     );
+
+    leafletEditMarker.removeEventListener("drag");
+    leafletEditMarker.dragging?.disable();
+
+    setMarker({
+      ...marker,
+      id: insEditMarker.id,
+    });
+    setEditMarker(undefined);
+  } catch (e) {
+    console.error(e);
   }
+};
 
-  leafletEditMarker.dragging?.disable();
+const leafletClickListener = (
+  map: Leaflet.Map,
+  leafletMarker: Leaflet.Marker,
+  marker: MarkerInterface,
+  setMarker: Setter<MarkerInterface | undefined>,
+  editMarker: Accessor<MarkerInterface | undefined>,
+  setLeafletEditMarker: Setter<Leaflet.Marker>
+) => {
+  leafletMarker.removeEventListener("click");
 
-  setEditMarker(undefined);
+  leafletMarker.addEventListener("click", () => {
+    if (!editMarker()) {
+      setMarker(marker);
+      setLeafletEditMarker(leafletMarker);
+    }
+
+    map.flyTo([marker.x, marker.y], 4);
+  });
 };

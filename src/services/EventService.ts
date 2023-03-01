@@ -7,9 +7,9 @@ import {
   orderBy,
   query,
 } from "firebase/firestore";
-import { FleeCalendar } from "../classes/FleeCalendar";
-import { FleeEvent } from "../classes/FleeEvents";
+import { CalendarClass } from "../classes/CalendarClass";
 import { firebaseStore } from "..";
+import { EventInterface } from "../types/EventType";
 
 export const useFetchEvent = async (id?: string) => {
   try {
@@ -26,7 +26,7 @@ export const useFetchEvent = async (id?: string) => {
     };
 
     // Validation checking. Throw errors if invalid.
-    FleeCalendar.validDate(date);
+    CalendarClass.validDate(date);
 
     const event = {
       id: doc.id,
@@ -55,7 +55,7 @@ export const useFetchEvents = async () => {
       )
     );
 
-    const events: FleeEvent[] = [];
+    const events: EventInterface[] = [];
 
     docs.forEach((doc) => {
       const data = doc.data();
@@ -68,7 +68,7 @@ export const useFetchEvents = async () => {
       };
 
       // Validation checking. Throw errors if invalid.
-      FleeCalendar.validDate(date);
+      CalendarClass.validDate(date);
 
       events.push({
         id: doc.id,

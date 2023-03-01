@@ -9,23 +9,27 @@ import {
   useCreateEditMarker,
   useRemoveEditMarker,
   useUpdateEditMarker,
-} from "../utils/useMap";
-import { Marker } from "../hooks/markers";
-import { navbarHeight } from "../components/navbar/Navbar";
+  useComfirmEditMarker,
+  removeAllLeafletListeners,
+} from "../hooks/MapHook";
+import { MarkerInterface } from "../types/MarkerType";
+import { navbarHeight } from "../components/navbar/NavbarComponent";
 import { useSession } from "../auth";
 
-import EditMarker from "../components/map/EditMarker";
+import EditMarkerComponent from "../components/map/EditMarkerComponent";
+import { useNavigate } from "@solidjs/router";
 
-const Map: Component = () => {
+const MapPage: Component = () => {
   const [session, actions] = useSession();
+  const navigator = useNavigate();
 
   let map: Leaflet.Map;
   let mapDiv = document.createElement("div") as HTMLDivElement;
 
-  const rmc = useRemoveEditMarker;
+  const rmc = removeAllLeafletListeners;
 
-  const [marker, setMarker] = createSignal<Marker>();
-  const [editMarker, setEditMarker] = createSignal<Marker>();
+  const [marker, setMarker] = createSignal<MarkerInterface>();
+  const [editMarker, setEditMarker] = createSignal<MarkerInterface>();
   const [leafletEditMarker, setLeafletEditMarker] =
     createSignal<Leaflet.Marker>();
 
@@ -40,9 +44,7 @@ const Map: Component = () => {
   });
 
   onCleanup(() => {
-    const insLeafletEditMarker = leafletEditMarker();
-    if (insLeafletEditMarker)
-      rmc(map, editMarker(), insLeafletEditMarker, setEditMarker);
+    rmc(map);
   });
 
   return (
@@ -95,12 +97,20 @@ const Map: Component = () => {
                 <Show when={leafletEditMarker()} keyed>
                   {(insLeafletEditMarker: Leaflet.Marker) => (
                     <Show when={editMarker()} keyed>
-                      {(insEditMarker: Marker) => (
+                      {(insEditMarker: MarkerInterface) => (
                         <>
                           <button
                             class="p-1 hover:bg-red rounded-md"
                             onClick={() => {
-                              console.log(insEditMarker);
+                              useComfirmEditMarker(
+                                map,
+                                editMarker,
+                                insLeafletEditMarker,
+                                setLeafletEditMarker,
+                                setEditMarker,
+                                setMarker,
+                                navigator
+                              );
                             }}
                           >
                             <img
@@ -148,7 +158,7 @@ const Map: Component = () => {
                   <Show when={leafletEditMarker()} keyed>
                     {(insLeafletEditMarker: Leaflet.Marker) => (
                       <Show when={marker()} keyed>
-                        {(insMarker: Marker) => (
+                        {(insMarker: MarkerInterface) => (
                           <button class="p-1 hover:bg-red rounded-md">
                             <img
                               src="/util-images/edit.svg"
@@ -174,8 +184,8 @@ const Map: Component = () => {
               <Show when={leafletEditMarker()} keyed>
                 {(insLeafletEditMarker: Leaflet.Marker) => (
                   <Show when={editMarker()} keyed>
-                    {(insMarker: Marker) => (
-                      <EditMarker
+                    {(insMarker: MarkerInterface) => (
+                      <EditMarkerComponent
                         marker={insMarker}
                         leafletMarker={insLeafletEditMarker}
                         setMarker={setEditMarker}
@@ -207,4 +217,4 @@ const Map: Component = () => {
   );
 };
 
-export default Map;
+export default MapPage;

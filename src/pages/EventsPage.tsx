@@ -1,14 +1,13 @@
 import { Component, onMount, createSignal, For, Show } from "solid-js";
-import { FleeCalendar } from "../classes/FleeCalendar";
-import { FleeEvent, FleeEvents } from "../classes/FleeEvents";
 import { A } from "@solidjs/router";
 import { useSession } from "../auth";
-import { useFetchEvents } from "../hooks/event";
+import { EventInterface } from "../types/EventType";
+import { useFetchEvents } from "../services/EventService";
 
-const Events: Component = () => {
+const EventsPage: Component = () => {
   const [session, actions] = useSession();
 
-  const [events, setEvents] = createSignal<FleeEvent[]>([]);
+  const [events, setEvents] = createSignal<EventInterface[]>([]);
 
   onMount(() => {
     useFetchEvents().then((events) => (events ? setEvents(events) : null));
@@ -57,4 +56,4 @@ const Events: Component = () => {
   );
 };
 
-export default Events;
+export default EventsPage;

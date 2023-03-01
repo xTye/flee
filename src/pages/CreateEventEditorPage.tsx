@@ -2,22 +2,23 @@ import { Component, createSignal } from "solid-js";
 import { useSession } from "../auth";
 import { useNavigate } from "@solidjs/router";
 
-import EventEditor from "../components/events/EventEditor";
-import { FleeEvent } from "../classes/FleeEvents";
-import { FleeCalendar } from "../classes/FleeCalendar";
+import EventEditorComponent from "../components/events/EventEditorComponent";
 import { addDoc, collection } from "firebase/firestore";
 import { firebaseStore } from "..";
 import { Editor } from "@tiptap/core";
 
-const CreateEventEditor: Component = () => {
+import { EventInterface } from "../types/EventType";
+import { CalendarClass } from "../classes/CalendarClass";
+
+const CreateEventEditorPage: Component = () => {
   const [session, actions] = useSession();
   const navigate = useNavigate();
-  const [event, setEvent] = createSignal<FleeEvent>({
+  const [event, setEvent] = createSignal<EventInterface>({
     title: "",
     description: "",
     contents: "",
     thumbnail: "",
-    date: FleeCalendar.CURRENT_DATE,
+    date: CalendarClass.CURRENT_DATE,
   });
   const [editor, setEditor] = createSignal<Editor>();
 
@@ -57,10 +58,14 @@ const CreateEventEditor: Component = () => {
             Post Event
           </button>
         </div>
-        <EventEditor setEditor={setEditor} event={event} setEvent={setEvent} />
+        <EventEditorComponent
+          setEditor={setEditor}
+          event={event}
+          setEvent={setEvent}
+        />
       </div>
     </>
   );
 };
 
-export default CreateEventEditor;
+export default CreateEventEditorPage;

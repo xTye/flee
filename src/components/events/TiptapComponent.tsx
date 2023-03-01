@@ -9,14 +9,14 @@ import TextAlign from "@tiptap/extension-text-align";
 import Subscript from "@tiptap/extension-subscript";
 import Superscript from "@tiptap/extension-superscript";
 
-import TiptapMenu from "./TiptapMenu";
+import TiptapMenuComponent from "./TiptapMenuComponent";
 
 interface TiptapProps {
   setEditor?: (editor?: Editor) => void;
   defaultContent?: string;
 }
 
-const Tiptap: Component<TiptapProps> = (props) => {
+const TiptapComponent: Component<TiptapProps> = (props) => {
   let ref!: HTMLDivElement;
 
   const editor = createTiptapEditor(() => ({
@@ -48,11 +48,11 @@ const Tiptap: Component<TiptapProps> = (props) => {
   return (
     <>
       <div>
-        <TiptapMenu editor={editor()} />
+        <TiptapMenuComponent editor={editor()} />
         <div id="editor" ref={ref} />
       </div>
     </>
   );
 };
 
-export default Tiptap;
+export default TiptapComponent;

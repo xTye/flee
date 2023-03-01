@@ -1,15 +1,15 @@
 import { Component, createSignal } from "solid-js";
-import { Marker } from "../../hooks/markers";
-import { icons } from "../../utils/useMap";
 import Leaflet from "leaflet";
+import { MarkerInterface } from "../../types/MarkerType";
+import { icons } from "../../hooks/MapHook";
 
 interface Props {
-  marker: Marker;
+  marker: MarkerInterface;
   leafletMarker: Leaflet.Marker;
-  setMarker: (marker: Marker) => void;
+  setMarker: (marker: MarkerInterface) => void;
 }
 
-const EditMarker: Component<Props> = (props) => {
+const EditMarkerComponent: Component<Props> = (props) => {
   return (
     <>
       <div class="flex gap-1">
@@ -81,4 +81,4 @@ const EditMarker: Component<Props> = (props) => {
   );
 };
 
-export default EditMarker;
+export default EditMarkerComponent;

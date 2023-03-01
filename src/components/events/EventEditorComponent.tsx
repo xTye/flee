@@ -1,18 +1,18 @@
-import { Accessor, Component, onMount } from "solid-js";
-import { FleeEvent } from "../../classes/FleeEvents";
+import { Accessor, Component } from "solid-js";
 
-import DatePicker from "../DatePicker";
-import Tiptap from "./Tiptap";
+import DatePickerComponent from "../DatePickerComponent";
+import TiptapComponent from "./TiptapComponent";
 import { Editor } from "@tiptap/core";
+import { EventInterface } from "../../types/EventType";
 
 interface EventEditorProps {
   setEditor: (editor?: Editor) => void;
   editorDefaultContent?: string;
-  event: Accessor<FleeEvent>;
-  setEvent: (event: FleeEvent) => void;
+  event: Accessor<EventInterface>;
+  setEvent: (event: EventInterface) => void;
 }
 
-const EventEditor: Component<EventEditorProps> = (props) => {
+const EventEditorComponent: Component<EventEditorProps> = (props) => {
   return (
     <>
       <div class="flex">
@@ -48,7 +48,7 @@ const EventEditor: Component<EventEditorProps> = (props) => {
           </div>
 
           <div class="w-1/5">
-            <DatePicker
+            <DatePickerComponent
               defaultDate={props.event().date}
               date={() => props.event().date}
               setDate={(date) => props.setEvent({ ...props.event(), date })}
@@ -57,7 +57,7 @@ const EventEditor: Component<EventEditorProps> = (props) => {
 
           <div class="relative flex flex-col justify-center gap-2">
             <div>Contents</div>
-            <Tiptap
+            <TiptapComponent
               defaultContent={props.editorDefaultContent}
               setEditor={props.setEditor}
             />
@@ -92,4 +92,4 @@ const EventEditor: Component<EventEditorProps> = (props) => {
   );
 };
 
-export default EventEditor;
+export default EventEditorComponent;

@@ -1,6 +1,6 @@
 import type { Component } from "solid-js";
 
-const Character: Component<{
+const CharacterComponent: Component<{
   image: string;
   name: string;
   class: string;
@@ -37,4 +37,4 @@ const Character: Component<{
   );
 };
 
-export default Character;
+export default CharacterComponent;

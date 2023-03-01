@@ -1,7 +1,7 @@
-import { Component, children } from "solid-js";
+import { Component } from "solid-js";
 import { JSX } from "solid-js/jsx-runtime";
 
-const Modal: Component<{
+const ModalComponent: Component<{
   children?: JSX.Element;
   setModal: (modal: boolean) => void;
 }> = ({ children, setModal }) => {
@@ -28,4 +28,4 @@ const Modal: Component<{
   );
 };
 
-export default Modal;
+export default ModalComponent;

@@ -3,9 +3,9 @@ import { A } from "@solidjs/router";
 import { useSession } from "../../auth";
 import { clickOutside } from "../../utils/clickOutside";
 
-import Panel from "./Panel";
+import PanelComponent from "./PanelComponent";
 
-const Login: Component = () => {
+const LoginComponent: Component = () => {
   const [session, actions] = useSession();
 
   let panelDiv = document.createElement("div") as HTMLDivElement;
@@ -67,4 +67,4 @@ const Login: Component = () => {
   );
 };
 
-export default Login;
+export default LoginComponent;
