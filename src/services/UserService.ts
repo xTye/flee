@@ -12,14 +12,12 @@ export const useFetchUser = async (id: string) => {
   try {
     const doc = await getDoc(docRef(firebaseStore, "users", id));
 
-    const data = doc.data();
+    const data = doc.data() as UserInterface;
     if (!data) throw new Error("No data found for user.");
 
     const user: UserInterface = {
+      ...data,
       id: doc.id,
-      name: data.name,
-      email: data.email,
-      tools: data.tools,
     };
 
     return user;
@@ -35,13 +33,11 @@ export const useFetchUsers = async () => {
     const users: UserInterface[] = [];
 
     docs.forEach((doc) => {
-      const data = doc.data();
+      const data = doc.data() as UserInterface;
 
       const user: UserInterface = {
+        ...data,
         id: doc.id,
-        name: data.name,
-        email: data.email,
-        tools: data.tools,
       };
 
       users.push(user);

@@ -6,23 +6,12 @@ export const useFetchCharacter = async (id: string) => {
   try {
     const doc = await getDoc(docRef(firebaseStore, "characters", id));
 
-    const data = doc.data();
+    const data = doc.data() as CharacterInterface;
     if (!data) throw new Error("No data found for character.");
 
     const character: CharacterInterface = {
+      ...data,
       id: doc.id,
-      userId: data.userId,
-      name: data.name,
-      title: data.title,
-      class: data.class,
-      sheet: data.sheet,
-      sheetType: data.sheetType,
-      home: data.home,
-      description: data.description,
-      image: data.image,
-      moves: data.moves,
-      movesImage: data.movesImage,
-      type: data.type,
     };
 
     return character;
@@ -38,22 +27,11 @@ export const useFetchCharacters = async () => {
     const characters: CharacterInterface[] = [];
 
     docs.forEach((doc) => {
-      const data = doc.data();
+      const data = doc.data() as CharacterInterface;
 
       const character = {
+        ...data,
         id: doc.id,
-        userId: data.userId,
-        name: data.name,
-        title: data.title,
-        class: data.class,
-        sheet: data.sheet,
-        sheetType: data.sheetType,
-        home: data.home,
-        description: data.description,
-        image: data.image,
-        moves: data.moves,
-        movesImage: data.movesImage,
-        type: data.type,
       };
 
       characters.push(character);

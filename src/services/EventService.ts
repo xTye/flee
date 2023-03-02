@@ -10,7 +10,6 @@ import {
 import { CalendarClass } from "../classes/CalendarClass";
 import { firebaseStore } from "..";
 import { EventInterface } from "../types/EventType";
-import { useNavigate } from "@solidjs/router";
 
 export const useFetchEvent = async (id?: string) => {
   try {

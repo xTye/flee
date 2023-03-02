@@ -15,16 +15,11 @@ export const useFetchMarkers = async () => {
     const markers: MarkerInterface[] = [];
 
     for (const doc of docs.docs) {
-      const data = doc.data();
+      const data = doc.data() as MarkerInterface;
 
       const marker: MarkerInterface = {
+        ...data,
         id: doc.id,
-        name: data.name,
-        description: data.description,
-        x: data.x,
-        y: data.y,
-        color: data.color,
-        maps: data.maps,
       };
 
       markers.push(marker);

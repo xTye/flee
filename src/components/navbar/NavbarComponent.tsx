@@ -30,7 +30,6 @@ const NavbarComponent: Component = () => {
               alt="Logo"
             />
           </A>
-          <div class="text-3xl">The Wandering Eyes</div>
         </div>
 
         <div class="flex items-center h-full gap-12 text-xl">

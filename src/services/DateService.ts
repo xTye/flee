@@ -8,6 +8,7 @@ import { CalendarClass } from "../classes/CalendarClass";
 import { DateInterface } from "../types/DateType";
 import { firebaseStore } from "..";
 
+// Only used for current date
 export const useFetchDate = async (id: string) => {
   const doc = await getDoc(refDoc(firebaseStore, "dates", id));
 
@@ -18,6 +19,7 @@ export const useFetchDate = async (id: string) => {
   return date;
 };
 
+// Only used for current date
 export const useUpdateDate = async (id: string, date: DateInterface) => {
   CalendarClass.validDate(date);
 
