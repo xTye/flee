@@ -1,4 +1,4 @@
-import { Component, onMount, createMemo, onCleanup } from "solid-js";
+import { Component, createMemo } from "solid-js";
 import { useNavigate } from "@solidjs/router";
 import { navbarHeight } from "../components/navbar/NavbarComponent";
 import { useSession } from "../auth";
