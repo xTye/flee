@@ -12,4 +12,6 @@ export interface CharacterInterface {
   moves: string;
   movesImage: string;
   type: string;
+  createdAt?: Date;
+  updatedAt?: Date;
 }

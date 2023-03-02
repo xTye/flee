@@ -189,8 +189,7 @@ export const useComfirmEditMarker = async (
   leafletEditMarker: Leaflet.Marker,
   setLeafletEditMarker: Setter<Leaflet.Marker>,
   setEditMarker: Setter<MarkerInterface | undefined>,
-  setMarker: Setter<MarkerInterface | undefined>,
-  navigator: Navigator
+  setMarker: Setter<MarkerInterface | undefined>
 ) => {
   try {
     const insEditMarker = editMarker();

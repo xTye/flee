@@ -1,12 +1,4 @@
-import {
-  collection,
-  doc as docRef,
-  getDoc,
-  getDocs,
-  limit,
-  orderBy,
-  query,
-} from "firebase/firestore";
+import { collection, doc as docRef, getDoc, getDocs } from "firebase/firestore";
 import { firebaseStore } from "..";
 import { CharacterInterface } from "../types/CharacterType";
 

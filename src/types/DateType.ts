@@ -7,4 +7,6 @@ export interface DateInterface {
   era: number;
   events?: EventInterface[];
   holiday?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
