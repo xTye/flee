@@ -25,7 +25,9 @@ const CalendarPage: Component = () => {
   );
 
   const [currentDate, setCurrentDate] = createSignal<DateInterface>();
-  const [selectedDate, setSelectedDate] = createSignal<DateInterface>();
+  const [selectedDate, setSelectedDate] = createSignal<DateInterface>(
+    CalendarClass.START_DATE
+  );
   const [dates, setDates] = createSignal<DateInterface[]>([]);
   const [modal, setModal] = createSignal<boolean>(false);
 
@@ -59,136 +61,130 @@ const CalendarPage: Component = () => {
       >
         <div class="flex flex-col bg-lightPurple h-full rounded-b-md">
           <div class="flex justify-between items-center bg-purple h-20 px-20">
-            <Show when={selectedDate()} keyed>
-              {(insSelectedDate) => (
-                <>
-                  <div class="text-text">{`Era: ${
-                    insSelectedDate.era
-                  } | Year: ${
-                    insSelectedDate.year
-                  } | Month: ${CalendarClass.getMonthName(
-                    insSelectedDate.month
-                  )} `}</div>
-                  <div class="flex gap-4">
-                    <div class="flex">
-                      <button
-                        class="flex items-center justify-center bg-white h-10 w-10 rounded-l-full hover:bg-red"
-                        onClick={() => {
-                          if (insSelectedDate.month - 1 == 0) {
-                            insSelectedDate.month =
-                              CalendarClass.MONTHS_PER_YEAR;
-
-                            if (insSelectedDate.year - 1 == 0) {
-                              insSelectedDate.year =
-                                CalendarClass.YEARS_PER_ERA;
-
-                              if (insSelectedDate.era - 1 == 0) return;
-
-                              insSelectedDate.era--;
-                            } else {
-                              insSelectedDate.year--;
-                            }
-                          } else {
-                            insSelectedDate.month--;
-                          }
-
-                          changeDate(insSelectedDate);
-                        }}
-                      >
-                        <img
-                          src="/util-images/arrow.png"
-                          alt="Arrow pointing left"
-                          class="object-fit h-8 w-8 rotate-180"
-                        />
-                      </button>
-                      <div class="border-l-2 border-black"></div>
-                      <button
-                        class="flex items-center justify-center bg-white h-10 w-10 rounded-r-full hover:bg-red"
-                        onClick={() => {
-                          if (
-                            insSelectedDate.month %
-                              CalendarClass.MONTHS_PER_YEAR ==
-                            0
-                          ) {
-                            insSelectedDate.month = 1;
-
-                            if (
-                              insSelectedDate.year %
-                                CalendarClass.YEARS_PER_ERA ==
-                              0
-                            ) {
-                              insSelectedDate.year = 1;
-
-                              insSelectedDate.era++;
-                            } else {
-                              insSelectedDate.year++;
-                            }
-                          } else {
-                            insSelectedDate.month++;
-                          }
-
-                          changeDate(insSelectedDate);
-                        }}
-                      >
-                        <img
-                          src="/util-images/arrow.png"
-                          alt="Arrow pointing right"
-                          class="object-fit h-8 w-8"
-                        />
-                      </button>
-                    </div>
+            <Show when={currentDate()}>
+              <>
+                <div class="text-text">{`Era: ${selectedDate().era} | Year: ${
+                  selectedDate().year
+                } | Month: ${CalendarClass.getMonthName(
+                  selectedDate().month ? selectedDate()?.month : 1
+                )} `}</div>
+                <div class="flex gap-4">
+                  <div class="flex">
                     <button
-                      class="flex items-center justify-center bg-white h-10 w-10 rounded-full hover:bg-red"
-                      onClick={() => setModal(true)}
+                      class="flex items-center justify-center bg-white h-10 w-10 rounded-l-full hover:bg-red"
+                      onClick={() => {
+                        const date = {
+                          ...selectedDate(),
+                        };
+
+                        if (date.month - 1 == 0) {
+                          date.month = CalendarClass.MONTHS_PER_YEAR;
+
+                          if (date.year - 1 == 0) {
+                            date.year = CalendarClass.YEARS_PER_ERA;
+
+                            if (date.era - 1 == 0) return;
+
+                            date.era--;
+                          } else {
+                            date.year--;
+                          }
+                        } else {
+                          date.month--;
+                        }
+
+                        changeDate(date);
+                      }}
+                    >
+                      <img
+                        src="/util-images/arrow.png"
+                        alt="Arrow pointing left"
+                        class="object-fit h-8 w-8 rotate-180"
+                      />
+                    </button>
+                    <div class="border-l-2 border-black"></div>
+                    <button
+                      class="flex items-center justify-center bg-white h-10 w-10 rounded-r-full hover:bg-red"
+                      onClick={() => {
+                        const date = {
+                          ...selectedDate(),
+                        };
+
+                        if (date.month % CalendarClass.MONTHS_PER_YEAR == 0) {
+                          date.month = 1;
+
+                          if (date.year % CalendarClass.YEARS_PER_ERA == 0) {
+                            date.year = 1;
+
+                            date.era++;
+                          } else {
+                            date.year++;
+                          }
+                        } else {
+                          date.month++;
+                        }
+
+                        changeDate(date);
+                      }}
                     >
                       <img
                         src="/util-images/arrow.png"
                         alt="Arrow pointing right"
-                        class="object-fit h-8 w-8 rotate-90"
+                        class="object-fit h-8 w-8"
                       />
-                      <Show when={modal()}>
-                        <ModalComponent setModal={setModal}>
-                          <div class="flex flex-col items-center h-full text-2xl text-white p-5 gap-6">
-                            <div class="text-3xl">Enter A Custom Date</div>
-                            <DatePickerComponent
-                              defaultDate={insSelectedDate}
-                              insSelectedDate={insSelectedDate}
-                              setDate={changeDate}
-                            />
-                            <button
-                              class="bg-white px-4 rounded-full text-black hover:bg-red"
-                              onClick={() => {
-                                const insCurrentDate = currentDate();
-                                if (!insCurrentDate) return;
-
-                                changeDate(insCurrentDate);
-                                setModal(false);
-                              }}
-                            >
-                              Go to current date
-                            </button>
-                          </div>
-                        </ModalComponent>
-                      </Show>
                     </button>
-                    <Show when={session().admin}>
-                      <button
-                        class="flex items-center justify-center bg-white h-10 px-2 bg-yellow text-text rounded-full hover:bg-red"
-                        onClick={() => {
-                          try {
-                            useUpdateDate("current", insSelectedDate);
-                            setCurrentDate(insSelectedDate);
-                          } catch (e) {
-                            console.error(e);
-                          }
-                        }}
-                      >
-                        Set current day
-                      </button>
-                    </Show>
                   </div>
-                </>
-              )}
+                  <button
+                    class="flex items-center justify-center bg-white h-10 w-10 rounded-full hover:bg-red"
+                    onClick={() => setModal(true)}
+                  >
+                    <img
+                      src="/util-images/arrow.png"
+                      alt="Arrow pointing right"
+                      class="object-fit h-8 w-8 rotate-90"
+                    />
+                    <Show when={modal()}>
+                      <ModalComponent setModal={setModal}>
+                        <div class="flex flex-col items-center h-full text-2xl text-white p-5 gap-6">
+                          <div class="text-3xl">Enter A Custom Date</div>
+                          <DatePickerComponent
+                            defaultDate={selectedDate()}
+                            insSelectedDate={selectedDate()}
+                            setDate={changeDate}
+                          />
+                          <button
+                            class="bg-white px-4 rounded-full text-black hover:bg-red"
+                            onClick={() => {
+                              const insCurrentDate = currentDate();
+                              if (!insCurrentDate) return;
+
+                              changeDate(insCurrentDate);
+                              setModal(false);
+                            }}
+                          >
+                            Go to current date
+                          </button>
+                        </div>
+                      </ModalComponent>
+                    </Show>
+                  </button>
+                  <Show when={session().admin}>
+                    <button
+                      class="flex items-center justify-center bg-white h-10 px-2 bg-yellow text-text rounded-full hover:bg-red"
+                      onClick={() => {
+                        try {
+                          useUpdateDate("current", selectedDate());
+                          setCurrentDate(selectedDate());
+                        } catch (e) {
+                          console.error(e);
+                        }
+                      }}
+                    >
+                      Set current day
+                    </button>
+                  </Show>
+                </div>
+              </>
             </Show>
           </div>
 
