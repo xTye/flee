@@ -67,6 +67,7 @@ export class CalendarClass implements EventClassMethods {
     era: 1,
   };
 
+  private selectedDate = CalendarClass.START_DATE;
   private events: EventClass;
 
   constructor() {
@@ -75,28 +76,6 @@ export class CalendarClass implements EventClassMethods {
 
   public async populateEvents() {
     await this.events.populateEvents();
-  }
-
-  public getDates(selectedDate: DateInterface): DateInterface[] {
-    let dates: DateInterface[] = [];
-    const holidayObj = Object.create(holidays);
-
-    for (let i = 0; i < 30; i++) {
-      const date = {
-        day: i + 1,
-        month: selectedDate.month,
-        year: selectedDate.year,
-        era: selectedDate.era,
-        events: [] as EventInterface[],
-        holiday: holidayObj[`${selectedDate.month}-${i + 1}`],
-      };
-
-      date.events = this.events.getEventFromDate(date);
-
-      dates.push(date);
-    }
-
-    return dates;
   }
 
   public static validDate(date: DateInterface, strict = true) {
@@ -113,15 +92,6 @@ export class CalendarClass implements EventClassMethods {
     }
 
     return true;
-  }
-
-  public static isSameDay(date1: DateInterface, date2: DateInterface) {
-    return (
-      date1.day === date2.day &&
-      date1.month === date2.month &&
-      date1.year === date2.year &&
-      date1.era === date2.era
-    );
   }
 
   public static toString(date: DateInterface) {
@@ -152,6 +122,38 @@ export class CalendarClass implements EventClassMethods {
     return this.events.getEventFromDate(date);
   }
 
+  public getDates(): DateInterface[] {
+    let dates: DateInterface[] = [];
+    const holidayObj = Object.create(holidays);
+
+    for (let i = 0; i < 30; i++) {
+      const date = {
+        day: i + 1,
+        month: this.selectedDate.month,
+        year: this.selectedDate.year,
+        era: this.selectedDate.era,
+        events: [] as EventInterface[],
+        holiday: holidayObj[`${this.selectedDate.month}-${i + 1}`],
+      };
+
+      date.events = this.events.getEventFromDate(date);
+
+      dates.push(date);
+    }
+
+    return dates;
+  }
+
+  public setSelectedDate(date: DateInterface) {
+    CalendarClass.validDate(date);
+
+    this.selectedDate = date;
+  }
+
+  public get date() {
+    return this.selectedDate;
+  }
+
   public static getMoonPhase(day: number) {
     return moonPhases[day - 1];
   }
@@ -176,11 +178,27 @@ export class CalendarClass implements EventClassMethods {
     return "";
   }
 
-  public static monthName(date: DateInterface) {
-    return monthNames[date.month - 1];
+  public get day() {
+    return this.selectedDate.day;
   }
 
-  public static moon(date: DateInterface) {
-    return moonPhases[date.day - 1];
+  public get month() {
+    return this.selectedDate.month;
+  }
+
+  public get monthName() {
+    return monthNames[this.selectedDate.month - 1];
+  }
+
+  public get moon() {
+    return moonPhases[this.selectedDate.day - 1];
+  }
+
+  public get year() {
+    return this.selectedDate.year;
+  }
+
+  public get era() {
+    return this.selectedDate.era;
   }
 }

@@ -5,7 +5,7 @@ import { CalendarClass } from "../classes/CalendarClass";
 
 interface DatePickerProps {
   defaultDate: DateInterface;
-  date: Accessor<DateInterface>;
+  insSelectedDate: DateInterface;
   setDate: (date: DateInterface) => void;
 }
 
@@ -24,10 +24,10 @@ const DatePickerComponent: Component<DatePickerProps> = (props) => {
             class="rounded-sm"
             onChange={(e) => {
               props.setDate({
-                ...props.date(),
+                ...props.insSelectedDate,
                 day: e.currentTarget.value
                   ? parseInt(e.currentTarget.value)
-                  : props.date().day,
+                  : props.insSelectedDate.day,
               });
             }}
           >
@@ -44,10 +44,10 @@ const DatePickerComponent: Component<DatePickerProps> = (props) => {
             class="rounded-sm"
             onChange={(e) => {
               props.setDate({
-                ...props.date(),
+                ...props.insSelectedDate,
                 month: e.currentTarget.value
                   ? parseInt(e.currentTarget.value)
-                  : props.date().month,
+                  : props.insSelectedDate.month,
               });
             }}
           >
@@ -67,10 +67,10 @@ const DatePickerComponent: Component<DatePickerProps> = (props) => {
             class="rounded-sm"
             onChange={(e) => {
               props.setDate({
-                ...props.date(),
+                ...props.insSelectedDate,
                 year: e.currentTarget.value
                   ? parseInt(e.currentTarget.value)
-                  : props.date().year,
+                  : props.insSelectedDate.year,
               });
             }}
           >
@@ -87,10 +87,10 @@ const DatePickerComponent: Component<DatePickerProps> = (props) => {
             class="rounded-sm"
             onChange={(e) => {
               props.setDate({
-                ...props.date(),
+                ...props.insSelectedDate,
                 era: e.currentTarget.value
                   ? parseInt(e.currentTarget.value)
-                  : props.date().era,
+                  : props.insSelectedDate.era,
               });
             }}
           >
