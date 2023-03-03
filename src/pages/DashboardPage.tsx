@@ -86,10 +86,6 @@ const DashboardPage: Component = () => {
             src="https://docs.google.com/spreadsheets/d/1sZkFUeiAcg6ZmkJ1JfVq21pKyilsHa3yI2M0BeTauRo/edit#gid=0?embedded=true"
             class="basis-1/2 h-[600px]"
           ></iframe> */}
-          <iframe
-            src="https://app.roll20.net/editor/"
-            class="basis-1/2 h-[600px]"
-          ></iframe>
         </div>
       </div>
     </>
