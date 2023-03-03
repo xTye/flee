@@ -27,7 +27,7 @@ const HomePage: Component = () => {
                 <div class="text-6xl">{event()?.title}</div>
                 <div class="flex flex-col xl:flex-row items-center gap-8">
                   <A
-                    class="flex items-center justify-center w-32 px-4 py-2 bg-yellow text-center rounded-full hover:bg-red"
+                    class="flex items-center justify-center w-40 px-6 py-2 bg-yellow text-center rounded-full hover:bg-red"
                     href={`/events/${event()?.id}`}
                   >
                     Read more!

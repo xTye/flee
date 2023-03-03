@@ -3,11 +3,12 @@ import { A } from "@solidjs/router";
 import { useSession } from "../auth";
 import { EventInterface } from "../types/EventType";
 import { useFetchEvents } from "../services/EventService";
+import LoadingComponent from "../components/utils/LoadingComponent";
 
 const EventsPage: Component = () => {
   const [session, actions] = useSession();
 
-  const [events, setEvents] = createSignal<EventInterface[]>([]);
+  const [events, setEvents] = createSignal<EventInterface[]>();
 
   onMount(() => {
     useFetchEvents().then((events) => (events ? setEvents(events) : null));
@@ -28,29 +29,31 @@ const EventsPage: Component = () => {
           </Show>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:px-32">
-          <For each={events()}>
-            {(event) => (
-              <>
-                <A href={`/events/${event.id}`}>
-                  <div
-                    class={
-                      "flex flex-col bg-white transition-all hover:scale-105 h-72"
-                    }
-                  >
-                    <img
-                      class="object-cover w-full h-32"
-                      src={event.thumbnail}
-                    />
-                    <div class="text-black font-bold h-full text-4xl">
-                      {event.title}
+        <Show when={events()} fallback={<LoadingComponent />}>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:px-32">
+            <For each={events()}>
+              {(event) => (
+                <>
+                  <A href={`/events/${event.id}`}>
+                    <div
+                      class={
+                        "flex flex-col bg-white transition-all hover:scale-105 h-72"
+                      }
+                    >
+                      <img
+                        class="object-cover w-full h-32"
+                        src={event.thumbnail}
+                      />
+                      <div class="text-black font-bold h-full text-4xl">
+                        {event.title}
+                      </div>
                     </div>
-                  </div>
-                </A>
-              </>
-            )}
-          </For>
-        </div>
+                  </A>
+                </>
+              )}
+            </For>
+          </div>
+        </Show>
       </div>
     </>
   );

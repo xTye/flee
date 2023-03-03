@@ -15,6 +15,7 @@ import { A } from "@solidjs/router";
 import ModalComponent from "../components/ModalComponent";
 import DatePickerComponent from "../components/DatePickerComponent";
 import { useSession } from "../auth";
+import LoadingComponent from "../components/utils/LoadingComponent";
 
 const CalendarPage: Component = () => {
   const [session, actions] = useSession();
@@ -28,7 +29,7 @@ const CalendarPage: Component = () => {
   const [selectedDate, setSelectedDate] = createSignal<DateInterface>(
     CalendarClass.START_DATE
   );
-  const [dates, setDates] = createSignal<DateInterface[]>([]);
+  const [dates, setDates] = createSignal<DateInterface[]>();
   const [modal, setModal] = createSignal<boolean>(false);
 
   const changeDate = (date: DateInterface) => {
@@ -170,14 +171,10 @@ const CalendarPage: Component = () => {
                   </button>
                   <Show when={session().admin}>
                     <button
-                      class="flex items-center justify-center h-10 px-6 md:px-2 bg-yellow text-text rounded-full hover:bg-red"
+                      class="flex items-center justify-center h-10 px-6 bg-yellow text-text rounded-full hover:bg-red"
                       onClick={() => {
-                        try {
-                          useUpdateDate("current", selectedDate());
-                          setCurrentDate(selectedDate());
-                        } catch (e) {
-                          console.error(e);
-                        }
+                        useUpdateDate("current", selectedDate());
+                        setCurrentDate(selectedDate());
                       }}
                     >
                       Set
@@ -188,46 +185,48 @@ const CalendarPage: Component = () => {
             </Show>
           </div>
 
-          <div class="grid grid-cols-5 grid-rows-6 lg:grid-cols-6 lg:grid-rows-5 xl:grid-cols-10 xl:grid-rows-3 gap-1 h-full text-xs md:text-sm p-2 select-none overflow-hidden">
-            <For each={dates()}>
-              {(date) => (
-                <div
-                  class={`relative flex flex-col bg-${
-                    // @ts-ignore
-                    CalendarClass.isSameDay(date, selectedDate())
-                      ? "red"
-                      : // @ts-ignore
+          <Show when={dates()} fallback={<LoadingComponent />}>
+            <div class="grid grid-cols-3 grid-rows-10 md:grid-cols-5 md:grid-rows-6 lg:grid-cols-6 lg:grid-rows-5 xl:grid-cols-10 xl:grid-rows-3 gap-1 h-full text-xs md:text-sm p-2 select-none overflow-hidden">
+              <For each={dates()}>
+                {(date) => (
+                  <div
+                    class={`relative flex flex-col bg-${
+                      // @ts-ignore
                       CalendarClass.isSameDay(date, currentDate())
-                      ? "yellow"
-                      : "white"
-                  } h-full rounded-md hover:bg-red p-2 overflow-hidden hover:overflow-y-auto`}
-                  onClick={() => {
-                    setSelectedDate(date);
-                  }}
-                >
-                  <div>{date.day}</div>
-                  <div>{CalendarClass.getMoonPhase(date.day)}</div>
-                  <Show when={date.holiday}>
-                    <div>{date.holiday}</div>
-                  </Show>
-                  <Show when={date.events}>
-                    <div class="flex flex-col">
-                      <For each={date.events}>
-                        {(event) => (
-                          <A
-                            href={`/events/${event.id}`}
-                            class="font-bold rounded-md p-1 hover:bg-white truncate"
-                          >
-                            {event.title}
-                          </A>
-                        )}
-                      </For>
-                    </div>
-                  </Show>
-                </div>
-              )}
-            </For>
-          </div>
+                        ? "yellow"
+                        : // @ts-ignore
+                        CalendarClass.isSameDay(date, selectedDate())
+                        ? "red"
+                        : "white"
+                    } h-full rounded-md hover:bg-red p-2 overflow-hidden hover:overflow-y-auto`}
+                    onClick={() => {
+                      setSelectedDate(date);
+                    }}
+                  >
+                    <div>{date.day}</div>
+                    <div>{CalendarClass.getMoonPhase(date.day)}</div>
+                    <Show when={date.holiday}>
+                      <div>{date.holiday}</div>
+                    </Show>
+                    <Show when={date.events}>
+                      <div class="flex flex-col">
+                        <For each={date.events}>
+                          {(event) => (
+                            <A
+                              href={`/events/${event.id}`}
+                              class="font-bold rounded-md p-1 hover:bg-white truncate"
+                            >
+                              {event.title}
+                            </A>
+                          )}
+                        </For>
+                      </div>
+                    </Show>
+                  </div>
+                )}
+              </For>
+            </div>
+          </Show>
         </div>
       </div>
     </>
