@@ -19,7 +19,7 @@ const UserEditorComponent: Component<{
               <input
                 value={props.insUser.name}
                 class="text-black rounded-sm"
-                onInput={(e) =>
+                onChange={(e) =>
                   props.setUser({
                     ...props.insUser,
                     name: e.currentTarget.value,
@@ -33,7 +33,7 @@ const UserEditorComponent: Component<{
                       <input
                         value={tool}
                         class="w-full text-black rounded-sm"
-                        onInput={(e) => {
+                        onChange={(e) => {
                           props.insUser.tools[i()] = e.currentTarget.value;
 
                           props.setUser(props.insUser);

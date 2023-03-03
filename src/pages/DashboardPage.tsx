@@ -11,7 +11,6 @@ import { navbarHeight } from "../components/navbar/NavbarComponent";
 import { useSession } from "../auth";
 import { UserInterface } from "../types/UserType";
 import { useCreateUser, useFetchUser } from "../services/UserService";
-import TwitchEmbedComponent from "../components/TwitchEmbedComponent";
 
 const DashboardPage: Component = () => {
   const [session, actions] = useSession();
