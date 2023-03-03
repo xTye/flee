@@ -21,6 +21,10 @@ export const useFetchDate = async (id: string) => {
 
 // Only used for current date
 export const useUpdateDate = async (id: string, date: DateInterface) => {
+  try {
+  } catch (e) {
+    console.log(e);
+  }
   CalendarClass.validDate(date);
 
   await updateDoc(refDoc(firebaseStore, "dates", id), {

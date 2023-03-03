@@ -40,8 +40,8 @@ export const useFetchEvent = async (id?: string) => {
     };
 
     return event;
-  } catch (e: any) {
-    console.error(e.message);
+  } catch (e) {
+    console.log(e);
   }
 };
 
@@ -83,8 +83,8 @@ export const useFetchEvents = async () => {
     });
 
     return events;
-  } catch (e: any) {
-    console.error(e.message);
+  } catch (e) {
+    console.log(e);
   }
 };
 

@@ -26,24 +26,32 @@ export const useFetchMarkers = async () => {
     }
 
     return markers;
-  } catch (e: any) {
-    console.error(e.message);
+  } catch (e) {
+    console.log(e);
   }
 };
 
 export const useCreateMarker = async (marker: MarkerInterface) => {
-  const doc = await addDoc(collection(firebaseStore, "markers"), {
-    ...marker,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  });
+  try {
+    const doc = await addDoc(collection(firebaseStore, "markers"), {
+      ...marker,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
 
-  return doc.id;
+    return doc.id;
+  } catch (e) {
+    console.log(e);
+  }
 };
 
 export const useUpdateMarker = async (id: string, marker: MarkerInterface) => {
-  await updateDoc(refDoc(firebaseStore, "markers", id), {
-    ...marker,
-    updatedAt: new Date(),
-  });
+  try {
+    await updateDoc(refDoc(firebaseStore, "markers", id), {
+      ...marker,
+      updatedAt: new Date(),
+    });
+  } catch (e) {
+    console.log(e);
+  }
 };

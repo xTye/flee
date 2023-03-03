@@ -9,10 +9,13 @@ import {
   browserLocalPersistence,
   signOut,
   Auth,
+  updateProfile,
 } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import { firebaseStore } from "..";
 import { SessionContext } from ".";
+import { useCreateUser } from "../services/UserService";
+import { UserInterface } from "../types/UserType";
 
 export interface SessionState {
   status: "loading" | "unauthenticated" | "authenticated";
@@ -26,6 +29,7 @@ export interface SessionActions {
   login: () => Promise<void>;
   logout: () => Promise<void>;
   redirect: () => Promise<void>;
+  update: (user: UserInterface) => Promise<void>;
 }
 
 interface SessionProviderProps {
@@ -96,17 +100,40 @@ export const SessionProvider: Component<SessionProviderProps> = (props) => {
 
         localStorage.setItem("user", JSON.stringify(user));
 
-        const res = await getDoc(doc(firebaseStore, "admins", user.uid));
+        const adminRes = await getDoc(doc(firebaseStore, "admins", user.uid));
 
-        res.exists() ? (admin = true) : (admin = false);
+        adminRes.exists() ? (admin = true) : (admin = false);
         if (admin) localStorage.setItem("admin", "true");
 
         setState({ status: "authenticated", auth, user, admin });
+
+        const userRes = await getDoc(doc(firebaseStore, "users", user.uid));
+        if (!userRes) await useCreateUser(user.uid);
       } catch (error: any) {
         console.log(error);
       }
 
       localStorage.removeItem("redirect");
+    },
+
+    update: async (user: UserInterface) => {
+      let auth = getAuth();
+
+      if (!auth.currentUser) return;
+
+      await updateProfile(auth.currentUser, {
+        displayName: user.name,
+        photoURL: user.picture,
+      });
+
+      auth = getAuth();
+      const userRes = auth.currentUser;
+
+      if (!userRes) throw new Error("User not found");
+
+      localStorage.setItem("user", JSON.stringify(userRes));
+
+      setState({ ...state(), auth, user: userRes });
     },
   };
 

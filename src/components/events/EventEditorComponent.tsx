@@ -50,7 +50,7 @@ const EventEditorComponent: Component<EventEditorProps> = (props) => {
           <div class="w-1/5">
             <DatePickerComponent
               defaultDate={props.event().date}
-              date={() => props.event().date}
+              insSelectedDate={props.event().date}
               setDate={(date) => props.setEvent({ ...props.event(), date })}
             />
           </div>

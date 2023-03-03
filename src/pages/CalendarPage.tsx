@@ -170,7 +170,7 @@ const CalendarPage: Component = () => {
                   </button>
                   <Show when={session().admin}>
                     <button
-                      class="flex items-center justify-center bg-white h-10 px-2 bg-yellow text-text rounded-full hover:bg-red"
+                      class="flex items-center justify-center h-10 px-2 bg-yellow text-text rounded-full hover:bg-red"
                       onClick={() => {
                         try {
                           useUpdateDate("current", selectedDate());

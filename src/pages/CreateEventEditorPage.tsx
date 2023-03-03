@@ -18,7 +18,7 @@ const CreateEventEditorPage: Component = () => {
     description: "",
     contents: "",
     thumbnail: "",
-    date: CalendarClass.CURRENT_DATE,
+    date: CalendarClass.START_DATE,
   });
   const [editor, setEditor] = createSignal<Editor>();
 

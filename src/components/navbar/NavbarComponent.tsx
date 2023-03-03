@@ -20,7 +20,7 @@ const NavbarComponent: Component = () => {
     <>
       <div
         ref={parent}
-        class="sticky top-0 flex justify-between items-center h-32 text-text bg-purple px-12 z-[1000] select-none shadow-sm shadow-black"
+        class="sticky top-0 flex justify-between items-center h-20 text-text bg-purple px-12 z-[1000] select-none shadow-sm shadow-black"
       >
         <div class="flex items-center gap-4">
           <A href="/">

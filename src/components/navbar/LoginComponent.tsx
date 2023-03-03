@@ -38,7 +38,11 @@ const LoginComponent: Component = () => {
             <Show when={panel()}>
               <PanelComponent>
                 <div class="flex flex-col gap-2 text-black bg-white p-4 rounded-md shadow-md">
-                  <A href="/dashboard" class="hover:text-yellow">
+                  <A
+                    href="/dashboard"
+                    class="hover:text-yellow"
+                    onClick={() => setPanel(false)}
+                  >
                     Dashboard
                   </A>
                   <div class="border-b-2 border-lightWhite"></div>
@@ -46,6 +50,7 @@ const LoginComponent: Component = () => {
                     <button
                       onClick={() => {
                         actions.logout();
+                        setPanel(false);
                       }}
                     >
                       Flee

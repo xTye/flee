@@ -15,8 +15,8 @@ export const useFetchCharacter = async (id: string) => {
     };
 
     return character;
-  } catch (e: any) {
-    console.error(e.message);
+  } catch (e) {
+    console.log(e);
   }
 };
 
@@ -38,7 +38,7 @@ export const useFetchCharacters = async () => {
     });
 
     return characters;
-  } catch (e: any) {
-    console.error(e.message);
+  } catch (e) {
+    console.log(e);
   }
 };

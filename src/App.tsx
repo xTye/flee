@@ -17,6 +17,7 @@ import CreateEventEditorPage from "./pages/CreateEventEditorPage";
 import UpdateEventEditorPage from "./pages/UpdateEventEditorPage";
 import CreateCharacterEditorPage from "./pages/CreateCharacterEditorPage";
 import UpdateCharacterEditorPage from "./pages/UpdateCharacterEditorPage";
+import UpdateUserEditorPage from "./pages/UpdateUserEditorPage";
 
 const App: Component = () => {
   return (
@@ -43,6 +44,7 @@ const App: Component = () => {
               path="/character-editor/:id"
               component={UpdateCharacterEditorPage}
             />
+            <Route path="/user-editor/:id" component={UpdateUserEditorPage} />
           </Routes>
         </Router>
       </SessionProvider>
