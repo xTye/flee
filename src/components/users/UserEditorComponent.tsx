@@ -1,12 +1,8 @@
 import { Accessor, Component, For } from "solid-js";
-
-import DatePickerComponent from "../DatePickerComponent";
-import TiptapComponent from "../TiptapComponent";
-import { Editor } from "@tiptap/core";
 import { UserInterface } from "../../types/UserType";
 
 const UserEditorComponent: Component<{
-  user: Accessor<UserInterface>;
+  insUser: UserInterface;
   setUser: (user: UserInterface) => void;
 }> = (props) => {
   return (
@@ -21,30 +17,26 @@ const UserEditorComponent: Component<{
             </div>
             <div class="flex flex-col gap-6 w-full">
               <input
-                value={props.user().name}
+                value={props.insUser.name}
                 class="text-black rounded-sm"
-                onChange={(e) =>
+                onInput={(e) =>
                   props.setUser({
-                    ...props.user(),
+                    ...props.insUser,
                     name: e.currentTarget.value,
                   })
                 }
               />
-              <For each={props.user().tools}>
+              <For each={props.insUser.tools}>
                 {(tool, i) => (
                   <>
                     <div class="flex">
                       <input
-                        value={props.user().tools}
+                        value={tool}
                         class="w-full text-black rounded-sm"
-                        onChange={(e) => {
-                          const tools = [...props.user().tools];
-                          tools[i()] = e.currentTarget.value;
+                        onInput={(e) => {
+                          props.insUser.tools[i()] = e.currentTarget.value;
 
-                          props.setUser({
-                            ...props.user(),
-                            tools,
-                          });
+                          props.setUser(props.insUser);
                         }}
                       />
                       <button class="p-1 hover:bg-red rounded-md">
@@ -52,13 +44,14 @@ const UserEditorComponent: Component<{
                           src="/util-images/trash.svg"
                           class="w-4 h-4"
                           onClick={() => {
+                            console.log();
                             const tools: string[] = [];
 
-                            for (let j = 0; j < props.user().tools.length; j++)
-                              if (j !== i()) tools.push(props.user().tools[j]);
+                            for (let j = 0; j < props.insUser.tools.length; j++)
+                              if (j !== i()) tools.push(props.insUser.tools[j]);
 
                             props.setUser({
-                              ...props.user(),
+                              ...props.insUser,
                               tools,
                             });
                           }}
@@ -74,10 +67,11 @@ const UserEditorComponent: Component<{
                     src="/util-images/plus.svg"
                     class="w-4 h-4"
                     onClick={() => {
-                      const tools: string[] = [...props.user().tools];
+                      const tools: string[] = [...props.insUser.tools];
                       tools.push("");
+                      console.log(tools);
 
-                      props.setUser({ ...props.user(), tools });
+                      props.setUser({ ...props.insUser, tools });
                     }}
                   />
                 </button>
@@ -89,11 +83,11 @@ const UserEditorComponent: Component<{
           <div class="flex items-center gap-8">
             <div>Picture</div>
             <input
-              value={props.user().picture}
+              value={props.insUser.picture}
               class="w-full text-black rounded-sm"
               onChange={(e) =>
                 props.setUser({
-                  ...props.user(),
+                  ...props.insUser,
                   picture: e.currentTarget.value,
                 })
               }
@@ -102,9 +96,9 @@ const UserEditorComponent: Component<{
           <img
             class="object-cover aspect-square"
             src={
-              props.user().picture === ""
+              props.insUser.picture === ""
                 ? "/character/character-images/instance.PNG"
-                : props.user().picture
+                : props.insUser.picture
             }
             alt="User image"
             referrerPolicy="no-referrer"

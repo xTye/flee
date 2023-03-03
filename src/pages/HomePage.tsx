@@ -21,7 +21,14 @@ const HomePage: Component = () => {
           src="https://player.twitch.tv/?channel=jo_finch&parent=fleednd.com"
         />
         <div class="flex justify-center w-full bg-black lg:h-[500px]">
-          <Show when={event()}>
+          <Show
+            when={event()}
+            fallback={
+              <div class="flex w-full justify-center items-center">
+                <LoadingComponent />
+              </div>
+            }
+          >
             <div class="flex flex-col md:flex-row justify-between items-center md:w-4/5">
               <div class="flex flex-col h-full gap-4 p-8">
                 <div class="text-6xl">{event()?.title}</div>
@@ -40,11 +47,6 @@ const HomePage: Component = () => {
                 src={event()?.thumbnail}
                 alt="Article image"
               />
-            </div>
-          </Show>
-          <Show when={!event()}>
-            <div class="flex w-full justify-center items-center">
-              <LoadingComponent />
             </div>
           </Show>
         </div>

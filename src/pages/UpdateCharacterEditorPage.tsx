@@ -8,6 +8,7 @@ import { firebaseStore } from "..";
 import { Editor } from "@tiptap/core";
 import { CharacterInterface } from "../types/CharacterType";
 import { useFetchCharacter } from "../services/CharacterService";
+import LoadingComponent from "../components/utils/LoadingComponent";
 
 const UpdateCharacterEditorPage: Component = () => {
   const [session, actions] = useSession();
@@ -84,7 +85,7 @@ const UpdateCharacterEditorPage: Component = () => {
             </button>
           </div>
         </div>
-        <Show when={character() != undefined}>
+        <Show when={character()} fallback={<LoadingComponent />}>
           <CharacterEditorComponent
             setEditor={setEditor}
             editorDefaultContent={editorDefaultContent}

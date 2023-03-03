@@ -8,6 +8,7 @@ import { firebaseStore } from "..";
 import { Editor } from "@tiptap/core";
 import { UserInterface } from "../types/UserType";
 import { useFetchUser, useUpdateUser } from "../services/UserService";
+import LoadingComponent from "../components/utils/LoadingComponent";
 
 const UpdateUserEditorPage: Component = () => {
   const [session, actions] = useSession();
@@ -73,14 +74,14 @@ const UpdateUserEditorPage: Component = () => {
             </button>
           </div>
         </div>
-        <Show when={user() != undefined}>
-          <UserEditorComponent
-            setEditor={setEditor}
-            editorDefaultContent={editorDefaultContent}
-            // @ts-ignore
-            user={user}
-            setUser={setUser}
-          />
+        <Show when={user()} fallback={<LoadingComponent />} keyed>
+          {(insUser: UserInterface) => (
+            <UserEditorComponent
+              //@ts-ignore
+              insUser={insUser}
+              setUser={setUser}
+            />
+          )}
         </Show>
       </div>
     </>

@@ -8,6 +8,7 @@ import { firebaseStore } from "..";
 import { Editor } from "@tiptap/core";
 import { EventInterface } from "../types/EventType";
 import { useFetchEvent } from "../services/EventService";
+import LoadingComponent from "../components/utils/LoadingComponent";
 
 const UpdateEventEditorPage: Component = () => {
   const [session, actions] = useSession();
@@ -77,7 +78,7 @@ const UpdateEventEditorPage: Component = () => {
             </button>
           </div>
         </div>
-        <Show when={event() != undefined}>
+        <Show when={event()} fallback={<LoadingComponent />}>
           <EventEditorComponent
             setEditor={setEditor}
             editorDefaultContent={editorDefaultContent}

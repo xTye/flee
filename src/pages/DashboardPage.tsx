@@ -1,4 +1,11 @@
-import { Component, Show, createMemo, createSignal, onMount } from "solid-js";
+import {
+  Component,
+  For,
+  Show,
+  createMemo,
+  createSignal,
+  onMount,
+} from "solid-js";
 import { A, useNavigate } from "@solidjs/router";
 import { navbarHeight } from "../components/navbar/NavbarComponent";
 import { useSession } from "../auth";
@@ -73,19 +80,14 @@ const DashboardPage: Component = () => {
             </button>
           </Show>
         </div>
-        {/* <TwitchEmbedComponent
-          class={"w-3/5 self-center"}
-          src="https://player.twitch.tv/?channel=jo_finch&parent=fleednd.com"
-        /> */}
         <div class="flex justify-between gap-2">
-          {/* <iframe
-            src="https://docs.google.com/document/d/1IlCK-w6unVGRH0dPMZ97MyuksUQsAazfPhOwgFjsX50/edit?embedded=true"
-            class="basis-1/2 h-[600px]"
-          ></iframe> */}
-          {/* <iframe
-            src="https://docs.google.com/spreadsheets/d/1sZkFUeiAcg6ZmkJ1JfVq21pKyilsHa3yI2M0BeTauRo/edit#gid=0?embedded=true"
-            class="basis-1/2 h-[600px]"
-          ></iframe> */}
+          <Show when={import.meta.env.MODE !== "development"}>
+            <For each={user()?.tools}>
+              {(tool) => (
+                <iframe src={tool} class="basis-1/2 h-[700px]"></iframe>
+              )}
+            </For>
+          </Show>
         </div>
       </div>
     </>
