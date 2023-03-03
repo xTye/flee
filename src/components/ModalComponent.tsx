@@ -30,7 +30,7 @@ const ModalComponent: Component<{
       >
         <div
           ref={contentsDiv}
-          class="flex items-center justify-center w-3/5 bg-purple rounded-md shadow-md"
+          class="flex items-center justify-center bg-purple rounded-md shadow-md"
         >
           {children}
         </div>

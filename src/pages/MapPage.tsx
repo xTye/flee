@@ -70,8 +70,8 @@ const MapPage: Component = () => {
         }}
         class="relative"
       >
-        <div class="absolute top-0 z-[5000]">
-          <div class="flex flex-col gap-1 w-72 h-96 m-4 p-4 bg-white rounded-md overflow-hidden">
+        <div class="absolute bottom-0 inset-x-0 md:inset-auto md:top-0 z-[1000]">
+          <div class="flex flex-col gap-1 w-full md:w-72 h-96 mt-1 md:m-4 p-4 bg-white md:rounded-md overflow-hidden">
             <div class="flex font-bold items-center justify-center pb-2 gap-4 border-b-2 border-purple">
               <div class="text-lg">Legend</div>
               <div class="flex flex-col gap-1">
@@ -122,8 +122,7 @@ const MapPage: Component = () => {
                                 insLeafletEditMarker,
                                 setLeafletEditMarker,
                                 setEditMarker,
-                                setMarker,
-                                navigator
+                                setMarker
                               );
                             }}
                           >

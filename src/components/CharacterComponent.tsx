@@ -13,7 +13,7 @@ const CharacterComponent: Component<{
 }> = (props) => {
   return (
     <>
-      <div class="flex flex-col gap-4 p-10 w-1/4">
+      <div class="flex flex-col gap-4 p-10 lg:w-1/4">
         <img
           class="object-cover aspect-square rounded-lg shadow-md shadow-black"
           src={props.image}
@@ -24,7 +24,7 @@ const CharacterComponent: Component<{
           <div>{props.class}</div>
         </div>
         <div class="text-base text-yellow">{props.title}</div>
-        <div class="text-sm h-52" innerHTML={props.description} />
+        <div class="text-sm h-52 text-justify" innerHTML={props.description} />
         <div class="flex justify-between gap-2 items-center">
           <div class="text-sm">{props.mainAttack}</div>
           <img class="w-1/5" src={props.mainAttackImage} alt="main attack" />

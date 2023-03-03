@@ -57,10 +57,10 @@ const CalendarPage: Component = () => {
           height: (calendarDiv.style.height =
             window.innerHeight - navbarHeight.height + "px"),
         }}
-        class="relative bg-background p-12"
+        class="relative bg-background lg:p-12"
       >
         <div class="flex flex-col bg-lightPurple h-full rounded-b-md">
-          <div class="flex justify-between items-center bg-purple h-20 px-20">
+          <div class="flex justify-between items-center bg-purple h-20 md:px-20">
             <Show when={currentDate()}>
               <>
                 <div class="text-text">{`Era: ${selectedDate().era} | Year: ${
@@ -170,7 +170,7 @@ const CalendarPage: Component = () => {
                   </button>
                   <Show when={session().admin}>
                     <button
-                      class="flex items-center justify-center h-10 px-2 bg-yellow text-text rounded-full hover:bg-red"
+                      class="flex items-center justify-center h-10 px-6 md:px-2 bg-yellow text-text rounded-full hover:bg-red"
                       onClick={() => {
                         try {
                           useUpdateDate("current", selectedDate());
@@ -180,7 +180,7 @@ const CalendarPage: Component = () => {
                         }
                       }}
                     >
-                      Set current day
+                      Set
                     </button>
                   </Show>
                 </div>
@@ -188,7 +188,7 @@ const CalendarPage: Component = () => {
             </Show>
           </div>
 
-          <div class="grid grid-cols-10 grid-rows-3 gap-1 h-full text-sm p-2 select-none overflow-hidden">
+          <div class="grid grid-cols-5 grid-rows-6 lg:grid-cols-6 lg:grid-rows-5 xl:grid-cols-10 xl:grid-rows-3 gap-1 h-full text-xs md:text-sm p-2 select-none overflow-hidden">
             <For each={dates()}>
               {(date) => (
                 <div

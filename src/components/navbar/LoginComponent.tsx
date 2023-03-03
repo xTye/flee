@@ -1,11 +1,14 @@
-import { Component, Show, createSignal, onMount } from "solid-js";
+import { Accessor, Component, Show, createSignal, onMount } from "solid-js";
 import { A } from "@solidjs/router";
 import { useSession } from "../../auth";
 import { clickOutside } from "../../utils/clickOutside";
 
 import PanelComponent from "./PanelComponent";
+import PageLinkComponent from "./PageLinkComponent";
 
-const LoginComponent: Component = () => {
+const LoginComponent: Component<{
+  width?: Accessor<number>;
+}> = (props) => {
   const [session, actions] = useSession();
 
   let panelDiv = document.createElement("div") as HTMLDivElement;
@@ -37,7 +40,7 @@ const LoginComponent: Component = () => {
           <div ref={panelDiv}>
             <Show when={panel()}>
               <PanelComponent>
-                <div class="flex flex-col gap-2 text-black bg-white p-4 rounded-md shadow-md">
+                <div class="flex flex-col gap-2 text-xl text-black bg-white p-4 rounded-md shadow-md">
                   <A
                     href="/dashboard"
                     class="hover:text-yellow"
@@ -46,6 +49,10 @@ const LoginComponent: Component = () => {
                     Dashboard
                   </A>
                   <div class="border-b-2 border-lightWhite"></div>
+                  <Show when={props.width && props.width() < 768}>
+                    <PageLinkComponent onClick={() => setPanel(false)} />
+                    <div class="border-b-2 border-lightWhite"></div>
+                  </Show>
                   <div class="hover:text-yellow">
                     <button
                       onClick={() => {

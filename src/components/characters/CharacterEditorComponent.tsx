@@ -13,11 +13,11 @@ const CharacterEditorComponent: Component<{
 }> = (props) => {
   return (
     <>
-      <div class="flex">
+      <div class="flex flex-col md:flex-row gap-6 md:gap-0">
         {/* Add a relative where the width will break the flexbox */}
-        <div class="relative w-full flex flex-col gap-6 p-8 overflow-hidden">
+        <div class="relative w-full flex flex-col gap-6 md:p-8 overflow-hidden">
           <div class="flex items-center gap-4">
-            <div class="flex flex-col justify-center gap-6">
+            <div class="flex flex-col gap-6 w-24">
               <div>Name</div>
               <div>User Id</div>
               <div>Title</div>
@@ -27,10 +27,10 @@ const CharacterEditorComponent: Component<{
               <div>Home</div>
               <div>Moves</div>
             </div>
-            <div class="flex flex-col justify-between w-full h-full">
+            <div class="flex flex-col gap-6 w-full">
               <input
                 value={props.character().name}
-                class="w-2/5 text-black rounded-sm"
+                class="w-full lg:w-2/5 text-black rounded-sm"
                 onChange={(e) =>
                   props.setCharacter({
                     ...props.character(),
@@ -40,7 +40,7 @@ const CharacterEditorComponent: Component<{
               />
               <input
                 value={props.character().userId}
-                class="w-2/5 text-black rounded-sm"
+                class="w-full lg:w-2/5 text-black rounded-sm"
                 onChange={(e) =>
                   props.setCharacter({
                     ...props.character(),
@@ -119,7 +119,7 @@ const CharacterEditorComponent: Component<{
             />
           </div>
         </div>
-        <div class="flex flex-col gap-4 w-2/5">
+        <div class="flex flex-col gap-4 w-full md:w-2/5">
           <div class="flex items-center gap-8">
             <div>Image</div>
             <input

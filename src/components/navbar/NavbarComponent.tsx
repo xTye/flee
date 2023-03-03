@@ -1,19 +1,28 @@
-import { Component, onMount } from "solid-js";
+import { Component, Show, createSignal, onCleanup, onMount } from "solid-js";
 import { createStore } from "solid-js/store";
 import { A } from "@solidjs/router";
 import LoginComponent from "./LoginComponent";
+import PageLinkComponent from "./PageLinkComponent";
 
 export const [navbarHeight, setNavbarHeight] = createStore({ height: 0 });
 
 const NavbarComponent: Component = () => {
   let parent: any;
 
+  const [width, setWidth] = createSignal(window.innerWidth);
+
   onMount(() => {
     setNavbarHeight({ height: parent.getBoundingClientRect().height });
   });
 
-  window.addEventListener("resize", () => {
-    // TODO: Add a resize to height on change navbar height
+  const cb = () => {
+    setWidth(window.innerWidth);
+  };
+
+  window.addEventListener("resize", cb);
+
+  onCleanup(() => {
+    window.removeEventListener("resize", cb);
   });
 
   return (
@@ -32,26 +41,20 @@ const NavbarComponent: Component = () => {
           </A>
         </div>
 
-        <div class="flex items-center h-full gap-12 text-xl">
-          <A href="/" class="hover:text-yellow">
-            Home
-          </A>
-          <A href="/characters" class="hover:text-yellow">
-            Characters
-          </A>
-          <A href="/map" class="hover:text-yellow">
-            Map
-          </A>
-          <A href="/calendar" class="hover:text-yellow">
-            Calendar
-          </A>
-          <A href="/events" class="hover:text-yellow">
-            Events
-          </A>
+        <Show when={width() < 768}>
           <div class="cursor-pointer">
-            <LoginComponent />
+            <LoginComponent width={width} />
           </div>
-        </div>
+        </Show>
+
+        <Show when={width() >= 768}>
+          <div class="flex items-center h-full gap-12 text-xl">
+            <PageLinkComponent />
+            <div class="cursor-pointer">
+              <LoginComponent />
+            </div>
+          </div>
+        </Show>
       </div>
     </>
   );

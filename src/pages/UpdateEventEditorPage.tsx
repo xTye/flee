@@ -59,8 +59,8 @@ const UpdateEventEditorPage: Component = () => {
 
   return (
     <>
-      <div class="flex flex-col gap-4 min-h-screen bg-background text-text p-20">
-        <div class="flex justify-between items-center">
+      <div class="flex flex-col gap-4 min-h-screen bg-background text-text p-4 sm:p-10 lg:p-20">
+        <div class="flex flex-col gap-4 sm:flex-row justify-between items-center">
           <div class="text-4xl">Update Event</div>
           <div class="flex gap-4">
             <A

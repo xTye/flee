@@ -5,7 +5,7 @@ const PanelComponent: Component<{
 }> = ({ children }) => {
   return (
     <>
-      <div class="absolute right-0 flex justify-center items-center z-[2000]">
+      <div class="absolute right-0 flex justify-center items-center z-[5000]">
         {children}
       </div>
     </>

@@ -15,32 +15,28 @@ const HomePage: Component = () => {
 
   return (
     <>
-      <div class="flex flex-col items-center min-h-screen bg-background text-text">
+      <div class="flex flex-col items-center md:gap-6 min-h-screen bg-background text-text">
         <TwitchEmbedComponent
-          class={"w-3/5"}
+          class={"w-full lg:w-4/5 md:w-3/5 md:rounded-b-lg"}
           src="https://player.twitch.tv/?channel=jo_finch&parent=fleednd.com"
         />
-        <div class="flex justify-center w-full bg-black h-[500px]">
+        <div class="flex justify-center w-full bg-black lg:h-[500px]">
           <Show when={event()}>
-            <div class="flex justify-between items-center md:w-4/5">
+            <div class="flex flex-col md:flex-row justify-between items-center md:w-4/5">
               <div class="flex flex-col h-full gap-4 p-8">
                 <div class="text-6xl">{event()?.title}</div>
-                <div class="flex items-center gap-8">
+                <div class="flex flex-col xl:flex-row items-center gap-8">
                   <A
-                    class="flex items-center justify-center w-60 h-10 bg-yellow text-center rounded-full hover:bg-red"
+                    class="flex items-center justify-center w-32 px-4 py-2 bg-yellow text-center rounded-full hover:bg-red"
                     href={`/events/${event()?.id}`}
                   >
                     Read more!
                   </A>
                   <div class="text-lg">{event()?.description}</div>
                 </div>
-                <div
-                  class="text-xl break-words"
-                  innerHTML={event()?.contents}
-                />
               </div>
               <img
-                class="w-40 h-40 md:w-96 md:h-96 aspect-square object-cover"
+                class="w-full md:w-40 lg:w-96 aspect-square object-cover"
                 src={event()?.thumbnail}
                 alt="Article image"
               />
@@ -52,9 +48,9 @@ const HomePage: Component = () => {
             </div>
           </Show>
         </div>
-        <div class="flex justify-between items-center md:w-4/5 h-[450px]">
+        <div class="flex flex-col-reverse md:flex-row justify-between items-center md:w-4/5 lg:h-[450px]">
           <img
-            class="w-40 h-40 md:w-96 md:h-96 aspect-square object-cover"
+            class="w-full md:w-40 lg:w-96 aspect-square object-cover"
             src="/campaign-images/wanderingarmsnobg.png"
             alt="Article image"
           />

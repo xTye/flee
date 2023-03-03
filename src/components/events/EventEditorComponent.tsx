@@ -15,9 +15,9 @@ interface EventEditorProps {
 const EventEditorComponent: Component<EventEditorProps> = (props) => {
   return (
     <>
-      <div class="flex">
+      <div class="flex flex-col md:flex-row gap-6 md:gap-0">
         {/* Add a relative where the width will break the flexbox */}
-        <div class="relative w-full flex flex-col gap-6 p-8 overflow-hidden">
+        <div class="relative w-full flex flex-col gap-6 md:p-8 overflow-hidden">
           <div class="flex items-center gap-4">
             <div class="flex flex-col justify-center gap-6">
               <div>Title</div>
@@ -26,7 +26,7 @@ const EventEditorComponent: Component<EventEditorProps> = (props) => {
             <div class="flex flex-col justify-center w-full gap-6">
               <input
                 value={props.event().title}
-                class="w-2/5 text-black rounded-sm"
+                class="w-full lg:w-2/5 text-black rounded-sm"
                 onChange={(e) =>
                   props.setEvent({
                     ...props.event(),
@@ -47,7 +47,7 @@ const EventEditorComponent: Component<EventEditorProps> = (props) => {
             </div>
           </div>
 
-          <div class="w-1/5">
+          <div class="w-3/5 sm:w-2/5 md:w-1/5">
             <DatePickerComponent
               defaultDate={props.event().date}
               insSelectedDate={props.event().date}
@@ -63,7 +63,7 @@ const EventEditorComponent: Component<EventEditorProps> = (props) => {
             />
           </div>
         </div>
-        <div class="flex flex-col gap-4 w-2/5">
+        <div class="flex flex-col gap-4 w-full md:w-2/5">
           <div class="flex items-center gap-8">
             <div>Thumbnail</div>
             <input

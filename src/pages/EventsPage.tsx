@@ -16,19 +16,19 @@ const EventsPage: Component = () => {
   return (
     <>
       <div class="flex flex-col min-h-screen bg-blue pb-12">
-        <div class="flex justify-between items-center px-40 py-12">
+        <div class="flex justify-between items-center md:px-40 px-4 py-12">
           <div class="text-text text-4xl">News</div>
           <Show when={session().admin}>
             <A
               href="/event-editor"
-              class="flex items-center justify-center w-48 h-10 bg-yellow rounded-full hover:bg-red text-text"
+              class="flex items-center justify-center w-32 h-10 bg-yellow rounded-full hover:bg-red text-text"
             >
               New Event
             </A>
           </Show>
         </div>
 
-        <div class="grid grid-cols-3 gap-4 px-32">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:px-32">
           <For each={events()}>
             {(event) => (
               <>

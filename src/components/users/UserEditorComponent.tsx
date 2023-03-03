@@ -11,15 +11,15 @@ const UserEditorComponent: Component<{
 }> = (props) => {
   return (
     <>
-      <div class="flex">
+      <div class="flex flex-col md:flex-row gap-6 md:gap-0">
         {/* Add a relative where the width will break the flexbox */}
-        <div class="relative w-full flex flex-col gap-6 p-8 overflow-hidden">
+        <div class="relative w-full flex flex-col gap-6 md:p-8 overflow-hidden">
           <div class="flex items-start gap-4">
-            <div class="flex flex-col justify-center gap-6">
-              <div>Title</div>
+            <div class="flex flex-col justify-center gap-6 w-24">
+              <div>Name</div>
               <div>Tools</div>
             </div>
-            <div class="flex flex-col justify-center w-2/5 gap-6">
+            <div class="flex flex-col gap-6 w-full">
               <input
                 value={props.user().name}
                 class="text-black rounded-sm"
@@ -85,7 +85,7 @@ const UserEditorComponent: Component<{
             </div>
           </div>
         </div>
-        <div class="flex flex-col gap-4 w-2/5">
+        <div class="flex flex-col gap-4 w-full md:w-2/5">
           <div class="flex items-center gap-8">
             <div>Picture</div>
             <input
