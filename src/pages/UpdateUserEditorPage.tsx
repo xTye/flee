@@ -23,7 +23,7 @@ const UpdateUserEditorPage: Component = () => {
 
   if (session().status === "loading") return <div>Loading</div>;
 
-  if (!session().admin || session().status === "unauthenticated") {
+  if (session().status === "unauthenticated") {
     navigate("/");
     return <div>Not admin</div>;
   }

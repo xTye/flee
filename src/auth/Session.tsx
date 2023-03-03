@@ -108,7 +108,7 @@ export const SessionProvider: Component<SessionProviderProps> = (props) => {
         setState({ status: "authenticated", auth, user, admin });
 
         const userRes = await getDoc(doc(firebaseStore, "users", user.uid));
-        if (!userRes) await useCreateUser(user.uid);
+        if (!userRes.exists()) await useCreateUser(user.uid);
       } catch (error: any) {
         console.log(error);
       }
