@@ -1,6 +1,5 @@
 import Leaflet from "leaflet";
-import { Accessor, Setter, onCleanup } from "solid-js";
-import { Navigator } from "@solidjs/router";
+import { Accessor, Setter } from "solid-js";
 
 import { MarkerInterface } from "../types/MarkerType";
 import {
@@ -205,12 +204,14 @@ export const useComfirmEditMarker = async (
     };
 
     // Call services
-    let id = "";
+    let id;
 
     if (insEditMarker.id && insEditMarker.previousData) {
       await useUpdateMarker(insEditMarker.id, marker);
       id = insEditMarker.id;
     } else id = await useCreateMarker(marker);
+
+    if (!id) return;
 
     // Update click listener
     leafletClickListener(

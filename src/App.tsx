@@ -1,3 +1,4 @@
+/* @refresh reload */
 import { Component } from "solid-js";
 import { Router, Routes, Route } from "@solidjs/router";
 
@@ -18,6 +19,7 @@ import UpdateEventEditorPage from "./pages/UpdateEventEditorPage";
 import CreateCharacterEditorPage from "./pages/CreateCharacterEditorPage";
 import UpdateCharacterEditorPage from "./pages/UpdateCharacterEditorPage";
 import UpdateUserEditorPage from "./pages/UpdateUserEditorPage";
+import BattlemapPage from "./pages/BattlemapPage";
 
 const App: Component = () => {
   return (
@@ -45,6 +47,7 @@ const App: Component = () => {
               component={UpdateCharacterEditorPage}
             />
             <Route path="/user-editor/:id" component={UpdateUserEditorPage} />
+            <Route path="/combat" component={BattlemapPage} />
           </Routes>
         </Router>
       </SessionProvider>
