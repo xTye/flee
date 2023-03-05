@@ -1,15 +1,17 @@
-import { Component } from "solid-js";
+import { Component, onMount } from "solid-js";
 import "./LoadingComponent.css";
 
-const LoadingComponent: Component = () => {
+const LoadingComponent: Component<{
+  color?: "white" | "black";
+}> = (props) => {
   return (
     <>
       <div class="flex h-full justify-center items-center w-full">
-        <div class="lds-ellipsis">
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
+        <div id="parent" class="lds-ellipsis">
+          <div style={{ background: props.color || "white" }}></div>
+          <div style={{ background: props.color || "white" }}></div>
+          <div style={{ background: props.color || "white" }}></div>
+          <div style={{ background: props.color || "white" }}></div>
         </div>
       </div>
     </>

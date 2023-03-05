@@ -98,7 +98,7 @@ export const useCreateEditMarker = (
     maps: [],
   });
 
-  leafletMarker.addEventListener("drag", () => {
+  leafletMarker.on("drag", () => {
     // Accessor because editMarker() is undefined
     const insEditMarker = editMarker();
     if (!insEditMarker) return;
@@ -140,7 +140,7 @@ export const useUpdateEditMarker = (
     },
   });
 
-  leafletEditMarker.addEventListener("drag", () => {
+  leafletEditMarker.on("drag", () => {
     // Accessor because editMarker() is undefined
     const insEditMarker = editMarker();
     if (!insEditMarker) return;
@@ -246,7 +246,7 @@ const leafletClickListener = (
 ) => {
   leafletMarker.removeEventListener("click");
 
-  leafletMarker.addEventListener("click", () => {
+  leafletMarker.on("click", () => {
     if (editMarker()) return;
 
     setMarker(marker);

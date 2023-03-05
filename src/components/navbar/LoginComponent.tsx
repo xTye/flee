@@ -70,10 +70,44 @@ const LoginComponent: Component<{
         </div>
       </Show>
 
-      <Show when={!session().user}>
+      <Show when={!session().user && !props.width}>
         <button class="hover:text-yellow" onClick={() => actions.login()}>
           Login
         </button>
+      </Show>
+
+      <Show when={!session().user && props.width && props.width() < 768}>
+        <div class="relative">
+          <button
+            class="w-12 h-12 rounded-full border-white hover:border-yellow border-2 p-2"
+            onClick={() => setPanel(!panel())}
+          >
+            <img
+              ref={img}
+              src="/util-images/hamburger.svg"
+              referrerPolicy="no-referrer"
+              alt="Profile image"
+            />
+          </button>
+          <div ref={panelDiv}>
+            <Show when={panel()}>
+              <PanelComponent>
+                <div class="flex flex-col gap-2 text-xl text-black bg-white p-4 rounded-md shadow-md">
+                  <PageLinkComponent onClick={() => setPanel(false)} />
+                  <div class="border-b-2 border-lightWhite"></div>
+                  <div class="hover:text-yellow">
+                    <button
+                      class="hover:text-yellow"
+                      onClick={() => actions.login()}
+                    >
+                      Login
+                    </button>
+                  </div>
+                </div>
+              </PanelComponent>
+            </Show>
+          </div>
+        </div>
       </Show>
     </>
   );

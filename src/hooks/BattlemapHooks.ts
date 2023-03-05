@@ -14,18 +14,19 @@ export const useBattlemap = (div: HTMLDivElement) => {
 
   map.zoomControl.setPosition("bottomright");
 
-  console.log(map.getBounds());
+  const backgroundLayer = Leaflet.layerGroup().addTo(map);
 
-  const overlay = Leaflet.imageOverlay(
+  const backgroundImage = Leaflet.imageOverlay(
     "https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/cute-cat-photos-1593441022.jpg",
     map.getBounds()
-  ).bringToFront();
-  overlay.addTo(map);
+  )
+    .bringToFront()
+    .addTo(backgroundLayer);
 
   return map;
 };
 
-export const useGrid = (map: Leaflet.Map) => {
+export const useGridLayer = (map: Leaflet.Map) => {
   const bounds = map.getBounds();
   const grid = Turf.squareGrid(
     [bounds.getWest(), bounds.getSouth(), bounds.getEast(), bounds.getNorth()],
@@ -42,9 +43,9 @@ export const useGrid = (map: Leaflet.Map) => {
 
   const gridLayer = Leaflet.geoJSON(grid);
 
-  gridLayer.addEventListener("click", (e) => {
-    console.log(e);
-  });
-
   gridLayer.addTo(map);
+
+  return gridLayer;
 };
+
+export const useCreateImage = (map: Leaflet.Map) => {};
