@@ -1,6 +1,5 @@
 import { Component, For, Show, createSignal, onMount } from "solid-js";
 
-import Character from "../components/CharacterComponent";
 import CharacterComponent from "../components/CharacterComponent";
 import { useFetchCharacters } from "../services/CharacterService";
 import { CharacterInterface } from "../types/CharacterType";
@@ -63,7 +62,7 @@ const CharactersPage: Component = () => {
               {(character) =>
                 character.type === "former" ? (
                   <>
-                    <Character
+                    <CharacterComponent
                       id={character.id}
                       image={character.image}
                       name={character.name}

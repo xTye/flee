@@ -1,33 +1,26 @@
 import { Component, createSignal } from "solid-js";
 import { useSession } from "../auth";
-import { useNavigate } from "@solidjs/router";
+import { A, useNavigate } from "@solidjs/router";
 
-import CharacterEditorComponent from "../components/characters/CharacterEditorComponent";
+import TeaserEditorComponent from "../components/teasers/TeaserEditorComponent";
 import { addDoc, collection } from "firebase/firestore";
-import { firebaseStore } from "..";
+import { httpsCallable } from "firebase/functions";
+import { firebaseFunctions, firebaseStore } from "..";
 import { Editor } from "@tiptap/core";
 
-import { CharacterInterface } from "../types/CharacterType";
+import { TeaserInterface } from "../types/TeaserType";
+import { useCreateTeaser } from "../services/TeaserService";
 
-const CreateCharacterEditorPage: Component = () => {
+const CreateTeaserEditorPage: Component = () => {
   const [session, actions] = useSession();
   const navigate = useNavigate();
-  const [character, setCharacter] = createSignal<CharacterInterface>({
+  const [teaser, setTeaser] = createSignal<TeaserInterface>({
     id: "",
-    userId: "",
-    name: "",
-    title: "",
-    class: "",
-    sheet: "",
-    sheetType: "",
-    home: "",
-    description: "",
-    image: "",
-    moves: "",
-    movesImage: "",
-    type: "",
+    content: "",
   });
   const [editor, setEditor] = createSignal<Editor>();
+  const [at, setAt] = createSignal(true);
+  const [publish, setPublish] = createSignal(true);
 
   if (session().status === "loading") return <div>Loading</div>;
 
@@ -36,54 +29,62 @@ const CreateCharacterEditorPage: Component = () => {
     return <div>Not admin</div>;
   }
 
-  const postCharacter = async () => {
-    try {
-      const insCharacter = character();
-
-      console.log("Posting character...");
-      const res = await addDoc(collection(firebaseStore, "characters"), {
-        userId: insCharacter.userId,
-        name: insCharacter.name,
-        title: insCharacter.title,
-        class: insCharacter.class,
-        sheet: insCharacter.sheet,
-        sheetType: insCharacter.sheetType,
-        home: insCharacter.home,
-        description: editor()?.getHTML() || "",
-        image: insCharacter.image,
-        moves: insCharacter.moves,
-        movesImage: insCharacter.movesImage,
-        type: insCharacter.type,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      });
-      console.log("Posted character", res);
-      navigate(`/characters/${res.id}`);
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
   return (
     <>
       <div class="flex flex-col gap-4 min-h-screen bg-background text-text p-4 sm:p-10 lg:p-20">
         <div class="flex flex-col gap-4 sm:flex-row justify-between items-center">
-          <div class="text-4xl">Create Character</div>
-          <button
-            onClick={() => postCharacter()}
-            class="flex items-center justify-center w-32 h-10 bg-yellow rounded-full hover:bg-red"
-          >
-            Post Character
-          </button>
+          <div class="text-4xl">Create Teaser</div>
+          <div class="flex gap-4">
+            <A
+              href="/teasers"
+              class="flex items-center justify-center w-32 h-10 bg-yellow rounded-full hover:bg-red"
+            >
+              Go to Teasers
+            </A>
+            <button
+              onClick={async () =>
+                (await useCreateTeaser({
+                  ...teaser(),
+                  at: at(),
+                  publish: publish(),
+                })) && navigate("/teasers")
+              }
+              class="flex items-center justify-center w-32 h-10 bg-yellow rounded-full hover:bg-red"
+            >
+              Post Teaser
+            </button>
+          </div>
         </div>
-        <CharacterEditorComponent
+        <div class="flex items-center gap-4">
+          <input
+            type="checkbox"
+            checked={at()}
+            class="w-4 h-4"
+            onInput={() => {
+              setAt(!at());
+            }}
+          />
+          <div>@The Wandering Eyes</div>
+        </div>
+        <div class="flex items-center gap-4">
+          <input
+            type="checkbox"
+            checked={publish()}
+            class="w-4 h-4"
+            onInput={() => {
+              setPublish(!publish());
+            }}
+          />
+          <div>Publish</div>
+        </div>
+        <TeaserEditorComponent
           setEditor={setEditor}
-          character={character}
-          setCharacter={setCharacter}
+          teaser={teaser}
+          setTeaser={setTeaser}
         />
       </div>
     </>
   );
 };
 
-export default CreateCharacterEditorPage;
+export default CreateTeaserEditorPage;

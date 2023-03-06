@@ -55,12 +55,20 @@ const DashboardPage: Component = () => {
               : "User"}
           </div>
           <Show when={!loading() && user()}>
-            <A
-              href={`/user-editor/${session().user?.uid}`}
-              class="flex items-center justify-center w-32 h-10 bg-yellow rounded-full hover:bg-red"
-            >
-              Edit Account
-            </A>
+            <div class="flex gap-4">
+              <A
+                href={`/user-editor/${session().user?.uid}`}
+                class="flex items-center justify-center w-32 h-10 bg-yellow rounded-full hover:bg-red"
+              >
+                Edit Account
+              </A>
+              <A
+                href="/teasers"
+                class="flex items-center justify-center w-32 h-10 bg-yellow rounded-full hover:bg-red"
+              >
+                Teasers
+              </A>
+            </div>
           </Show>
           <Show when={!loading() && !user()}>
             <button

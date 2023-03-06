@@ -8,6 +8,7 @@ import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 import { getDatabase } from "firebase/database";
+import { connectFunctionsEmulator, getFunctions } from "firebase/functions";
 
 const firebaseConfig = {
   apiKey: "AIzaSyASrzGbTJs9bJwzcLasfpOW1nbq7ymfsyE",
@@ -24,6 +25,10 @@ export const firebaseApp = initializeApp(firebaseConfig);
 export const firebaseStore = getFirestore(firebaseApp);
 export const firebaseStorage = getStorage(firebaseApp);
 export const firebaseDatabase = getDatabase(firebaseApp);
+export const firebaseFunctions = getFunctions(firebaseApp);
+
+if (import.meta.env.MODE === "development")
+  connectFunctionsEmulator(firebaseFunctions, "localhost", 5001);
 
 const root = document.getElementById("root");
 

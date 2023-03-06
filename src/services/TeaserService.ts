@@ -1,44 +1,121 @@
-import { collection, doc as docRef, getDoc, getDocs } from "firebase/firestore";
-import { firebaseStore } from "..";
-import { CharacterInterface } from "../types/CharacterType";
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc as docRef,
+  getDoc,
+  getDocs,
+  orderBy,
+  query,
+  updateDoc,
+} from "firebase/firestore";
+import { firebaseFunctions, firebaseStore } from "..";
+import { TeaserInterface } from "../types/TeaserType";
+import { httpsCallable } from "firebase/functions";
 
-export const useFetchCharacter = async (id: string) => {
+export const useFetchTeaser = async (id: string) => {
   try {
     const doc = await getDoc(docRef(firebaseStore, "teasers", id));
 
-    const data = doc.data() as CharacterInterface;
-    if (!data) throw new Error("No data found for character.");
+    const data = doc.data() as TeaserInterface;
+    if (!data) throw new Error("No data found for teaser.");
 
-    const character: CharacterInterface = {
+    const teaser: TeaserInterface = {
       ...data,
       id: doc.id,
     };
 
-    return character;
+    return teaser;
   } catch (e) {
     console.log(e);
   }
 };
 
-export const useFetchCharacters = async () => {
+export const useFetchTeasers = async () => {
   try {
-    const docs = await getDocs(collection(firebaseStore, "teasers"));
+    const docs = await getDocs(
+      query(collection(firebaseStore, "teasers"), orderBy("createdAt", "desc"))
+    );
 
-    const characters: CharacterInterface[] = [];
+    const teasers: TeaserInterface[] = [];
 
     docs.forEach((doc) => {
-      const data = doc.data() as CharacterInterface;
+      const data = doc.data() as TeaserInterface;
 
-      const character = {
+      const teaser = {
         ...data,
         id: doc.id,
       };
 
-      characters.push(character);
+      teasers.push(teaser);
     });
 
-    return characters;
+    return teasers;
   } catch (e) {
     console.log(e);
   }
+};
+
+export const useCreateTeaser = async (
+  teaser: TeaserInterface & { at: boolean; publish: boolean }
+) => {
+  try {
+    await addDoc(collection(firebaseStore, "teasers"), {
+      content: teaser.content,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
+
+    if (teaser.publish) {
+      console.log("Sending discord message...");
+      const postTeaser = httpsCallable(firebaseFunctions, "postTeaser");
+      await postTeaser({
+        content: teaser.content,
+        at: teaser.at,
+      });
+      console.log("Sent discord message");
+    }
+
+    return true;
+  } catch (e) {
+    console.error(e);
+  }
+
+  return false;
+};
+
+export const useUpdateTeaser = async (
+  teaser: TeaserInterface & { at: boolean; publish: boolean }
+) => {
+  try {
+    await updateDoc(docRef(firebaseStore, "teasers", teaser.id), {
+      content: teaser.content,
+      updatedAt: new Date(),
+    });
+
+    if (teaser.publish) {
+      const postTeaser = httpsCallable(firebaseFunctions, "postTeaser");
+      await postTeaser({
+        content: teaser.content,
+        at: teaser.at,
+      });
+    }
+
+    return true;
+  } catch (e) {
+    console.error(e);
+  }
+
+  return false;
+};
+
+export const useDeleteTeaser = async (id: string) => {
+  try {
+    await deleteDoc(docRef(firebaseStore, "teasers", id));
+    return true;
+  } catch (e) {
+    console.error(e);
+  }
+
+  return false;
 };

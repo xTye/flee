@@ -1,39 +1,56 @@
 import * as functions from "firebase-functions";
 import "dotenv/config";
 
-export const postTeaser = functions.https.onRequest(
-  async (request, response) => {
-    try {
-      const { content } = request.body;
-      const url = process.env.DISCORD_WEBHOOK_URL;
+interface ReqPostTeaser {
+  content: string;
+  at: boolean;
+}
 
-      if (!content || content === "" || typeof content !== "string")
-        throw new Error("Invalid content");
-      if (!url) throw new Error("Invalid discrd webhook URL");
-      const res = await fetch(url, {
-        method: "POST",
-        headers: {
-          "content-type": "application/json",
-        },
-        body: JSON.stringify({
-          content: "<@&803035728958324748>",
-          embeds: [
-            {
-              description: content,
-              color: 2755640,
-            },
-          ],
-          allowed_mentions: {
-            roles: ["803035728958324748"],
-          },
-        }),
-      });
+export const postTeaser = functions.https.onCall(
+  async ({ content, at }: ReqPostTeaser, context) => {
+    const url = process.env.DISCORD_WEBHOOK_URL;
+    if (!url) throw new Error("Invalid discrd webhook URL");
 
-      if (res.status !== 200) throw new Error("Discord webhook failed");
-
-      response.send("Discord webhook sent!");
-    } catch (e) {
-      response.send(e);
+    if (!context.auth) {
+      throw new functions.https.HttpsError(
+        "unauthenticated",
+        "The function must be called " + "while authenticated."
+      );
     }
+
+    if (!content || content === "")
+      throw new functions.https.HttpsError(
+        "invalid-argument",
+        "Content parameter must exist."
+      );
+    if (at === undefined)
+      throw new functions.https.HttpsError(
+        "invalid-argument",
+        "At parameter must exist."
+      );
+
+    const res = await fetch(url, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({
+        ...(at && { content: "<@&803035728958324748>" }),
+        embeds: [
+          {
+            description: content,
+            color: 2755640,
+          },
+        ],
+        allowed_mentions: {
+          roles: ["803035728958324748"],
+        },
+      }),
+    });
+
+    if (res.status !== 204)
+      throw new functions.https.HttpsError("internal", "Discord webhook error");
+
+    return {};
   }
 );

@@ -19,6 +19,9 @@ import CreateCharacterEditorPage from "./pages/CreateCharacterEditorPage";
 import UpdateCharacterEditorPage from "./pages/UpdateCharacterEditorPage";
 import UpdateUserEditorPage from "./pages/UpdateUserEditorPage";
 import BattlemapPage from "./pages/BattlemapPage";
+import TeasersPage from "./pages/TeasersPage";
+import CreateTeaserEditorPage from "./pages/CreateTeaserEditorPage";
+import UpdateTeaserEditorPage from "./pages/UpdateTeaserEditorPage";
 
 const App: Component = () => {
   return (
@@ -46,6 +49,12 @@ const App: Component = () => {
               component={UpdateCharacterEditorPage}
             />
             <Route path="/user-editor/:id" component={UpdateUserEditorPage} />
+            <Route path="/teasers" component={TeasersPage} />
+            <Route path="/teaser-editor" component={CreateTeaserEditorPage} />
+            <Route
+              path="/teaser-editor/:id"
+              component={UpdateTeaserEditorPage}
+            />
             <Route path="/live" component={BattlemapPage} />
           </Routes>
         </Router>
