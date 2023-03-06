@@ -211,11 +211,16 @@ const MapPage: Component = () => {
                         when={smallMapModal().show && i() === smallMapModal().i}
                       >
                         <ModalComponent
+                          ignoreContents
+                          css="h-full"
                           setModal={(show: boolean) =>
                             setSmallMapModal({ i: 0, show })
                           }
                         >
-                          <img src={map} class="w-full object-cover" />
+                          <img
+                            src={map}
+                            class="max-h-[80%] aspect-auto object-cover"
+                          />
                         </ModalComponent>
                       </Show>
                       <img
