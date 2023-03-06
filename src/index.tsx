@@ -7,6 +7,7 @@ import App from "./App";
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
+import { getDatabase } from "firebase/database";
 
 const firebaseConfig = {
   apiKey: "AIzaSyASrzGbTJs9bJwzcLasfpOW1nbq7ymfsyE",
@@ -16,11 +17,13 @@ const firebaseConfig = {
   messagingSenderId: "796176359929",
   appId: "1:796176359929:web:178bad7743e9c3cfa15d28",
   measurementId: "G-W43GXRPJ4Q",
+  databaseURL: "https://flee-website-default-rtdb.firebaseio.com",
 };
 
 export const firebaseApp = initializeApp(firebaseConfig);
 export const firebaseStore = getFirestore(firebaseApp);
 export const firebaseStorage = getStorage(firebaseApp);
+export const firebaseDatabase = getDatabase(firebaseApp);
 
 const root = document.getElementById("root");
 
