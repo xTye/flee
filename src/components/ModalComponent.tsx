@@ -5,7 +5,7 @@ import { navbarHeight } from "./navbar/NavbarComponent";
 const ModalComponent: Component<{
   children?: JSX.Element;
   ignoreContents?: boolean;
-  css?: string;
+  class?: string;
   setModal: (modal: boolean) => void;
 }> = (props) => {
   let contentsDiv = document.createElement("div") as HTMLDivElement;
@@ -36,7 +36,7 @@ const ModalComponent: Component<{
         <div
           ref={contentsDiv}
           class={`flex items-center justify-center ${
-            props.css || "bg-purple"
+            props.class || "bg-purple"
           } rounded-md shadow-md`}
         >
           {props.children}

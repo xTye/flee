@@ -46,7 +46,7 @@ const App: Component = () => {
               component={UpdateCharacterEditorPage}
             />
             <Route path="/user-editor/:id" component={UpdateUserEditorPage} />
-            <Route path="/combat" component={BattlemapPage} />
+            <Route path="/live" component={BattlemapPage} />
           </Routes>
         </Router>
       </SessionProvider>

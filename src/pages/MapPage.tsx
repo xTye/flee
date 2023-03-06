@@ -212,7 +212,7 @@ const MapPage: Component = () => {
                       >
                         <ModalComponent
                           ignoreContents
-                          css="h-full"
+                          class="h-full"
                           setModal={(show: boolean) =>
                             setSmallMapModal({ i: 0, show })
                           }
