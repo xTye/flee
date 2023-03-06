@@ -1,4 +1,7 @@
 import * as functions from "firebase-functions";
+import * as admin from "firebase-admin";
+admin.initializeApp();
+const firebaseStore = admin.firestore();
 import "dotenv/config";
 
 interface ReqPostTeaser {
@@ -8,13 +11,20 @@ interface ReqPostTeaser {
 
 export const postTeaser = functions.https.onCall(
   async ({ content, at }: ReqPostTeaser, context) => {
-    const url = process.env.DISCORD_WEBHOOK_URL;
-    if (!url) throw new Error("Invalid discrd webhook URL");
-
     if (!context.auth) {
       throw new functions.https.HttpsError(
         "unauthenticated",
         "The function must be called " + "while authenticated."
+      );
+    }
+
+    const docRef = firebaseStore.collection("admins").doc(context.auth.uid);
+    const admin = await docRef.get();
+
+    if (!admin.exists) {
+      throw new functions.https.HttpsError(
+        "permission-denied",
+        "Not an admin."
       );
     }
 
@@ -29,7 +39,7 @@ export const postTeaser = functions.https.onCall(
         "At parameter must exist."
       );
 
-    const res = await fetch(url, {
+    const res = await fetch(process.env.DISCORD_WEBHOOK_URL!, {
       method: "POST",
       headers: {
         "content-type": "application/json",

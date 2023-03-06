@@ -67,13 +67,11 @@ export const useCreateTeaser = async (
     });
 
     if (teaser.publish) {
-      console.log("Sending discord message...");
       const postTeaser = httpsCallable(firebaseFunctions, "postTeaser");
       await postTeaser({
         content: teaser.content,
         at: teaser.at,
       });
-      console.log("Sent discord message");
     }
 
     return true;
