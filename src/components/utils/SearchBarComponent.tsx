@@ -13,7 +13,7 @@ const SearchBarComponent: Component<{
   useFetch: (query: string) => Promise<any[] | undefined>;
   itemComponent: (item: any, i: Accessor<number>) => JSX.Element;
 }> = (props) => {
-  const [showResults, setShowResults] = createSignal(true);
+  const [showResults, setShowResults] = createSignal(false);
   const [results, setResults] = createSignal<any[]>([]);
   const [fetching, setFetching] = createSignal(false);
 
