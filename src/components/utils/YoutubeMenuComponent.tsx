@@ -1,4 +1,5 @@
 /* @refresh solid */
+// TODO: Add loading indicator
 import {
   Component,
   For,
@@ -16,6 +17,8 @@ import {
   useFetchMedias,
   useUpdateDatabaseMedia,
 } from "../../services/MediaService";
+import LoadingComponent from "./LoadingComponent";
+import LoadingRingComponent from "./LoadingRingComponent";
 
 const YoutubeMenuComponent: Component = (props) => {
   const [selectedMedia, setSelectedMedia] = createSignal<MediaInterface>();
@@ -23,6 +26,11 @@ const YoutubeMenuComponent: Component = (props) => {
   const [options, setOptions] = createSignal({
     autoplay: true,
     loop: true,
+  });
+
+  const [loading, setLoading] = createSignal({
+    database: false,
+    firestore: false,
   });
 
   const favoriteMediaMap = new Map<string, MediaInterface>();
@@ -54,6 +62,7 @@ const YoutubeMenuComponent: Component = (props) => {
                     setSelectedMedia(item);
                     setShowResults(false);
                   }}
+                  class="w-full h-full"
                 >
                   <div class="flex items-center gap-1">
                     <img src={item.thumbnail} class="h-4" />
@@ -87,52 +96,74 @@ const YoutubeMenuComponent: Component = (props) => {
             </select>
           </Show>
           <div class="flex items-center gap-1">
-            <button
-              class="flex items-center justify-center w-8 h-8 bg-yellow rounded-full hover:bg-red text-text"
-              onClick={async () => {
-                const insPlayingMedia = selectedMedia();
-                if (!insPlayingMedia) return;
-
-                if (favoriteMediaMap.get(insPlayingMedia.id)) {
-                  const res = await useDeleteMedia(insPlayingMedia);
-                  if (!res) return;
-
-                  favoriteMediaMap.delete(insPlayingMedia.id);
-                  setFavoriteMedia([...favoriteMediaMap.values()]);
-                } else {
-                  const res = await useCreateMedia(insPlayingMedia);
-                  if (!res) return;
-
-                  favoriteMediaMap.set(insPlayingMedia.id, insPlayingMedia);
-                  setFavoriteMedia([...favoriteMediaMap.values()]);
-                }
-              }}
+            <Show
+              when={!loading().firestore}
+              fallback={<LoadingRingComponent />}
             >
-              <Show
-                when={favorited()}
-                fallback={
-                  <img src={"/util-images/heart-empty.svg"} class="w-4 h-4" />
-                }
+              <button
+                class="flex items-center justify-center w-8 h-8 bg-yellow rounded-full hover:bg-red text-text"
+                onClick={async () => {
+                  const insPlayingMedia = selectedMedia();
+                  if (!insPlayingMedia || loading().firestore) return;
+
+                  setLoading({ ...loading(), firestore: true });
+                  try {
+                    if (favoriteMediaMap.get(insPlayingMedia.id)) {
+                      const deleted = await useDeleteMedia(insPlayingMedia);
+                      if (!deleted)
+                        throw new Error("Error deleting favorite media");
+
+                      favoriteMediaMap.delete(insPlayingMedia.id);
+                      setFavoriteMedia([...favoriteMediaMap.values()]);
+                    } else {
+                      const created = await useCreateMedia(insPlayingMedia);
+                      if (!created)
+                        throw new Error("Error creating favorite media");
+
+                      favoriteMediaMap.set(insPlayingMedia.id, insPlayingMedia);
+                      setFavoriteMedia([...favoriteMediaMap.values()]);
+                    }
+                  } catch (e) {}
+
+                  setLoading({ ...loading(), firestore: false });
+                }}
               >
-                <img src={"/util-images/heart-full.svg"} class="w-4 h-4" />
-              </Show>
-            </button>
-            <button
-              class="flex items-center justify-center w-8 h-8 bg-yellow rounded-full hover:bg-red text-text"
-              onClick={async () => {
-                await useUpdateDatabaseMedia(undefined);
-              }}
+                <Show
+                  when={favorited()}
+                  fallback={
+                    <img src={"/util-images/heart-empty.svg"} class="w-4 h-4" />
+                  }
+                >
+                  <img src={"/util-images/heart-full.svg"} class="w-4 h-4" />
+                </Show>
+              </button>
+            </Show>
+
+            <Show
+              when={!loading().database}
+              fallback={<LoadingRingComponent />}
             >
-              <img src="/util-images/stop.svg" class="w-4 h-4" />
-            </button>
-            <button
-              class="flex items-center justify-center w-8 h-8 bg-yellow rounded-full hover:bg-red text-text"
-              onClick={async () => {
-                await useUpdateDatabaseMedia(selectedMedia(), options());
-              }}
-            >
-              <img src="/util-images/arrow.svg" class="w-4 h-4" />
-            </button>
+              <button
+                class="flex items-center justify-center w-8 h-8 bg-yellow rounded-full hover:bg-red text-text"
+                onClick={async () => {
+                  setLoading({ ...loading(), database: true });
+                  await useUpdateDatabaseMedia(undefined);
+                  setLoading({ ...loading(), database: false });
+                }}
+              >
+                <img src="/util-images/stop.svg" class="w-4 h-4" />
+              </button>
+              <button
+                class="flex items-center justify-center w-8 h-8 bg-yellow rounded-full hover:bg-red text-text"
+                onClick={async () => {
+                  setLoading({ ...loading(), database: true });
+                  await useUpdateDatabaseMedia(selectedMedia(), options());
+                  setLoading({ ...loading(), database: false });
+                }}
+              >
+                <img src="/util-images/arrow.svg" class="w-4 h-4" />
+              </button>
+            </Show>
           </div>
         </div>
         <div class="flex justify-between items-center">

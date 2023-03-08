@@ -11,10 +11,9 @@ const CharactersPage: Component = () => {
   const [session, actions] = useSession();
   const [characters, setCharacters] = createSignal<CharacterInterface[]>();
 
-  onMount(() => {
-    useFetchCharacters().then((characters) => {
-      characters ? setCharacters(characters) : null;
-    });
+  onMount(async () => {
+    const characters = await useFetchCharacters();
+    setCharacters(characters);
   });
 
   return (

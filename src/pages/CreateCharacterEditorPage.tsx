@@ -7,26 +7,17 @@ import { addDoc, collection } from "firebase/firestore";
 import { firebaseStore } from "..";
 import { Editor } from "@tiptap/core";
 
-import { CharacterInterface } from "../types/CharacterType";
+import {
+  CharacterInterface,
+  CharacterInterfaceDefault,
+} from "../types/CharacterType";
 
 const CreateCharacterEditorPage: Component = () => {
   const [session, actions] = useSession();
   const navigate = useNavigate();
-  const [character, setCharacter] = createSignal<CharacterInterface>({
-    id: "",
-    userId: "",
-    name: "",
-    title: "",
-    class: "",
-    sheet: "",
-    sheetType: "",
-    home: "",
-    description: "",
-    image: "",
-    moves: "",
-    movesImage: "",
-    type: "",
-  });
+  const [character, setCharacter] = createSignal<CharacterInterface>(
+    CharacterInterfaceDefault
+  );
   const [editor, setEditor] = createSignal<Editor>();
 
   if (session().status === "loading") return <div>Loading</div>;
@@ -42,18 +33,8 @@ const CreateCharacterEditorPage: Component = () => {
 
       console.log("Posting character...");
       const res = await addDoc(collection(firebaseStore, "characters"), {
-        userId: insCharacter.userId,
-        name: insCharacter.name,
-        title: insCharacter.title,
-        class: insCharacter.class,
-        sheet: insCharacter.sheet,
-        sheetType: insCharacter.sheetType,
-        home: insCharacter.home,
+        ...insCharacter,
         description: editor()?.getHTML() || "",
-        image: insCharacter.image,
-        moves: insCharacter.moves,
-        movesImage: insCharacter.movesImage,
-        type: insCharacter.type,
         createdAt: new Date(),
         updatedAt: new Date(),
       });

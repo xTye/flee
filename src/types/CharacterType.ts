@@ -12,6 +12,24 @@ export interface CharacterInterface {
   moves: string;
   movesImage: string;
   type: string;
+  hidden: boolean;
   createdAt?: Date;
   updatedAt?: Date;
 }
+
+export const CharacterInterfaceDefault: CharacterInterface = {
+  id: "",
+  userId: "",
+  name: "",
+  title: "",
+  class: "",
+  sheet: "",
+  sheetType: "",
+  home: "",
+  description: "",
+  image: "",
+  moves: "",
+  movesImage: "",
+  type: "",
+  hidden: true,
+};

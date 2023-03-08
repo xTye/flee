@@ -7,7 +7,7 @@ const LoadingComponent: Component<{
   return (
     <>
       <div class="flex h-full justify-center items-center w-full">
-        <div id="parent" class="lds-ellipsis">
+        <div class="lds-ellipsis">
           <div style={{ background: props.color || "white" }}></div>
           <div style={{ background: props.color || "white" }}></div>
           <div style={{ background: props.color || "white" }}></div>

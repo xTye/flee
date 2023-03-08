@@ -1,0 +1,30 @@
+
+const [imagePath, setImagePath] = createSignal<string>("maps");
+
+<div class="flex gap-4">
+  <div class="px-2">Name</div>
+  <input
+    type="text"
+    value={imageName()}
+    class="text-black px-2 rounded-md"
+    onInput={(e) => {
+      setImageName(e.currentTarget.value);
+    }}
+  />
+  <select
+    class="text-black rounded-md"
+    onChange={(e) => {
+      setImagePath(e.currentTarget.value);
+    }}
+  >
+    <option selected={imagePath() === "maps"} value="maps">
+      Map
+    </option>
+    <option
+      selected={imagePath() === "characters"}
+      value="characters"
+    >
+      Character
+    </option>
+  </select>
+</div>

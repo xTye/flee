@@ -17,7 +17,7 @@ const SearchBarComponent: Component<{
   itemComponent: (
     item: any,
     i: Accessor<number>,
-    setSelectedMedia: Setter<boolean>
+    setShowResults: Setter<boolean>
   ) => JSX.Element;
 }> = (props) => {
   const [showResults, setShowResults] = createSignal(false);

@@ -25,6 +25,8 @@ const Character: Component = () => {
     if (character) setCharacter(character);
     else return navigate("/characters");
 
+    if (character.sheet === "") return;
+
     if (character.sheetType === "pdf") {
       const arr = character.sheetType.split("/");
 
@@ -63,7 +65,7 @@ const Character: Component = () => {
         </div>
         <div class="flex justify-between">
           <div class="relative flex flex-col gap-4 p-3 w-full overflow-hidden">
-            <div class="text-base">{character()?.type}</div>
+            <div class="text-base text-red">{character()?.title}</div>
             <div class="flex items-center gap-8">
               <div
                 class="text-base text-justify"

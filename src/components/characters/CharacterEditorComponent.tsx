@@ -120,6 +120,21 @@ const CharacterEditorComponent: Component<{
           </div>
         </div>
         <div class="flex flex-col gap-4 w-full md:w-2/5">
+          <div class="flex items-center gap-4">
+            <input
+              type="checkbox"
+              checked={props.character().hidden}
+              class="w-4 h-4"
+              onInput={() => {
+                props.setCharacter({
+                  ...props.character(),
+                  hidden: !props.character().hidden,
+                });
+              }}
+            />
+            <div>Hidden</div>
+          </div>
+
           <div class="flex items-center gap-8">
             <div>Image</div>
             <input
@@ -137,7 +152,7 @@ const CharacterEditorComponent: Component<{
             class="object-cover aspect-square"
             src={
               props.character().image === ""
-                ? "/character/character-images/instance.PNG"
+                ? "/characters/character-images/instance.png"
                 : props.character().image
             }
             alt="Article image"
@@ -159,7 +174,7 @@ const CharacterEditorComponent: Component<{
             class="object-cover aspect-square"
             src={
               props.character().movesImage === ""
-                ? "/character/character-images/instance.PNG"
+                ? "/characters/character-images/instance.png"
                 : props.character().movesImage
             }
             alt="Article image"

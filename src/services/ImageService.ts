@@ -5,7 +5,7 @@ type Paths = "battlemap/maps" | "battlemap/characters" | "user-images";
 
 export const useCreateImage = async (path: string, blob: Blob) => {
   try {
-    await uploadBytes(ref(firebaseStorage, path), blob);
+    return await uploadBytes(ref(firebaseStorage, path), blob);
   } catch (e) {
     console.error(e);
   }

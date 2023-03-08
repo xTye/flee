@@ -43,18 +43,8 @@ const UpdateCharacterEditorPage: Component = () => {
       const res = await updateDoc(
         doc(firebaseStore, "characters", insCharacter.id),
         {
-          userId: insCharacter.userId,
-          name: insCharacter.name,
-          title: insCharacter.title,
-          class: insCharacter.class,
-          sheet: insCharacter.sheet,
-          sheetType: insCharacter.sheetType,
-          home: insCharacter.home,
+          ...insCharacter,
           description: editor()?.getHTML() || "",
-          image: insCharacter.image,
-          moves: insCharacter.moves,
-          movesImage: insCharacter.movesImage,
-          type: insCharacter.type,
           updatedAt: new Date(),
         }
       );

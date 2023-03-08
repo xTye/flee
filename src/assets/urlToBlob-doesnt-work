@@ -1,0 +1,6 @@
+      if (text.match(/\.(jpeg|jpg|gif|png)$/) === null) return;
+      const image = await fetch(text);
+      const blob = await image.blob();
+      const file = new File([blob], blob.name, { type: blob.type });
+      setFile(() => file);
+      return;
