@@ -16,6 +16,11 @@ import { firebaseStore } from "..";
 import { SessionContext } from ".";
 import { useCreateUser } from "../services/UserService";
 import { UserInterface } from "../types/UserType";
+import {
+  set as setCookie,
+  get as getCookie,
+  erase as eraseCookie,
+} from "browser-cookies";
 
 export interface SessionState {
   status: "loading" | "unauthenticated" | "authenticated";
@@ -44,8 +49,8 @@ export const SessionProvider: Component<SessionProviderProps> = (props) => {
   const actions: SessionActions = {
     init: () => {
       const auth = getAuth();
-      const userString = localStorage.getItem("user");
-      const admin = localStorage.getItem("admin") ? true : undefined;
+      const userString = getCookie("user");
+      const admin = getCookie("admin") ? true : undefined;
 
       if (!userString) {
         setState({ ...state(), status: "unauthenticated" });
@@ -63,7 +68,7 @@ export const SessionProvider: Component<SessionProviderProps> = (props) => {
     },
 
     login: async () => {
-      localStorage.setItem("redirect", "true");
+      setCookie("redirect", "true", { samesite: "Lax" });
       const provider = new GoogleAuthProvider();
       const auth = getAuth();
 
@@ -78,9 +83,9 @@ export const SessionProvider: Component<SessionProviderProps> = (props) => {
 
       await signOut(auth);
 
-      localStorage.removeItem("user");
-      localStorage.removeItem("admin");
-      localStorage.removeItem("redirect");
+      eraseCookie("user");
+      eraseCookie("admin");
+      eraseCookie("redirect");
       setState({
         auth: undefined,
         user: undefined,
@@ -89,31 +94,33 @@ export const SessionProvider: Component<SessionProviderProps> = (props) => {
     },
 
     redirect: async () => {
+      console.log("lkejresjlfSJLEFLSKEFljkSEF");
       const auth = getAuth();
 
       try {
         const result = await getRedirectResult(auth);
-        if (!result) return;
+        if (!result) throw new Error("No redirect result");
 
         const user = result.user;
         let admin: boolean | undefined = undefined;
 
-        localStorage.setItem("user", JSON.stringify(user));
+        setCookie("user", JSON.stringify(user), { samesite: "Lax" });
 
         const adminRes = await getDoc(doc(firebaseStore, "admins", user.uid));
 
         adminRes.exists() ? (admin = true) : (admin = false);
-        if (admin) localStorage.setItem("admin", "true");
+        if (admin) setCookie("admin", "true", { samesite: "Lax" });
 
         setState({ status: "authenticated", auth, user, admin });
 
         const userRes = await getDoc(doc(firebaseStore, "users", user.uid));
         if (!userRes.exists()) await useCreateUser(user.uid);
       } catch (error: any) {
+        setState({ status: "unauthenticated" });
         console.log(error);
       }
 
-      localStorage.removeItem("redirect");
+      eraseCookie("redirect");
     },
 
     update: async (user: UserInterface) => {
@@ -131,13 +138,13 @@ export const SessionProvider: Component<SessionProviderProps> = (props) => {
 
       if (!userRes) throw new Error("User not found");
 
-      localStorage.setItem("user", JSON.stringify(userRes));
+      setCookie("user", JSON.stringify(userRes), { samesite: "Lax" });
 
       setState({ ...state(), auth, user: userRes });
     },
   };
 
-  if (localStorage.getItem("redirect") === "true") actions.redirect();
+  if (getCookie("redirect") === "true") actions.redirect();
   else actions.init();
 
   const session = state;

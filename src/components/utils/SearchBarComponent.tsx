@@ -3,15 +3,22 @@ import {
   Component,
   For,
   JSX,
+  Setter,
   Show,
   createSignal,
   onCleanup,
+  onMount,
 } from "solid-js";
 import LoadingComponent from "./LoadingComponent";
+import { clickOutside } from "../../utils/clickOutside";
 const SearchBarComponent: Component<{
   queryBegin?: string;
   useFetch: (query: string) => Promise<any[] | undefined>;
-  itemComponent: (item: any, i: Accessor<number>) => JSX.Element;
+  itemComponent: (
+    item: any,
+    i: Accessor<number>,
+    setSelectedMedia: Setter<boolean>
+  ) => JSX.Element;
 }> = (props) => {
   const [showResults, setShowResults] = createSignal(false);
   const [results, setResults] = createSignal<any[]>([]);
@@ -22,14 +29,18 @@ const SearchBarComponent: Component<{
     setFetching(true);
     if (fetchRef) clearTimeout(fetchRef);
     fetchRef = setTimeout(async () => {
-      console.log(results());
       const res = await props.useFetch(query);
       if (res) setResults(res);
-      console.log(res);
       setFetching(false);
       fetchRef = undefined;
     }, 500);
   };
+
+  let parentDiv = document.createElement("div") as HTMLDivElement;
+
+  onMount(() => {
+    clickOutside(parentDiv, () => setShowResults(false), parentDiv);
+  });
 
   onCleanup(() => {
     if (fetchRef) clearTimeout(fetchRef);
@@ -37,7 +48,7 @@ const SearchBarComponent: Component<{
 
   return (
     <>
-      <div class="relative">
+      <div ref={parentDiv} class="relative">
         <input
           type="text"
           placeholder="Search..."
@@ -45,16 +56,13 @@ const SearchBarComponent: Component<{
           onFocusIn={() => {
             setShowResults(true);
           }}
-          onFocusOut={() => {
-            setShowResults(false);
-          }}
           onInput={(e) => {
             fetch(props.queryBegin || "" + e.currentTarget.value);
           }}
         />
         <Show when={showResults()}>
-          <div class="overflow-hidden">
-            <div class="absolute left-0 h-40 w-full z-[4000] bg-lightWhite border-x-2 border-b-2 rounded-b-md overflow-y-auto">
+          <div class="">
+            <div class="absolute left-0 h-40 w-full z-[4000] bg-lightWhite border-x-2 border-b-2 rounded-b-md overflow-x-hidden overflow-y-auto">
               <Show
                 when={!fetching()}
                 fallback={<LoadingComponent color={"black"} />}
@@ -66,7 +74,7 @@ const SearchBarComponent: Component<{
                         i() === results().length - 1 ? "" : "border-b-2"
                       } hover:bg-white p-2`}
                     >
-                      {props.itemComponent(result, i)}
+                      {props.itemComponent(result, i, setShowResults)}
                     </div>
                   )}
                 </For>

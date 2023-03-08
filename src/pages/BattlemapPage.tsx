@@ -1,15 +1,5 @@
+/* @refresh solid */
 import { Component, Show, createMemo, createSignal, onMount } from "solid-js";
-import { navbarHeight } from "../components/navbar/NavbarComponent";
-import ModalComponent from "../components/ModalComponent";
-
-import Leaflet from "leaflet";
-import "leaflet/dist/leaflet.css";
-
-import ImageCropperModalComponent from "../components/battlemap/ImageCropperModalComponent";
-import { useBattlemap, useGridLayer } from "../hooks/BattlemapHooks";
-import MapToolComponent from "../components/utils/MapToolComponent";
-import SearchBarComponent from "../components/utils/SearchBarComponent";
-import { useFetchImagesQuery } from "../services/ImageService";
 import {
   onValue,
   ref as databaseRef,
@@ -17,6 +7,22 @@ import {
   get as databaseGet,
 } from "firebase/database";
 import { firebaseDatabase } from "..";
+
+import Leaflet from "leaflet";
+import "leaflet/dist/leaflet.css";
+
+import { useFetchImagesQuery } from "../services/ImageService";
+
+import { useBattlemap, useGridLayer } from "../hooks/BattlemapHooks";
+
+import ImageCropperModalComponent from "../components/battlemap/ImageCropperModalComponent";
+import MapToolComponent from "../components/utils/MapToolComponent";
+import SearchBarComponent from "../components/utils/SearchBarComponent";
+import YoutubeEmbedComponent from "../components/utils/YoutubeEmbedComponent";
+import YoutubeMenuComponent from "../components/utils/YoutubeMenuComponent";
+import { navbarHeight } from "../components/navbar/NavbarComponent";
+import ModalComponent from "../components/ModalComponent";
+import { MediaInterface } from "../types/MediaType";
 
 const Battlemap: Component = () => {
   let map: Leaflet.Map;
@@ -41,17 +47,9 @@ const Battlemap: Component = () => {
     map = useBattlemap(mapDiv);
     //gridLayer = useGridLayer(map);
 
-    const img = await databaseGet(
-      databaseRef(firebaseDatabase, "character/src")
-    );
-    setImage(img.val());
-
     onValue(databaseRef(firebaseDatabase, "character/src"), (snapshot) => {
       setImage(snapshot.val());
     });
-
-    const music = await databaseGet(databaseRef(firebaseDatabase, "music/src"));
-    setMusic(music.val());
 
     onValue(databaseRef(firebaseDatabase, "music/src"), (snapshot) => {
       setMusic(snapshot.val());
@@ -122,36 +120,10 @@ const Battlemap: Component = () => {
         </MapToolComponent>
         <MapToolComponent
           class1="absolute left-0 bottom-0 z-[1000]"
-          class2="flex flex-col gap-1 p-4"
+          class2="flex flex-col w-[550px] p-4"
         >
-          <>
-            <button
-              class="flex items-center justify-center w-32 h-10 bg-yellow rounded-full hover:bg-red text-text"
-              onClick={() => {
-                const src =
-                  music() ===
-                  "https://www.youtube.com/embed/DuDZbDGCRf0?autoplay=1&loop=1&playlist=DuDZbDGCRf0"
-                    ? "https://www.youtube.com/embed/MHxJXBLJW98?autoplay=1&loop=1&playlist=MHxJXBLJW98"
-                    : "https://www.youtube.com/embed/DuDZbDGCRf0?autoplay=1&loop=1&playlist=DuDZbDGCRf0";
-
-                databaseSet(databaseRef(firebaseDatabase, "music"), {
-                  src,
-                });
-              }}
-            >
-              Change music
-            </button>
-
-            <Show when={music()}>
-              <iframe
-                src={music()}
-                title="YouTube video player"
-                frameborder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowfullscreen
-              ></iframe>
-            </Show>
-          </>
+          <YoutubeMenuComponent />
+          <YoutubeEmbedComponent class="aspect-video" src={music} />
         </MapToolComponent>
         <div ref={mapDiv}></div>
         <Show when={imageCropperModal()}>

@@ -1,6 +1,5 @@
 // @ts-nocheck
-import { Component, onMount } from "solid-js";
-import { useTwitch } from "../hooks/TwitchHooks";
+import { Component } from "solid-js";
 
 const TwitchEmbedComponent: Component<{
   src: string;
