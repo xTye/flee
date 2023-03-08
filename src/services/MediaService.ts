@@ -126,6 +126,9 @@ export const useUpdateDatabaseMedia = async (
     if (snapshot.val().id === media?.id)
       await databaseSet(databaseRef(firebaseDatabase, "music/src"), "");
 
+    if (!media)
+      return await databaseSet(databaseRef(firebaseDatabase, "music/src"), src);
+
     await databaseSet(databaseRef(firebaseDatabase, "music"), {
       ...media,
       src,
