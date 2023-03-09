@@ -1,10 +1,12 @@
 import {
+  QueryConstraint,
   addDoc,
   collection,
   deleteDoc,
   doc as docRef,
   getDoc,
   getDocs,
+  limit,
   orderBy,
   query,
   updateDoc,
@@ -31,10 +33,15 @@ export const useFetchTeaser = async (id: string) => {
   }
 };
 
-export const useFetchTeasers = async () => {
+export const useFetchTeasers = async (options?: { limit?: number }) => {
   try {
+    const queryList: QueryConstraint[] = [
+      orderBy("createdAt", "desc"),
+      ...(options?.limit ? [limit(options.limit)] : []),
+    ];
+
     const docs = await getDocs(
-      query(collection(firebaseStore, "teasers"), orderBy("createdAt", "desc"))
+      query(collection(firebaseStore, "teasers"), ...queryList)
     );
 
     const teasers: TeaserInterface[] = [];

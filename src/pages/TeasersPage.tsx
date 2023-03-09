@@ -44,7 +44,7 @@ const TeasersPage: Component = () => {
                     class="flex py-2 border-t-2 hover:bg-lightPurple overflow-hidden h-16"
                   >
                     <div class="basis-1/5">{teaser.id}</div>
-                    <div innerText={teaser.content}></div>
+                    <div class="basis-4/5" innerText={teaser.content}></div>
                   </A>
                 )}
               </For>

@@ -1,4 +1,4 @@
-import { Component, Show, createSignal } from "solid-js";
+import { Component, Show, createSignal, onMount } from "solid-js";
 import MapToolComponent from "../utils/MapToolComponent";
 import { firebaseDatabase } from "../..";
 import { onValue, ref as databaseRef } from "firebase/database";

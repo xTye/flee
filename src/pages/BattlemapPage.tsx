@@ -19,8 +19,6 @@ const Battlemap: Component = () => {
   let gridLayer: Leaflet.GeoJSON;
   let mapDiv = document.createElement("div") as HTMLDivElement;
 
-  const [imageCropperModal, setImageCropperModal] = createSignal(false);
-
   /* !!! START OF MAP TOOL || MOVE TO COMPONENT LATER !!! */
   const [queryBegin, setQueryBegin] = createSignal("maps");
   /* !!! END OF MAP TOOL || MOVE TO COMPONENT LATER !!! */

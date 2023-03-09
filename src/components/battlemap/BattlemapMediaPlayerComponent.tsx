@@ -10,10 +10,8 @@ const BattlemapMediaPlayerComponent: Component = () => {
   const [session, actions] = useSession();
   const [music, setMusic] = createSignal<string>();
 
-  onMount(async () => {
-    onValue(ref(firebaseDatabase, "music/src"), (snapshot) => {
-      setMusic(snapshot.val());
-    });
+  onValue(ref(firebaseDatabase, "music/src"), (snapshot) => {
+    setMusic(snapshot.val());
   });
 
   return (
