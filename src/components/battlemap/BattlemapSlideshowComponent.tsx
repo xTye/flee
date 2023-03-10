@@ -6,7 +6,9 @@ import SlideshowMenuComponent from "./SlideshowMenuComponent";
 import { useSession } from "../../auth";
 import { CharacterInterface } from "../../types/CharacterType";
 
-const BattlemapSlideshowComponent: Component = () => {
+const BattlemapSlideshowComponent: Component<{
+  callback?: (e: DragEvent, character: CharacterInterface) => void;
+}> = (props) => {
   const [session, actions] = useSession();
   const [character, setCharacter] = createSignal<
     CharacterInterface & { src: string }
@@ -24,7 +26,7 @@ const BattlemapSlideshowComponent: Component = () => {
       class2="flex flex-col p-4 w-72"
     >
       <Show when={session().admin}>
-        <SlideshowMenuComponent />
+        <SlideshowMenuComponent callback={props.callback} />
       </Show>
       <Show when={character()?.src !== "" && character()?.name}>
         <img src={character()?.src} class="w-full aspect-square object-cover" />

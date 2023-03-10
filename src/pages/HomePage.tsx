@@ -9,7 +9,6 @@ import {
 import { A } from "@solidjs/router";
 import { EventInterface } from "../types/EventType";
 import { useFetchEvent } from "../services/EventService";
-import TwitchEmbedComponent from "../components/TwitchEmbedComponent";
 import LoadingComponent from "../components/utils/LoadingComponent";
 
 import Splide from "@splidejs/splide";
@@ -44,31 +43,6 @@ const HomePage: Component = () => {
   return (
     <>
       <div class="flex flex-col items-center md:gap-6 min-h-screen bg-background text-text">
-        <section
-          ref={splideRef}
-          class="splide w-full md:w-4/5 lg:w-3/5 h-[500px] pt-6"
-          aria-label="Splide Basic HTML Example"
-        >
-          <div class="splide__track h-full">
-            <ul class="splide__list h-full">
-              <For each={teasers()}>
-                {(teaser, i) => (
-                  <>
-                    <li class="splide__slide">
-                      <div
-                        class="flex flex-col items-center justify-center w-full h-full p-20 text-justify overflow-y-auto"
-                        innerText={teaser.content}
-                      ></div>
-                    </li>
-                  </>
-                )}
-              </For>
-            </ul>
-          </div>
-          <div class="splide__progress">
-            <div class="splide__progress__bar"></div>
-          </div>
-        </section>
         <Show
           when={event() && teasers()}
           fallback={
@@ -77,6 +51,31 @@ const HomePage: Component = () => {
             </div>
           }
         >
+          <section
+            ref={splideRef}
+            class="splide w-full md:w-4/5 lg:w-3/5 h-[500px]"
+            aria-label="Splide Basic HTML Example"
+          >
+            <div class="splide__track h-full">
+              <ul class="splide__list h-full">
+                <For each={teasers()}>
+                  {(teaser, i) => (
+                    <>
+                      <li class="splide__slide">
+                        <div
+                          class="flex flex-col items-center justify-center w-full h-full p-20 text-justify overflow-y-auto"
+                          innerText={teaser.content}
+                        ></div>
+                      </li>
+                    </>
+                  )}
+                </For>
+              </ul>
+            </div>
+            <div class="splide__progress">
+              <div class="splide__progress__bar"></div>
+            </div>
+          </section>
           <div class="flex justify-center w-full bg-black lg:h-[500px]">
             <div class="flex flex-col md:flex-row justify-between items-center md:w-4/5">
               <div class="flex flex-col h-full gap-4 p-8">

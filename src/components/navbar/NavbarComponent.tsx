@@ -3,10 +3,12 @@ import { createStore } from "solid-js/store";
 import { A } from "@solidjs/router";
 import LoginComponent from "./LoginComponent";
 import PageLinkComponent from "./PageLinkComponent";
+import { useSession } from "../../auth";
 
 export const [navbarHeight, setNavbarHeight] = createStore({ height: 0 });
 
 const NavbarComponent: Component = () => {
+  const [session, actions] = useSession();
   let parent: any;
 
   const [width, setWidth] = createSignal(window.innerWidth);
@@ -39,6 +41,18 @@ const NavbarComponent: Component = () => {
               alt="Logo"
             />
           </A>
+          <Show when={session().status === "authenticated"}>
+            <A
+              href="/live"
+              class="flex items-center gap-2 hover:bg-lightPurple h-8 rounded-full px-4"
+            >
+              <div class="flex items-center justify-center relative">
+                <div class="absolute w-3 h-3 bg-pink rounded-full"></div>
+                <div class="absolut w-3 h-3 bg-pink rounded-full animate-ping"></div>
+              </div>
+              <div class="text-text text-lg">Live</div>
+            </A>
+          </Show>
         </div>
 
         <Show when={width() < 768}>

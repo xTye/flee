@@ -10,13 +10,17 @@ import ModalComponent from "../ModalComponent";
 import ImageCropperEditorComponent from "../utils/ImageCropperEditorComponent";
 import QuickCreateCharacterComponent from "./QuickCreateCharacterComponent";
 
-const SlideshowMenuComponent: Component = () => {
+const SlideshowMenuComponent: Component<{
+  callback?: (e: DragEvent, character: CharacterInterface) => void;
+}> = (props) => {
   const [selectedCharacter, setSelectedCharacter] =
     createSignal<CharacterInterface>();
   const [loading, setLoading] = createSignal({
     database: false,
   });
   const [modal, setModal] = createSignal(false);
+
+  let dragCharacter: CharacterInterface;
 
   return (
     <>
@@ -31,7 +35,7 @@ const SlideshowMenuComponent: Component = () => {
             useFetch={useFetchCharactersFromQuery}
             itemComponent={(character, i, setShowResults) => (
               <>
-                <button
+                <div
                   onClick={async () => {
                     setSelectedCharacter(character);
                     setLoading({ ...loading(), database: true });
@@ -39,13 +43,21 @@ const SlideshowMenuComponent: Component = () => {
                     setLoading({ ...loading(), database: false });
                     setShowResults(false);
                   }}
-                  class="w-full h-full"
+                  draggable={true}
+                  onDragEnter={(e) => {
+                    dragCharacter = character;
+                    setShowResults(false);
+                  }}
+                  onDragEnd={(e) => {
+                    if (props.callback) props.callback(e, dragCharacter);
+                  }}
+                  class="w-full h-full select-none"
                 >
                   <div class="flex items-center gap-1">
                     <img src={character.image} class="w-4 h-4 object-cover" />
                     <div class="text-sm">{character.name}</div>
                   </div>
-                </button>
+                </div>
               </>
             )}
           />

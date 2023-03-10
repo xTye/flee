@@ -29,6 +29,11 @@ export const icons: any = {
     iconSize: [32, 32],
     iconAnchor: [16, 32],
   }),
+  test: Leaflet.icon({
+    iconUrl: "/maps/util-images/marker-black.png",
+    iconSize: [64, 64],
+    iconAnchor: [0, 64],
+  }),
 };
 
 export const useMap = async (

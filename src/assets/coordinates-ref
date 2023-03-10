@@ -1,0 +1,4 @@
+[layers[0][1][1], layers[0][1][0]], bottom-left
+[layers[0][1][1], layers[0][1][0]], top-left
+[layers[0][2][1], layers[0][2][0]], top-right
+[layers[0][1][1], layers[0][1][0]], bottom-right
