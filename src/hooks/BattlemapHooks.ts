@@ -21,6 +21,11 @@ export interface GridData {
   }[][];
 }
 
+export interface BackgroundLayerInterface {
+  layerGroup: Leaflet.LayerGroup;
+  backgroundImage: Leaflet.ImageOverlay;
+}
+
 const maxBounds = [
   [-1, -1],
   [1, 1],
@@ -90,19 +95,26 @@ export const useBattlemap = (div: HTMLDivElement) => {
 
   map.zoomControl.setPosition("bottomright");
 
-  const backgroundLayer = Leaflet.layerGroup().addTo(map);
+  return map;
+};
+
+export const useBackgroundLayer = (map: Leaflet.Map) => {
+  const layerGroup = Leaflet.layerGroup().addTo(map);
 
   const backgroundImage = Leaflet.imageOverlay(
-    "https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/cute-cat-photos-1593441022.jpg",
+    "/maps/lowres-maps/Daggerfalls.jpg",
     map.options.maxBounds!,
     {
       interactive: true,
     }
   )
     .bringToFront()
-    .addTo(backgroundLayer);
+    .addTo(layerGroup);
 
-  return map;
+  return {
+    layerGroup,
+    backgroundImage,
+  };
 };
 
 export const useGridLayer = (map: Leaflet.Map): [Leaflet.GeoJSON, any] => {
@@ -171,6 +183,59 @@ export const useTokenLayer = (map: Leaflet.Map) => {
 };
 
 export const useCreateImage = (map: Leaflet.Map) => {};
+
+export const useCreateBackgroundImage = (
+  map: Leaflet.Map,
+  backgroundLayer: BackgroundLayerInterface,
+  e: DragEvent
+) => {
+  let icon = icons["test"] as Leaflet.Icon;
+  icon.options.iconUrl = "/campaign-images/logo-edited.png";
+  // @ts-ignore
+  const width = e.target.naturalWidth as number;
+  // @ts-ignore
+  const height = e.target.naturalHeight as number;
+  console.log(width, height);
+
+  // let imageOverlay = Leaflet.imageOverlay(
+  //   "/campaign-images/logo-edited.png",
+  //   bounds,
+  //   {
+  //     interactive: true,
+  //   }
+  // )
+  //   .on("mousedown", (e) => {
+  //     if (e.originalEvent.button !== 0) return;
+  //     imageOverlay.setOpacity(0.5);
+  //     const tile = calculateTile(e.latlng, data);
+
+  //     icon = getScaledIconFromMap(icon, map);
+  //     marker = Leaflet.marker([tile.lat, tile.lng], {
+  //       icon,
+  //       draggable: true,
+  //       autoPan: true,
+  //     }).addTo(tokenLayer);
+
+  //     marker.on("mouseup", (e) => {
+  //       imageOverlay.setOpacity(1);
+  //       imageOverlay.setBounds(
+  //         getBoundsFromData(map.mouseEventToLatLng(e.originalEvent), data)
+  //       );
+  //       marker.remove();
+  //     });
+
+  //     // @ts-ignore
+  //     marker.dragging?._draggable._onDown(e.originalEvent);
+  //   })
+  //   .on("mouseover", (e) => {
+  //     map.dragging.disable();
+  //   })
+  //   .on("mouseout", (e) => {
+  //     map.dragging.enable();
+  //   })
+  //   .bringToFront()
+  //   .addTo(backgroundLayer.layerGroup);
+};
 
 export const calculateTile = (pos: Leaflet.LatLng, data: GridData) => {
   const i = Math.max(
