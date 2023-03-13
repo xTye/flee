@@ -1,6 +1,7 @@
 /* @refresh solid */
 
 //! Notes
+// Check why the cat doesn't produce a square.
 // Easily change between battlemaps using the setUrl method.
 
 import { Component, Show, createMemo, createSignal, onMount } from "solid-js";

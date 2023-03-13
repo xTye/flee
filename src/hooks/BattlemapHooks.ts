@@ -189,52 +189,46 @@ export const useCreateBackgroundImage = (
   backgroundLayer: BackgroundLayerInterface,
   e: DragEvent
 ) => {
+  const pos = map.mouseEventToLatLng(e);
   let icon = icons["test"] as Leaflet.Icon;
   icon.options.iconUrl = "/campaign-images/logo-edited.png";
-  // @ts-ignore
-  const width = e.target.naturalWidth as number;
-  // @ts-ignore
-  const height = e.target.naturalHeight as number;
-  console.log(width, height);
+  const width = (e.target as HTMLImageElement).naturalWidth;
+  const height = (e.target as HTMLImageElement).naturalHeight;
 
-  // let imageOverlay = Leaflet.imageOverlay(
-  //   "/campaign-images/logo-edited.png",
-  //   bounds,
-  //   {
-  //     interactive: true,
-  //   }
-  // )
-  //   .on("mousedown", (e) => {
-  //     if (e.originalEvent.button !== 0) return;
-  //     imageOverlay.setOpacity(0.5);
-  //     const tile = calculateTile(e.latlng, data);
+  let imageOverlay = Leaflet.imageOverlay(icon.options.iconUrl, , {
+    interactive: true,
+  })
+    .on("mousedown", (e) => {
+      if (e.originalEvent.button !== 0) return;
+      imageOverlay.setOpacity(0.5);
+      const tile = calculateTile(e.latlng, data);
 
-  //     icon = getScaledIconFromMap(icon, map);
-  //     marker = Leaflet.marker([tile.lat, tile.lng], {
-  //       icon,
-  //       draggable: true,
-  //       autoPan: true,
-  //     }).addTo(tokenLayer);
+      icon = getScaledIconFromMap(icon, map);
+      marker = Leaflet.marker([tile.lat, tile.lng], {
+        icon,
+        draggable: true,
+        autoPan: true,
+      }).addTo(tokenLayer);
 
-  //     marker.on("mouseup", (e) => {
-  //       imageOverlay.setOpacity(1);
-  //       imageOverlay.setBounds(
-  //         getBoundsFromData(map.mouseEventToLatLng(e.originalEvent), data)
-  //       );
-  //       marker.remove();
-  //     });
+      marker.on("mouseup", (e) => {
+        imageOverlay.setOpacity(1);
+        imageOverlay.setBounds(
+          getBoundsFromData(map.mouseEventToLatLng(e.originalEvent), data)
+        );
+        marker.remove();
+      });
 
-  //     // @ts-ignore
-  //     marker.dragging?._draggable._onDown(e.originalEvent);
-  //   })
-  //   .on("mouseover", (e) => {
-  //     map.dragging.disable();
-  //   })
-  //   .on("mouseout", (e) => {
-  //     map.dragging.enable();
-  //   })
-  //   .bringToFront()
-  //   .addTo(backgroundLayer.layerGroup);
+      // @ts-ignore
+      marker.dragging?._draggable._onDown(e.originalEvent);
+    })
+    .on("mouseover", (e) => {
+      map.dragging.disable();
+    })
+    .on("mouseout", (e) => {
+      map.dragging.enable();
+    })
+    .bringToFront()
+    .addTo(backgroundLayer.layerGroup);
 };
 
 export const calculateTile = (pos: Leaflet.LatLng, data: GridData) => {
@@ -275,6 +269,14 @@ export const getBoundsFromData = (
   );
 
   return Leaflet.latLngBounds(southWest, northEast);
+};
+
+export const getBoundsFromSize = (pos: Leaflet.LatLng, size: {
+  width: number;
+  height: number;
+}) => {
+  // This function is meant to return the bounds of an image
+  // Based on the 
 };
 
 export const getScaledIconFromMap = (
