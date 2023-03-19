@@ -11,7 +11,7 @@ import ImageCropperEditorComponent from "../utils/ImageCropperEditorComponent";
 import QuickCreateCharacterComponent from "./QuickCreateCharacterComponent";
 
 const SlideshowMenuComponent: Component<{
-  callback?: (e: DragEvent, character: CharacterInterface) => void;
+  characterDragEnd?: (e: DragEvent, character: CharacterInterface) => void;
 }> = (props) => {
   const [selectedCharacter, setSelectedCharacter] =
     createSignal<CharacterInterface>();
@@ -49,7 +49,7 @@ const SlideshowMenuComponent: Component<{
                     setShowResults(false);
                   }}
                   onDragEnd={(e) => {
-                    if (props.callback) props.callback(e, dragCharacter);
+                    if (props.characterDragEnd) props.characterDragEnd(e, dragCharacter);
                   }}
                   class="w-full h-full select-none"
                 >

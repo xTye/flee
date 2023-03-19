@@ -7,7 +7,7 @@ import { useSession } from "../../auth";
 import { CharacterInterface } from "../../types/CharacterType";
 
 const BattlemapSlideshowComponent: Component<{
-  callback?: (e: DragEvent, character: CharacterInterface) => void;
+  characterDragEnd?: (e: DragEvent, character: CharacterInterface) => void;
 }> = (props) => {
   const [session, actions] = useSession();
   const [character, setCharacter] = createSignal<
@@ -26,7 +26,7 @@ const BattlemapSlideshowComponent: Component<{
       class2="flex flex-col p-4 w-72"
     >
       <Show when={session().admin}>
-        <SlideshowMenuComponent callback={props.callback} />
+        <SlideshowMenuComponent characterDragEnd={props.characterDragEnd} />
       </Show>
       <Show when={character()?.src !== "" && character()?.name}>
         <img src={character()?.src} class="w-full aspect-square object-cover" />

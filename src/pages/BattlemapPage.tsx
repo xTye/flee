@@ -3,6 +3,7 @@
 //! Notes
 // Check why the cat doesn't produce a square.
 // Easily change between battlemaps using the setUrl method.
+// TODO: Set the dragging images to undefined after delete.
 
 import { Component, Show, createMemo, createSignal, onMount } from "solid-js";
 
@@ -12,11 +13,6 @@ import "leaflet/dist/leaflet.css";
 import { useFetchImagesQuery } from "../services/ImageService";
 
 import {
-  BackgroundLayerInterface,
-  GridData,
-  calculateTile,
-  getBoundsFromData,
-  getScaledIconFromMap,
   useBackgroundLayer,
   useBattlemap,
   useCreateBackgroundImage,
@@ -31,88 +27,29 @@ import BattlemapMediaPlayerComponent from "../components/battlemap/BattlemapMedi
 import BattlemapSlideshowComponent from "../components/battlemap/BattlemapSlideshowComponent";
 import { CharacterInterface } from "../types/CharacterType";
 import { icons } from "../hooks/MapHooks";
+import { BattlemapInterface } from "../types/BattlemapType";
 
 const Battlemap: Component = () => {
-  let map: Leaflet.Map;
-  let gridLayer: Leaflet.GeoJSON;
-  let backgroundLayer: BackgroundLayerInterface;
-  let tokenLayer: Leaflet.LayerGroup;
-  let data: GridData;
   let mapDiv = document.createElement("div") as HTMLDivElement;
-
-  let marker: Leaflet.Marker;
-  let imageOverlay: Leaflet.ImageOverlay;
+  const battlemap: BattlemapInterface = {} as BattlemapInterface;
 
   /* !!! START OF MAP TOOL || MOVE TO COMPONENT LATER !!! */
   const [queryBegin, setQueryBegin] = createSignal("maps");
   /* !!! END OF MAP TOOL || MOVE TO COMPONENT LATER !!! */
 
+  onMount(async () => {
+    battlemap.map = useBattlemap(mapDiv, battlemap);
+    battlemap.background = useBackgroundLayer(battlemap);
+    battlemap.grid = useGridLayer(battlemap);
+    battlemap.tokens = useTokenLayer(battlemap);
+  });
+
   createMemo(() => {
     mapDiv.style.height = window.innerHeight - navbarHeight.height + "px";
-    if (!map) return;
-    setTimeout(() => map.invalidateSize(), 1);
+    if (!battlemap.map) return;
+    setTimeout(() => battlemap.map.invalidateSize(), 1);
   });
 
-  onMount(async () => {
-    map = useBattlemap(mapDiv);
-    backgroundLayer = useBackgroundLayer(map);
-    [gridLayer, data] = useGridLayer(map);
-    tokenLayer = useTokenLayer(map);
-
-    map.on("zoomstart", (e) => {
-      if (marker) {
-        imageOverlay.setOpacity(1);
-        marker.remove();
-      }
-    });
-  });
-
-  const callback = (e: MouseEvent) => {
-    let icon = icons["test"] as Leaflet.Icon;
-    icon.options.iconUrl = "/characters/character-images/eldawyn.png";
-
-    const pos = map.mouseEventToLatLng(e);
-    const bounds = getBoundsFromData(pos, data);
-
-    imageOverlay = Leaflet.imageOverlay(
-      "/characters/character-images/eldawyn.png",
-      bounds,
-      {
-        interactive: true,
-      }
-    )
-      .on("mousedown", (e) => {
-        if (e.originalEvent.button !== 0) return;
-        imageOverlay.setOpacity(0.5);
-        const tile = calculateTile(e.latlng, data);
-
-        icon = getScaledIconFromMap(icon, map);
-        marker = Leaflet.marker([tile.lat, tile.lng], {
-          icon,
-          draggable: true,
-          autoPan: true,
-        }).addTo(tokenLayer);
-
-        marker.on("mouseup", (e) => {
-          imageOverlay.setOpacity(1);
-          imageOverlay.setBounds(
-            getBoundsFromData(map.mouseEventToLatLng(e.originalEvent), data)
-          );
-          marker.remove();
-        });
-
-        // @ts-ignore
-        marker.dragging?._draggable._onDown(e.originalEvent);
-      })
-      .on("mouseover", (e) => {
-        map.dragging.disable();
-      })
-      .on("mouseout", (e) => {
-        map.dragging.enable();
-      })
-      .bringToFront()
-      .addTo(tokenLayer);
-  };
 
   return (
     <>
@@ -150,7 +87,7 @@ const Battlemap: Component = () => {
             </div>
             <button
               onClick={() => {
-                backgroundLayer.backgroundImage.setUrl(
+                battlemap.background.image.setUrl(
                   "/maps/lowres-maps/Beastlands.jpg"
                 );
               }}
@@ -160,7 +97,7 @@ const Battlemap: Component = () => {
             </button>
             <button
               onClick={() => {
-                backgroundLayer.backgroundImage.setUrl(
+                battlemap.background.image.setUrl(
                   "/maps/lowres-maps/Candlekeep.jpg"
                 );
               }}
@@ -170,7 +107,7 @@ const Battlemap: Component = () => {
             </button>
             <button
               onClick={() => {
-                backgroundLayer.backgroundImage.setUrl(
+                battlemap.background.image.setUrl(
                   "/maps/lowres-maps/Daggerfalls.jpg"
                 );
               }}
@@ -183,13 +120,13 @@ const Battlemap: Component = () => {
               class="w-12 h-12 object-cover"
               draggable
               onDragEnd={(e) => {
-                useCreateBackgroundImage(map, backgroundLayer, e);
+                useCreateBackgroundImage(e, battlemap);
               }}
             />
           </>
         </MapToolComponent>
-        {/* <BattlemapSlideshowComponent callback={callback} /> */}
-        {/* <BattlemapMediaPlayerComponent /> */}
+        {/* <BattlemapSlideshowComponent characterDragEnd={callback} />
+        <BattlemapMediaPlayerComponent /> */}
         <div ref={mapDiv}></div>
       </div>
     </>
