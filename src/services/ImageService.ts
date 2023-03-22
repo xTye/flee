@@ -1,5 +1,6 @@
-import { list, ref, uploadBytes } from "firebase/storage";
+import { getDownloadURL, list, ref, uploadBytes } from "firebase/storage";
 import { firebaseStorage } from "..";
+import { ImageInterface } from "../types/ImageType";
 
 type Paths = "battlemap/maps" | "battlemap/characters" | "user-images";
 
@@ -15,12 +16,16 @@ export const useFetchImagesQuery = async (query: string) => {
   try {
     const res = await list(ref(firebaseStorage, query), { maxResults: 10 });
 
-    const images = res.items.map((item) => {
-      return {
+    const images: ImageInterface[] = [];
+
+    for (const item of res.items) {
+      const url = await getDownloadURL(item);
+
+      images.push({
         name: item.name,
-        url: item.fullPath,
-      };
-    });
+        url,
+      });
+    }
 
     return images;
   } catch (e) {

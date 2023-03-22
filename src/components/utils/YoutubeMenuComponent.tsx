@@ -36,6 +36,7 @@ const YoutubeMenuComponent: Component = (props) => {
   const favoriteMediaMap = new Map<string, MediaInterface>();
 
   const favorited = createMemo(() => {
+    // Necessary to attack listener to favoriteMedia.
     const media = favoriteMedia();
     return favoriteMediaMap.get(selectedMedia()?.id || "");
   });

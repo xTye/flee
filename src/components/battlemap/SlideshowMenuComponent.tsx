@@ -49,7 +49,8 @@ const SlideshowMenuComponent: Component<{
                     setShowResults(false);
                   }}
                   onDragEnd={(e) => {
-                    if (props.characterDragEnd) props.characterDragEnd(e, dragCharacter);
+                    if (props.characterDragEnd)
+                      props.characterDragEnd(e, dragCharacter);
                   }}
                   class="w-full h-full select-none"
                 >
@@ -82,16 +83,6 @@ const SlideshowMenuComponent: Component<{
               >
                 <img src="/util-images/plus.svg" class="w-4 h-4" />
               </button>
-              {/* <button
-                class="flex items-center justify-center w-8 h-8 bg-yellow rounded-full hover:bg-red text-text"
-                onClick={async () => {
-                  setLoading({ ...loading(), database: true });
-                  await useUpdateDatabaseCharacter(selectedCharacter());
-                  setLoading({ ...loading(), database: false });
-                }}
-              >
-                <img src="/util-images/arrow.svg" class="w-4 h-4" />
-              </button> */}
             </Show>
           </div>
         </div>
