@@ -126,6 +126,24 @@ const ImageCropperEditorComponent: Component<{
                       <button
                         class="px-2 bg-yellow hover:bg-red active:bg-burgandy rounded-full"
                         onClick={() => {
+                          const c = imageCropper();
+                          if (!c) return;
+                          const width = c.getCanvasData().naturalWidth;
+                          const height = c.getCanvasData().naturalHeight;
+                          imageCropper()?.setAspectRatio(width / height);
+                          imageCropper()?.setCropBoxData({
+                            top: c.getCanvasData().top,
+                            left: c.getCanvasData().left,
+                            width: c.getCanvasData().width,
+                            height: c.getCanvasData().height,
+                          });
+                        }}
+                      >
+                        Full
+                      </button>
+                      <button
+                        class="px-2 bg-yellow hover:bg-red active:bg-burgandy rounded-full"
+                        onClick={() => {
                           const scale = imageCropper()?.getData();
                           if (!scale) return;
                           imageCropper()?.scale(

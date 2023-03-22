@@ -6,11 +6,13 @@ import {
   BattlemapInterface,
   GridLayerInterface,
   TokenInterface,
+  TokenLayerInterface,
 } from "../types/BattlemapType";
 import {
   calculateBoundsFromGrid,
   calculateBoundsFromFree,
   calculateImageSize,
+  calculateBackgroundImageBounds,
 } from "./battlemap-utils/calculateUtil";
 import {
   addAssetContextMenuListener,
@@ -20,6 +22,7 @@ import {
   addTokenContextMenuListener,
 } from "./battlemap-utils/eventListenerUtil";
 import { createSignal } from "solid-js";
+import { ImageInterface } from "../types/ImageType";
 
 const maxBounds = [
   [-1, -1],
@@ -91,6 +94,7 @@ export const useGridLayer = (battlemap: BattlemapInterface, cellSize = 10) => {
 
   const grid: GridLayerInterface = {
     layer: new Leaflet.GeoJSON(),
+    show: true,
     cellSize,
     deltaX: 0,
     deltaY: 0,
@@ -142,16 +146,21 @@ export const useGridLayer = (battlemap: BattlemapInterface, cellSize = 10) => {
   return grid;
 };
 
-export const useTokenLayer = (battlemap: BattlemapInterface) => {
+export const useTokenLayer = (
+  battlemap: BattlemapInterface
+): TokenLayerInterface => {
   const layer = Leaflet.layerGroup().addTo(battlemap.map);
+  const conditionIconLayer = Leaflet.layerGroup().addTo(battlemap.map);
 
   const [selected, setSelected] = createSignal<TokenInterface>();
 
   return {
     layer,
+    conditionIconLayer,
     selected,
     setSelected,
     tokens: new Map(),
+    conditionIcons: new Map(),
   };
 };
 
@@ -163,13 +172,28 @@ export const useFogLayer = (battlemap: BattlemapInterface) => {
   };
 };
 
+export const changeBackgroundImage = (
+  battlemap: BattlemapInterface,
+  backgroundImage: ImageInterface
+) => {
+  const { width, height } = backgroundImage.customMetadata;
+
+  const widthNum = Number.parseFloat(width);
+  const heightNum = Number.parseFloat(height);
+
+  const { bounds } = calculateBackgroundImageBounds(widthNum, heightNum);
+
+  battlemap.background.image.setUrl(backgroundImage.url);
+  battlemap.background.image.setBounds(bounds);
+};
+
 export const useCreateCharacterImage = (
   e: DragEvent,
   character: CharacterInterface,
   battlemap: BattlemapInterface
 ) => {
   const pos = battlemap.map.mouseEventToLatLng(e);
-  const bounds = calculateBoundsFromGrid(pos, battlemap);
+  const bounds = calculateBoundsFromGrid(pos, battlemap, { mousePos: true });
 
   const imageOverlay = Leaflet.imageOverlay(character.image, bounds, {
     interactive: true,
@@ -201,14 +225,17 @@ export const useCreateCharacterImage = (
 
 export const useCreateBackgroundImage = (
   e: DragEvent,
-  battlemap: BattlemapInterface
+  battlemap: BattlemapInterface,
+  backgroundImage: ImageInterface
 ) => {
   const pos = battlemap.map.mouseEventToLatLng(e);
 
-  const imageUrl = (e.target as HTMLImageElement).currentSrc;
+  const imageUrl = backgroundImage.url;
 
-  const originalWidth = (e.target as HTMLImageElement).naturalWidth;
-  const originalHeight = (e.target as HTMLImageElement).naturalHeight;
+  const originalWidth = Number.parseFloat(backgroundImage.customMetadata.width);
+  const originalHeight = Number.parseFloat(
+    backgroundImage.customMetadata.height
+  );
 
   const [width, height] = calculateImageSize(originalWidth, originalHeight);
 
@@ -257,13 +284,10 @@ export const resizeImage = (
   const bounds = overlay.getBounds();
   const pos = bounds.getSouthWest();
 
-  pos.lat = pos.lat + battlemap.grid.deltaLat / 2;
-  pos.lng = pos.lng + battlemap.grid.deltaLng / 2;
-
   let newBounds: Leaflet.LatLngBounds;
 
   if (image.movable.type === "grid") {
-    newBounds = calculateBoundsFromGrid(pos, battlemap, scale);
+    newBounds = calculateBoundsFromGrid(pos, battlemap, { scale });
   } else {
     const [width, height] = [
       Math.abs(bounds.getEast() - bounds.getWest()),
@@ -278,6 +302,34 @@ export const resizeImage = (
   }
 
   overlay.setBounds(newBounds);
+};
+
+export const rotateImage = () => {};
+
+export const useCreateTokenIcon = (
+  battlemap: BattlemapInterface,
+  token: TokenInterface
+) => {
+  const bounds = token.overlay.getBounds();
+
+  const northEast = bounds.getNorthEast();
+  const southWest = bounds.getNorthEast();
+  const iconBounds = Leaflet.latLngBounds(
+    [
+      southWest.lat - battlemap.grid.deltaLat / 4,
+      southWest.lng - battlemap.grid.deltaLng / 4,
+    ],
+    northEast
+  );
+
+  console.log(bounds, iconBounds);
+
+  const icon = Leaflet.imageOverlay(
+    "/campaign-images/logo-edited.png",
+    iconBounds
+  )
+    .bringToFront()
+    .addTo(battlemap.token.conditionIconLayer);
 };
 
 //! REMOVE

@@ -22,6 +22,7 @@ import BattlemapMediaPlayerComponent from "../components/battlemap/BattlemapMedi
 import BattlemapSlideshowComponent from "../components/battlemap/BattlemapSlideshowComponent";
 import { BattlemapInterface } from "../types/BattlemapType";
 import BattlemapEditorComponent from "../components/battlemap/BattlemapEditorComponent";
+import { ModalProvider } from "../components/utils/ModalContextProvider";
 
 const Battlemap: Component = () => {
   let mapDiv = document.createElement("div") as HTMLDivElement;
@@ -50,13 +51,15 @@ const Battlemap: Component = () => {
         }}
         class="relative bg-lightPurple select-none"
       >
-        <BattlemapEditorComponent battlemap={battlemap} />
-        <BattlemapSlideshowComponent
-          characterDragEnd={(e, character) =>
-            useCreateCharacterImage(e, character, battlemap)
-          }
-        />
-        {/* <BattlemapMediaPlayerComponent /> */}
+        <ModalProvider>
+          <BattlemapEditorComponent battlemap={battlemap} />
+          <BattlemapSlideshowComponent
+            characterDragEnd={(e, character) =>
+              useCreateCharacterImage(e, character, battlemap)
+            }
+          />
+          {/* <BattlemapMediaPlayerComponent /> */}
+        </ModalProvider>
         <div ref={mapDiv}></div>
       </div>
     </>

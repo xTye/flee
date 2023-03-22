@@ -19,10 +19,8 @@ const BattlemapSlideshowComponent: Component<{
   });
 
   return (
-    //! This is potentially dangerous because it overwrite relative positioning
-    //! of the parent component. This is a temporary solution. MODAL IS IN HERE.
     <MapToolComponent
-      class1="absolute right-0 top-0 z-[1001]"
+      class1="absolute right-0 top-0 z-[1000]"
       class2="flex flex-col p-4 w-72"
     >
       <Show when={session().admin}>

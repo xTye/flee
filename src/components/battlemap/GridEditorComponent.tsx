@@ -1,6 +1,10 @@
 import { Component, createSignal, onCleanup } from "solid-js";
 import { BattlemapInterface } from "../../types/BattlemapType";
-import { toggleGrid, useGridLayer } from "../../hooks/BattlemapHooks";
+import {
+  resizeImage,
+  toggleGrid,
+  useGridLayer,
+} from "../../hooks/BattlemapHooks";
 
 const GridEditorComponent: Component<{ battlemap: BattlemapInterface }> = (
   props
@@ -8,8 +12,8 @@ const GridEditorComponent: Component<{ battlemap: BattlemapInterface }> = (
   const battlemap = props.battlemap;
 
   const [options, setOptions] = createSignal({
-    grid: true,
-    size: 10,
+    grid: battlemap.grid.show,
+    size: battlemap.grid.cellSize,
   });
 
   let resizeGridRef: NodeJS.Timeout | undefined = undefined;
@@ -20,6 +24,12 @@ const GridEditorComponent: Component<{ battlemap: BattlemapInterface }> = (
       battlemap.grid.layer.removeFrom(battlemap.map);
       battlemap.grid = useGridLayer(battlemap, value);
       resizeGridRef = undefined;
+
+      for (const [id, token] of battlemap.token.tokens)
+        resizeImage(battlemap, token);
+
+      for (const [id, asset] of battlemap.background.assets)
+        resizeImage(battlemap, asset);
     }, 500);
   };
 
@@ -49,7 +59,7 @@ const GridEditorComponent: Component<{ battlemap: BattlemapInterface }> = (
         <div class="px-2">Cell size</div>
         <input
           type="range"
-          min="1"
+          min="3"
           max="10"
           step=".1"
           value={options().size}
@@ -70,7 +80,7 @@ const GridEditorComponent: Component<{ battlemap: BattlemapInterface }> = (
           class="text-black px-2 w-12 rounded-md"
           onInput={(e) => {
             const value = Number.parseInt(e.currentTarget.value);
-            if (Number.isNaN(value) || value > 10 || value < 1) return;
+            if (Number.isNaN(value) || value > 10 || value < 3) return;
             resizeGrid(value);
             setOptions({
               ...options(),

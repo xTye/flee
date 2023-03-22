@@ -1,14 +1,41 @@
-import { getDownloadURL, list, ref, uploadBytes } from "firebase/storage";
+import {
+  getDownloadURL,
+  getMetadata,
+  list,
+  ref,
+  updateMetadata,
+  uploadBytes,
+} from "firebase/storage";
 import { firebaseStorage } from "..";
 import { ImageInterface } from "../types/ImageType";
 
 type Paths = "battlemap/maps" | "battlemap/characters" | "user-images";
 
-export const useCreateImage = async (path: string, blob: Blob) => {
+export const useCreateImage = async (
+  path: string,
+  blob: Blob,
+  customMetadata: {
+    width: string;
+    height: string;
+  }
+) => {
   try {
-    return await uploadBytes(ref(firebaseStorage, path), blob);
+    await getMetadata(ref(firebaseStorage, path));
+    return false;
+  } catch (e) {}
+
+  try {
+    const res = await uploadBytes(ref(firebaseStorage, path), blob);
+
+    const metadata = res.metadata;
+    metadata.customMetadata = customMetadata;
+
+    await updateMetadata(ref(firebaseStorage, path), metadata);
+
+    return res;
   } catch (e) {
     console.error(e);
+    return false;
   }
 };
 
@@ -19,11 +46,18 @@ export const useFetchImagesQuery = async (query: string) => {
     const images: ImageInterface[] = [];
 
     for (const item of res.items) {
+      const metadata = await getMetadata(item);
+      if (!metadata.customMetadata) continue;
+
       const url = await getDownloadURL(item);
 
       images.push({
         name: item.name,
         url,
+        customMetadata: metadata.customMetadata as {
+          width: string;
+          height: string;
+        },
       });
     }
 

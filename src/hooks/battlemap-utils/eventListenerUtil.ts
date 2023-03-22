@@ -50,11 +50,16 @@ export const addImageOverlayMoveListener = (
       let bounds: Leaflet.LatLngBounds;
 
       if (image.movable.type === "grid") {
-        const pos = battlemap.map.mouseEventToLatLng(e.originalEvent);
-        bounds = calculateBoundsFromGrid(pos, battlemap, image.scale);
-      } else if (image.movable.type === "free")
+        const pos = e.latlng;
+        pos.lat -= width / 2;
+        pos.lng -= height / 2;
+
+        bounds = calculateBoundsFromGrid(pos, battlemap, {
+          scale: image.scale,
+        });
+      } else if (image.movable.type === "free") {
         bounds = calculateBoundsFromFree(e.latlng, width, height);
-      else throw new Error("Image is not movable");
+      } else throw new Error("Image is not movable");
 
       imageOverlay.setOpacity(1);
       imageOverlay.setBounds(bounds);

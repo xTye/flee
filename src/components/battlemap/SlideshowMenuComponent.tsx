@@ -1,4 +1,4 @@
-import { Component, Show, createSignal } from "solid-js";
+import { Component, Setter, Show, createSignal } from "solid-js";
 import {
   useFetchCharactersFromQuery,
   useUpdateDatabaseCharacter,
@@ -9,26 +9,20 @@ import SearchBarComponent from "../utils/SearchBarComponent";
 import ModalComponent from "../ModalComponent";
 import ImageCropperEditorComponent from "../utils/ImageCropperEditorComponent";
 import QuickCreateCharacterComponent from "./QuickCreateCharacterComponent";
+import { useModal } from "../utils/ModalContext";
 
 const SlideshowMenuComponent: Component<{
   characterDragEnd?: (e: DragEvent, character: CharacterInterface) => void;
 }> = (props) => {
+  const [content, actions] = useModal();
   const [selectedCharacter, setSelectedCharacter] =
     createSignal<CharacterInterface>();
   const [loading, setLoading] = createSignal({
     database: false,
   });
-  const [modal, setModal] = createSignal(false);
-
-  let dragCharacter: CharacterInterface;
 
   return (
     <>
-      <Show when={modal()}>
-        <ModalComponent setModal={setModal}>
-          <QuickCreateCharacterComponent setModal={setModal} />
-        </ModalComponent>
-      </Show>
       <div class="flex flex-col gap-2 bg-lightPurple p-2 rounded-t-md">
         <div class="flex items-center justify-between gap-1">
           <SearchBarComponent
@@ -45,12 +39,11 @@ const SlideshowMenuComponent: Component<{
                   }}
                   draggable={true}
                   onDragEnter={(e) => {
-                    dragCharacter = character;
                     setShowResults(false);
                   }}
                   onDragEnd={(e) => {
-                    if (props.characterDragEnd)
-                      props.characterDragEnd(e, dragCharacter);
+                    if (props.characterDragEnd && character)
+                      props.characterDragEnd(e, character);
                   }}
                   class="w-full h-full select-none"
                 >
@@ -79,7 +72,13 @@ const SlideshowMenuComponent: Component<{
               </button>
               <button
                 class="flex items-center justify-center w-8 h-8 bg-yellow rounded-full hover:bg-red text-text"
-                onClick={() => setModal(true)}
+                onClick={() =>
+                  actions.open(
+                    <QuickCreateCharacterComponent
+                      setModal={actions.close as Setter<boolean>}
+                    />
+                  )
+                }
               >
                 <img src="/util-images/plus.svg" class="w-4 h-4" />
               </button>

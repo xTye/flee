@@ -27,7 +27,7 @@ export const firebaseStorage = getStorage(firebaseApp);
 export const firebaseDatabase = getDatabase(firebaseApp);
 export const firebaseFunctions = getFunctions(firebaseApp);
 
-if (import.meta.env.MODE === "development")
+if (false && import.meta.env.MODE === "development")
   connectFunctionsEmulator(firebaseFunctions, "localhost", 5001);
 
 const root = document.getElementById("root");

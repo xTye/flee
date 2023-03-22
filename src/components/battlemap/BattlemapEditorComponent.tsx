@@ -1,4 +1,4 @@
-import { Component, Show, createSignal } from "solid-js";
+import { Component, Show, createEffect, createSignal } from "solid-js";
 import MapToolComponent from "../utils/MapToolComponent";
 import { BattlemapInterface } from "../../types/BattlemapType";
 import GridEditorComponent from "./GridEditorComponent";
@@ -13,6 +13,11 @@ const BattlemapEditorComponent: Component<{
   const battlemap = props.battlemap;
 
   const [selectedTab, setSelectedTab] = createSignal<TabType>("pages");
+
+  createEffect(() => {
+    const token = battlemap.token.selected();
+    if (token) setSelectedTab("token");
+  });
 
   return (
     <>

@@ -1,5 +1,5 @@
 import Leaflet from "leaflet";
-import { Accessor, Setter, Signal } from "solid-js";
+import { Accessor, Setter } from "solid-js";
 
 export interface AssetInterface {
   id: string;
@@ -27,9 +27,52 @@ export interface TokenInterface {
   rotation: number;
 }
 
+export interface ConditionIconInterface {
+  tokenId: string;
+  type: ConditionIconType;
+  url: string;
+  overlay: Leaflet.ImageOverlay;
+}
+
 export type ImageOverlayType = "asset" | "token";
 export type MovableType = "none" | "free" | "grid";
-type MovableByType = "none" | "all" | string;
+export type MovableByType = "all" | string;
+export type ConditionIconType =
+  | "dead"
+  | "blinded"
+  | "charmed"
+  | "deafened"
+  | "frightened"
+  | "grappled"
+  | "incapacitated"
+  | "invisible"
+  | "paralyzed"
+  | "petrified"
+  | "poisoned"
+  | "prone"
+  | "restrained"
+  | "stunned"
+  | "unconscious"
+  | "exhaustion";
+
+export const CONDITION_ICON_URL_IMAGES = {
+  dead: "/battlemap-images/essentials/dead.png",
+  blinded: "/battlemap-images/essentials/blinded.png",
+  charmed: "/battlemap-images/essentials/charmed.png",
+  deafened: "/battlemap-images/essentials/deafened.png",
+  frightened: "/battlemap-images/essentials/frightened.png",
+  grappled: "/battlemap-images/essentials/grappled.png",
+  incapacitated: "/battlemap-images/essentials/incapacitated.png",
+  invisible: "/battlemap-images/essentials/invisible.png",
+  paralyzed: "/battlemap-images/essentials/paralyzed.png",
+  petrified: "/battlemap-images/essentials/petrified.png",
+  poisoned: "/battlemap-images/essentials/poisoned.png",
+  prone: "/battlemap-images/essentials/prone.png",
+  restrained: "/battlemap-images/essentials/restrained.png",
+  stunned: "/battlemap-images/essentials/stunned.png",
+  unconscious: "/battlemap-images/essentials/unconscious.png",
+  exhaustion: "/battlemap-images/essentials/exhaustion.png",
+};
 
 export interface BattlemapDatabaseInterface {
   id: number;
@@ -61,6 +104,7 @@ export interface BackgroundLayerInterface {
 
 export interface GridLayerInterface {
   layer: Leaflet.GeoJSON;
+  show: boolean;
   cellSize: number;
   deltaX: number;
   deltaY: number;
@@ -81,11 +125,13 @@ export interface GridLayerInterface {
 
 export interface TokenLayerInterface {
   layer: Leaflet.LayerGroup;
+  conditionIconLayer: Leaflet.LayerGroup;
   draggingTokenImage?: Leaflet.ImageOverlay;
   draggingTokenMarker?: Leaflet.Marker;
   selected: Accessor<TokenInterface | undefined>;
   setSelected: Setter<TokenInterface | undefined>;
   tokens: Map<string, TokenInterface>;
+  conditionIcons: Map<string, Map<string, ConditionIconInterface>>;
 }
 
 export interface FogLayerInterface {
