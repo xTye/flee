@@ -5,9 +5,10 @@ import { onValue, ref as databaseRef } from "firebase/database";
 import SlideshowMenuComponent from "./SlideshowMenuComponent";
 import { useSession } from "../../auth";
 import { CharacterInterface } from "../../types/CharacterType";
+import { BattlemapInterface } from "../../types/BattlemapType";
 
 const BattlemapSlideshowComponent: Component<{
-  characterDragEnd?: (e: DragEvent, character: CharacterInterface) => void;
+  battlemap: BattlemapInterface;
 }> = (props) => {
   const [session, actions] = useSession();
   const [character, setCharacter] = createSignal<
@@ -24,7 +25,7 @@ const BattlemapSlideshowComponent: Component<{
       class2="flex flex-col p-4 w-72"
     >
       <Show when={session().admin}>
-        <SlideshowMenuComponent characterDragEnd={props.characterDragEnd} />
+        <SlideshowMenuComponent battlemap={props.battlemap} />
       </Show>
       <Show when={character()?.src !== "" && character()?.name}>
         <img src={character()?.src} class="w-full aspect-square object-cover" />

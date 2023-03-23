@@ -10,9 +10,11 @@ import ModalComponent from "../ModalComponent";
 import ImageCropperEditorComponent from "../utils/ImageCropperEditorComponent";
 import QuickCreateCharacterComponent from "./QuickCreateCharacterComponent";
 import { useModal } from "../utils/ModalContext";
+import { useCreateCharacterImage } from "../../hooks/BattlemapHooks";
+import { BattlemapInterface } from "../../types/BattlemapType";
 
 const SlideshowMenuComponent: Component<{
-  characterDragEnd?: (e: DragEvent, character: CharacterInterface) => void;
+  battlemap: BattlemapInterface;
 }> = (props) => {
   const [content, actions] = useModal();
   const [selectedCharacter, setSelectedCharacter] =
@@ -42,8 +44,8 @@ const SlideshowMenuComponent: Component<{
                     setShowResults(false);
                   }}
                   onDragEnd={(e) => {
-                    if (props.characterDragEnd && character)
-                      props.characterDragEnd(e, character);
+                    if (character)
+                      useCreateCharacterImage(e, character, props.battlemap);
                   }}
                   class="w-full h-full select-none"
                 >

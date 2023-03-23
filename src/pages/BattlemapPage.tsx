@@ -53,11 +53,7 @@ const Battlemap: Component = () => {
       >
         <ModalProvider>
           <BattlemapEditorComponent battlemap={battlemap} />
-          <BattlemapSlideshowComponent
-            characterDragEnd={(e, character) =>
-              useCreateCharacterImage(e, character, battlemap)
-            }
-          />
+          <BattlemapSlideshowComponent battlemap={battlemap} />
           {/* <BattlemapMediaPlayerComponent /> */}
         </ModalProvider>
         <div ref={mapDiv}></div>
