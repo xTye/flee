@@ -23,6 +23,8 @@ import BattlemapSlideshowComponent from "../components/battlemap/BattlemapSlides
 import { BattlemapInterface } from "../types/BattlemapType";
 import BattlemapEditorComponent from "../components/battlemap/BattlemapEditorComponent";
 import { ModalProvider } from "../components/utils/ModalContextProvider";
+import KonvaComponent from "../components/battlemap/KonvaComponent";
+import FabricComponent from "../components/battlemap/FabricComponent";
 
 const Battlemap: Component = () => {
   let mapDiv = document.createElement("div") as HTMLDivElement;
@@ -56,7 +58,9 @@ const Battlemap: Component = () => {
           <BattlemapSlideshowComponent battlemap={battlemap} />
           {/* <BattlemapMediaPlayerComponent /> */}
         </ModalProvider>
+        <KonvaComponent />
         <div ref={mapDiv}></div>
+        {/* <FabricComponent /> */}
       </div>
     </>
   );
