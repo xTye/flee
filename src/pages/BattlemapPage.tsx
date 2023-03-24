@@ -26,10 +26,13 @@ import BattlemapEditorComponent from "../components/battlemap/BattlemapEditorCom
 import { ModalProvider } from "../components/utils/ModalContextProvider";
 import KonvaComponent from "../components/battlemap/KonvaComponent";
 import FabricComponent from "../components/battlemap/FabricComponent";
+import { KonvaInterface } from "../types/KonvaType";
+import { useKonvaStage } from "../hooks/KonvaHooks";
 
 const BattlemapPage: Component = () => {
   let mapDiv = document.createElement("div") as HTMLDivElement;
-  const battlemap: BattlemapInterface = {} as BattlemapInterface;
+  const battlemap = {} as BattlemapInterface;
+  const konva = {} as KonvaInterface;
 
   onMount(async () => {
     battlemap.map = useBattlemap(mapDiv, battlemap);
@@ -56,13 +59,12 @@ const BattlemapPage: Component = () => {
         class="relative bg-lightPurple select-none"
       >
         <ModalProvider>
-          <BattlemapEditorComponent battlemap={battlemap} />
+          <BattlemapEditorComponent battlemap={battlemap} konva={konva} />
           <BattlemapSlideshowComponent battlemap={battlemap} />
           {/* <BattlemapMediaPlayerComponent /> */}
         </ModalProvider>
-        <KonvaComponent battlemap={battlemap} />
+        <KonvaComponent battlemap={battlemap} konva={konva} />
         <div ref={mapDiv}></div>
-        {/* <FabricComponent /> */}
       </div>
     </>
   );

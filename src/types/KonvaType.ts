@@ -1,15 +1,15 @@
 import Konva from "konva";
 
+export type KonvaToolType = "line" | "rect" | "circle";
+
 export interface KonvaInterface {
   stage: Konva.Stage;
-  lasso: {
-    e: MouseEvent;
-    line: Konva.Line;
-    layer: Konva.Layer;
-  };
-  fog: {
-    image: Konva.Image;
-    canvas: HTMLCanvasElement;
-    layer: Konva.Layer;
-  };
+  tool: KonvaToolType;
+  e: MouseEvent;
+  shape: Konva.Shape;
+  line: Konva.Line;
+  rect: Konva.Rect;
+  circle: Konva.Circle;
+  layer: Konva.Layer;
+  canvas: HTMLCanvasElement;
 }

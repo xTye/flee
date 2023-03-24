@@ -94,7 +94,6 @@ export const SessionProvider: Component<SessionProviderProps> = (props) => {
     },
 
     redirect: async () => {
-      console.log("lkejresjlfSJLEFLSKEFljkSEF");
       const auth = getAuth();
 
       try {

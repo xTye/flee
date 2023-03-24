@@ -295,6 +295,13 @@ export const toggleGrid = (battlemap: BattlemapInterface, on: boolean) => {
   else battlemap.grid.layer.removeFrom(battlemap.map);
 };
 
+export const toggleFog = (battlemap: BattlemapInterface, on: boolean) => {
+  if (on && battlemap.map.hasLayer(battlemap.fog.layer)) return;
+
+  if (on) battlemap.fog.layer.addTo(battlemap.map);
+  else battlemap.fog.layer.removeFrom(battlemap.map);
+};
+
 export const resizeImage = (
   battlemap: BattlemapInterface,
   image: AssetInterface | TokenInterface
@@ -353,14 +360,10 @@ export const useAddFog = (
   battlemap: BattlemapInterface,
   konva: KonvaInterface
 ) => {
-  const { topLeft, bottomRight } = calculateContainerPointsFromMap(battlemap);
-
-  const width = 1024;
-  const height = 1024;
-
+  if (!battlemap.map.hasLayer(battlemap.fog.layer)) return;
   const canvas = document.createElement("canvas");
-  canvas.width = width;
-  canvas.height = height;
+  canvas.width = 2048;
+  canvas.height = 2048;
 
   const ctx = canvas.getContext("2d");
   if (!ctx) return;
@@ -369,7 +372,6 @@ export const useAddFog = (
     const image = new Image();
     image.src = URL.createObjectURL(battlemap.fog.blob);
     image.onload = () => {
-      //console.log(image.width, image.height, canvas.width, canvas.height);
       ctx.drawImage(image, 0, 0);
 
       addFogCallback(battlemap, konva, canvas, ctx);
@@ -389,34 +391,13 @@ const addFogCallback = (
 ) => {
   const { topLeft, bottomRight } = calculateContainerPointsFromMap(battlemap);
   const width = bottomRight.x - topLeft.x;
-  const height = bottomRight.y - topLeft.y;
-  const scale = width / 1024;
-  console.log(scale);
+  const scale = canvas.width / width;
 
-  // const kc = konva.fog.canvas;
-  // const kct = kc.getContext("2d");
-  // if (!kct) return;
-
-  // kct.save();
-  // kct.clearRect(0, 0, kc.width, kc.height);
-  // kct.scale(kc.width / scale, kc.height / scale);
-  // kct.restore();
-
-  const kc = konva.lasso.line.toCanvas({
-    width: konva.stage.width() / scale,
-    height: konva.stage.height() / scale,
-    x: 0,
-    y: 0,
-    pixelRatio: scale,
-  });
-
-  if (konva.lasso.e.shiftKey) ctx.globalCompositeOperation = "destination-out";
+  if (konva.e.shiftKey) ctx.globalCompositeOperation = "destination-out";
   else ctx.globalCompositeOperation = "source-over";
 
-  console.log(-topLeft.x, -topLeft.y);
-  console.log(-topLeft.x / scale, -topLeft.y / scale);
-
-  ctx.drawImage(kc, -topLeft.x / scale, -topLeft.y / scale);
+  ctx.scale(scale, scale);
+  ctx.drawImage(konva.canvas, -topLeft.x, -topLeft.y);
 
   canvas.toBlob((blob) => {
     if (!blob) return;
@@ -427,7 +408,10 @@ const addFogCallback = (
 
     battlemap.fog.image = Leaflet.imageOverlay(
       imageUrl,
-      battlemap.map.options.maxBounds!
+      battlemap.map.options.maxBounds!,
+      {
+        opacity: 0.5,
+      }
     )
       .bringToFront()
       .addTo(battlemap.fog.layer);

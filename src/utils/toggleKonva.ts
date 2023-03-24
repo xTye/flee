@@ -10,7 +10,7 @@ export const toggleKonva = (
 ) => {
   const onDrag = (e: MouseEvent) => {
     if (e.button !== 2 || battlemap.events.dragging) return;
-    konva.lasso.e = e;
+    konva.e = e;
     setShow(true);
     konva.stage.fire("mousedown");
   };

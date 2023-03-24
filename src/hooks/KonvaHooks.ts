@@ -6,6 +6,12 @@ import { calculateContainerPointsFromMap } from "./battlemap-utils/calculateUtil
 import { BattlemapInterface } from "../types/BattlemapType";
 import { useAddFog } from "./BattlemapHooks";
 
+/**
+ *
+ * @param div Div element to attach Konva stage to
+ * @param konva Konva interface
+ * @param battlemap Battlemap interface
+ */
 export const useKonvaStage = (
   div: HTMLDivElement,
   konva: KonvaInterface,
@@ -17,65 +23,97 @@ export const useKonvaStage = (
     height: window.innerHeight - navbarHeight.height,
   });
 
-  //@ts-ignore
-  konva.lasso = {};
-  //@ts-ignore
-  konva.fog = {};
+  konva.tool = "line";
 
-  konva.lasso.layer = new Konva.Layer();
-  konva.fog.layer = new Konva.Layer();
-  konva.stage.add(konva.lasso.layer);
-  konva.stage.add(konva.fog.layer);
+  konva.layer = new Konva.Layer();
+  konva.stage.add(konva.layer);
+  konva.stage.add(konva.layer);
 
-  konva.fog.image = new Konva.Image({
-    image: new Image(),
-  });
-  konva.fog.layer.add(konva.fog.image);
-
-  konva.lasso.line = new Konva.Line({
+  konva.line = new Konva.Line({
     lineJoin: "round",
     tension: 0.5,
     closed: true,
     fill: "blue",
     opacity: 0.5,
   });
-  konva.lasso.layer.add(konva.lasso.line);
+
+  konva.rect = new Konva.Rect({
+    lineJoin: "round",
+    tension: 0.5,
+    closed: true,
+    fill: "blue",
+    opacity: 0.5,
+  });
+
+  konva.circle = new Konva.Circle({
+    lineJoin: "round",
+    tension: 0.5,
+    closed: true,
+    fill: "blue",
+    opacity: 0.5,
+  });
 
   let isPaint = false;
   let points: any[] = [];
 
   konva.stage.on("mousedown touchstart", (e) => {
     isPaint = true;
-    konva.lasso.line.opacity(0.5);
-    if (konva.lasso.e.shiftKey) {
-      konva.lasso.line.fill("red");
+
+    if (konva.tool === "line") {
+      konva.shape = konva.line;
+    } else if (konva.tool === "rect") {
+      konva.shape = konva.rect;
+      konva.rect.x(konva.e.offsetX);
+      konva.rect.y(konva.e.offsetY);
     } else {
-      konva.lasso.line.fill("blue");
+      konva.shape = konva.circle;
+      konva.circle.x(konva.e.offsetX);
+      konva.circle.y(konva.e.offsetY);
     }
+
+    konva.shape.opacity(0.5);
+    if (konva.e.shiftKey) {
+      konva.shape.fill("red");
+    } else {
+      konva.shape.fill("blue");
+    }
+
+    konva.layer.add(konva.shape);
   });
 
   konva.stage.on("mousemove touchmove", (e) => {
     if (!isPaint) return;
 
     const pos = konva.stage.getPointerPosition() as Vector2d;
-    points = points.concat([pos.x, pos.y]);
 
-    konva.lasso.line.points(points);
+    if (konva.tool === "line") {
+      points = points.concat([pos.x, pos.y]);
+      konva.line.points(points);
+    } else if (konva.tool === "rect") {
+      konva.rect.width(pos.x - konva.rect.x());
+      konva.rect.height(pos.y - konva.rect.y());
+    } else {
+      konva.circle.radius(
+        Math.sqrt(
+          Math.pow(pos.x - konva.circle.x(), 2) +
+            Math.pow(pos.y - konva.circle.y(), 2)
+        )
+      );
+    }
   });
 
   konva.stage.on("mouseup touchend", async (e) => {
     if (!isPaint) return;
-
     isPaint = false;
 
-    if (konva.lasso.e.shiftKey) {
-      konva.lasso.line.opacity(1);
+    if (konva.e.shiftKey) {
+      konva.shape.opacity(1);
     } else {
-      konva.lasso.line.opacity(1);
-      konva.lasso.line.fill("black");
+      konva.shape.opacity(1);
+      konva.shape.fill("black");
     }
 
-    konva.fog.canvas = konva.lasso.line.toCanvas({
+    konva.canvas = konva.shape.toCanvas({
       width: konva.stage.width(),
       height: konva.stage.height(),
       x: 0,
@@ -84,7 +122,16 @@ export const useKonvaStage = (
 
     useAddFog(battlemap, konva);
 
-    points = [];
-    konva.lasso.line.points(points);
+    konva.shape.remove();
+
+    if (konva.tool === "line") {
+      points = [];
+      konva.line.points(points);
+    } else if (konva.tool === "rect") {
+      konva.rect.width(0);
+      konva.rect.height(0);
+    } else {
+      konva.circle.radius(0);
+    }
   });
 };

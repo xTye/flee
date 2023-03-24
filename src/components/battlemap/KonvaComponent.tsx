@@ -8,17 +8,17 @@ import { KonvaInterface } from "../../types/KonvaType";
 
 const KonvaComponent: Component<{
   battlemap: BattlemapInterface;
+  konva: KonvaInterface;
 }> = (props) => {
   let konvaDiv = document.createElement("div") as HTMLDivElement;
-  const konva = {} as KonvaInterface;
   const [show, setShow] = createSignal(false);
 
   onMount(() => {
     removeContextMenu();
 
-    useKonvaStage(konvaDiv, konva, props.battlemap);
+    useKonvaStage(konvaDiv, props.konva, props.battlemap);
 
-    toggleKonva(props.battlemap, konva, setShow);
+    toggleKonva(props.battlemap, props.konva, setShow);
   });
 
   return (
