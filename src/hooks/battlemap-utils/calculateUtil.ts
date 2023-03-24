@@ -127,3 +127,43 @@ export const calculateTile = (
 
   return battlemap.grid.tiles[i][j];
 };
+
+export const calculateContainerPointsFromMap = (
+  battlemap: BattlemapInterface
+) => {
+  const maxBounds = battlemap.map.options.maxBounds as Leaflet.LatLngBounds;
+
+  const bottomLeft = battlemap.map.latLngToContainerPoint(
+    maxBounds.getSouthWest()
+  );
+
+  const topRight = battlemap.map.latLngToContainerPoint(
+    maxBounds.getNorthEast()
+  );
+
+  return {
+    bottomLeft,
+    bottomRight: Leaflet.point(topRight.x, bottomLeft.y),
+    topRight,
+    topLeft: Leaflet.point(bottomLeft.x, topRight.y),
+  };
+};
+
+export const calculateMapPointsFromContainer = (
+  battlemap: BattlemapInterface
+) => {
+  const bottomLeft = battlemap.map.containerPointToLayerPoint(
+    Leaflet.point(0, battlemap.map.getSize().y)
+  );
+
+  const topRight = battlemap.map.containerPointToLayerPoint(
+    Leaflet.point(battlemap.map.getSize().x, 0)
+  );
+
+  return {
+    bottomLeft,
+    bottomRight: Leaflet.point(topRight.x, bottomLeft.y),
+    topRight,
+    topLeft: Leaflet.point(bottomLeft.x, topRight.y),
+  };
+};

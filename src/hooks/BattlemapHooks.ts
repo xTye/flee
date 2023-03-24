@@ -1,4 +1,4 @@
-import Leaflet from "leaflet";
+import Leaflet, { imageOverlay } from "leaflet";
 import * as Turf from "@turf/turf";
 import { CharacterInterface } from "../types/CharacterType";
 import {
@@ -13,6 +13,8 @@ import {
   calculateBoundsFromFree,
   calculateImageSize,
   calculateBackgroundImageBounds,
+  calculateContainerPointsFromMap,
+  calculateMapPointsFromContainer,
 } from "./battlemap-utils/calculateUtil";
 import {
   addAssetContextMenuListener,
@@ -23,6 +25,7 @@ import {
 } from "./battlemap-utils/eventListenerUtil";
 import { createSignal } from "solid-js";
 import { ImageInterface } from "../types/ImageType";
+import { KonvaInterface } from "../types/KonvaType";
 
 const maxBounds = [
   [-1, -1],
@@ -40,6 +43,7 @@ export const useBattlemap = (
     zoom: 10,
     minZoom: 8,
     maxZoom: 12,
+    zoomAnimation: false,
   });
 
   map.zoomControl.setPosition("bottomright");
@@ -55,6 +59,15 @@ export const useBattlemap = (
       battlemap.token.draggingTokenImage = undefined;
       battlemap.token.draggingTokenMarker = undefined;
     }
+  });
+
+  map.on("mousedown", (e) => {
+    if (e.originalEvent && e.originalEvent.button === 2) return;
+    battlemap.events.dragging = true;
+  });
+
+  map.on("mouseup", (e) => {
+    battlemap.events.dragging = false;
   });
 
   return map;
@@ -169,6 +182,12 @@ export const useFogLayer = (battlemap: BattlemapInterface) => {
 
   return {
     layer,
+  };
+};
+
+export const useEvents = (battlemap: BattlemapInterface) => {
+  return {
+    dragging: false,
   };
 };
 
@@ -322,14 +341,99 @@ export const useCreateTokenIcon = (
     northEast
   );
 
-  console.log(bounds, iconBounds);
-
   const icon = Leaflet.imageOverlay(
     "/campaign-images/logo-edited.png",
     iconBounds
   )
     .bringToFront()
     .addTo(battlemap.token.conditionIconLayer);
+};
+
+export const useAddFog = (
+  battlemap: BattlemapInterface,
+  konva: KonvaInterface
+) => {
+  const { topLeft, bottomRight } = calculateContainerPointsFromMap(battlemap);
+
+  const width = 1024;
+  const height = 1024;
+
+  const canvas = document.createElement("canvas");
+  canvas.width = width;
+  canvas.height = height;
+
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return;
+
+  if (battlemap.fog.blob) {
+    const image = new Image();
+    image.src = URL.createObjectURL(battlemap.fog.blob);
+    image.onload = () => {
+      //console.log(image.width, image.height, canvas.width, canvas.height);
+      ctx.drawImage(image, 0, 0);
+
+      addFogCallback(battlemap, konva, canvas, ctx);
+    };
+
+    return;
+  }
+
+  addFogCallback(battlemap, konva, canvas, ctx);
+};
+
+const addFogCallback = (
+  battlemap: BattlemapInterface,
+  konva: KonvaInterface,
+  canvas: HTMLCanvasElement,
+  ctx: CanvasRenderingContext2D
+) => {
+  const { topLeft, bottomRight } = calculateContainerPointsFromMap(battlemap);
+  const width = bottomRight.x - topLeft.x;
+  const height = bottomRight.y - topLeft.y;
+  const scale = width / 1024;
+  console.log(scale);
+
+  // const kc = konva.fog.canvas;
+  // const kct = kc.getContext("2d");
+  // if (!kct) return;
+
+  // kct.save();
+  // kct.clearRect(0, 0, kc.width, kc.height);
+  // kct.scale(kc.width / scale, kc.height / scale);
+  // kct.restore();
+
+  const kc = konva.lasso.line.toCanvas({
+    width: konva.stage.width() / scale,
+    height: konva.stage.height() / scale,
+    x: 0,
+    y: 0,
+    pixelRatio: scale,
+  });
+
+  if (konva.lasso.e.shiftKey) ctx.globalCompositeOperation = "destination-out";
+  else ctx.globalCompositeOperation = "source-over";
+
+  console.log(-topLeft.x, -topLeft.y);
+  console.log(-topLeft.x / scale, -topLeft.y / scale);
+
+  ctx.drawImage(kc, -topLeft.x / scale, -topLeft.y / scale);
+
+  canvas.toBlob((blob) => {
+    if (!blob) return;
+    const imageUrl = URL.createObjectURL(blob);
+    battlemap.fog.blob = blob;
+
+    const prev = battlemap.fog.image;
+
+    battlemap.fog.image = Leaflet.imageOverlay(
+      imageUrl,
+      battlemap.map.options.maxBounds!
+    )
+      .bringToFront()
+      .addTo(battlemap.fog.layer);
+
+    prev?.remove();
+  });
 };
 
 //! REMOVE

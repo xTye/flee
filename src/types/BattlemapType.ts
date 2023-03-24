@@ -92,6 +92,9 @@ export interface BattlemapInterface {
   grid: GridLayerInterface;
   token: TokenLayerInterface;
   fog: FogLayerInterface;
+  events: {
+    dragging: boolean;
+  };
 }
 
 export interface BackgroundLayerInterface {
@@ -136,4 +139,6 @@ export interface TokenLayerInterface {
 
 export interface FogLayerInterface {
   layer: Leaflet.LayerGroup;
+  blob?: Blob;
+  image?: Leaflet.ImageOverlay;
 }

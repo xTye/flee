@@ -16,7 +16,7 @@ export const addImageOverlayMoveListener = (
   const imageOverlay = image.overlay;
 
   imageOverlay.on("mousedown", (e) => {
-    if (e.originalEvent.button !== 0) return;
+    if (e.originalEvent.button !== 0 || battlemap.events.dragging) return;
     battlemap.token.draggingTokenImage = imageOverlay;
     imageOverlay.setOpacity(0.5);
 
@@ -47,6 +47,7 @@ export const addImageOverlayMoveListener = (
     }).addTo(battlemap.token.layer);
 
     battlemap.token.draggingTokenMarker.on("mouseup", (e) => {
+      if (e.originalEvent.button !== 0) return;
       let bounds: Leaflet.LatLngBounds;
 
       if (image.movable.type === "grid") {
@@ -101,7 +102,7 @@ export const addAssetContextMenuListener = (
   asset: AssetInterface
 ) => {
   asset.overlay.on("contextmenu", (e) => {
-    battlemap.background.setSelected(asset);
+    //battlemap.background.setSelected(asset);
   });
 };
 
@@ -110,7 +111,7 @@ export const addTokenContextMenuListener = (
   token: TokenInterface
 ) => {
   token.overlay.on("contextmenu", (e) => {
-    battlemap.token.setSelected(token);
+    //battlemap.token.setSelected(token);
   });
 };
 

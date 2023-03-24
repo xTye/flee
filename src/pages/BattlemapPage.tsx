@@ -12,6 +12,7 @@ import {
   useBackgroundLayer,
   useBattlemap,
   useCreateCharacterImage,
+  useEvents,
   useFogLayer,
   useGridLayer,
   useTokenLayer,
@@ -26,7 +27,7 @@ import { ModalProvider } from "../components/utils/ModalContextProvider";
 import KonvaComponent from "../components/battlemap/KonvaComponent";
 import FabricComponent from "../components/battlemap/FabricComponent";
 
-const Battlemap: Component = () => {
+const BattlemapPage: Component = () => {
   let mapDiv = document.createElement("div") as HTMLDivElement;
   const battlemap: BattlemapInterface = {} as BattlemapInterface;
 
@@ -36,6 +37,7 @@ const Battlemap: Component = () => {
     battlemap.grid = useGridLayer(battlemap);
     battlemap.token = useTokenLayer(battlemap);
     battlemap.fog = useFogLayer(battlemap);
+    battlemap.events = useEvents(battlemap);
   });
 
   createMemo(() => {
@@ -58,7 +60,7 @@ const Battlemap: Component = () => {
           <BattlemapSlideshowComponent battlemap={battlemap} />
           {/* <BattlemapMediaPlayerComponent /> */}
         </ModalProvider>
-        <KonvaComponent />
+        <KonvaComponent battlemap={battlemap} />
         <div ref={mapDiv}></div>
         {/* <FabricComponent /> */}
       </div>
@@ -66,4 +68,4 @@ const Battlemap: Component = () => {
   );
 };
 
-export default Battlemap;
+export default BattlemapPage;
