@@ -4,7 +4,11 @@ import { Vector2d } from "konva/lib/types";
 import { KonvaInterface } from "../types/KonvaType";
 import { calculateContainerPointsFromMap } from "./battlemap-utils/calculateUtil";
 import { BattlemapInterface } from "../types/BattlemapType";
-import { useAddFog } from "./BattlemapHooks";
+import {
+  changeFog,
+  selectAssets,
+  selectTokens,
+} from "./battlemap-utils/konvaUtil";
 
 /**
  *
@@ -58,17 +62,24 @@ export const useKonvaStage = (
 
   konva.stage.on("mousedown touchstart", (e) => {
     isPaint = true;
+    konva.dragged = false;
+
+    //@ts-ignore
+    const pos = { x: konva.e.layerX, y: konva.e.layerY } as Vector2d;
+    konva.start = pos;
 
     if (konva.tool === "line") {
       konva.shape = konva.line;
+      points = points.concat([pos.x, pos.y]);
+      konva.line.points(points);
     } else if (konva.tool === "rect") {
       konva.shape = konva.rect;
-      konva.rect.x(konva.e.offsetX);
-      konva.rect.y(konva.e.offsetY);
+      konva.rect.x(pos.x);
+      konva.rect.y(pos.y);
     } else {
       konva.shape = konva.circle;
-      konva.circle.x(konva.e.offsetX);
-      konva.circle.y(konva.e.offsetY);
+      konva.circle.x(pos.x);
+      konva.circle.y(pos.y);
     }
 
     konva.shape.opacity(0.5);
@@ -83,6 +94,7 @@ export const useKonvaStage = (
 
   konva.stage.on("mousemove touchmove", (e) => {
     if (!isPaint) return;
+    konva.dragged = true;
 
     const pos = konva.stage.getPointerPosition() as Vector2d;
 
@@ -120,8 +132,16 @@ export const useKonvaStage = (
       y: 0,
     });
 
-    useAddFog(battlemap, konva);
+    // TODO: Add other hooks here | Depending on tab selected
+    if (battlemap.events.tab === "background") {
+      selectAssets(battlemap, konva);
+    } else if (battlemap.events.tab === "token") {
+      selectTokens(battlemap, konva);
+    } else if (battlemap.events.tab === "fog") {
+      changeFog(battlemap, konva);
+    }
 
+    //! This could be a problem because of the callbacks in the hooks
     konva.shape.remove();
 
     if (konva.tool === "line") {

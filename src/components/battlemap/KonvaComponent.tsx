@@ -1,7 +1,6 @@
 import { Component, createSignal, onMount } from "solid-js";
 import { removeContextMenu } from "../../utils/removeContextMenu";
 import { toggleKonva } from "../../utils/toggleKonva";
-import Konva from "konva";
 import { useKonvaStage } from "../../hooks/KonvaHooks";
 import { BattlemapInterface } from "../../types/BattlemapType";
 import { KonvaInterface } from "../../types/KonvaType";

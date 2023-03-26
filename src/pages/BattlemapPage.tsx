@@ -11,7 +11,6 @@ import "leaflet/dist/leaflet.css";
 import {
   useBackgroundLayer,
   useBattlemap,
-  useCreateCharacterImage,
   useEvents,
   useFogLayer,
   useGridLayer,
@@ -25,9 +24,7 @@ import { BattlemapInterface } from "../types/BattlemapType";
 import BattlemapEditorComponent from "../components/battlemap/BattlemapEditorComponent";
 import { ModalProvider } from "../components/utils/ModalContextProvider";
 import KonvaComponent from "../components/battlemap/KonvaComponent";
-import FabricComponent from "../components/battlemap/FabricComponent";
 import { KonvaInterface } from "../types/KonvaType";
-import { useKonvaStage } from "../hooks/KonvaHooks";
 
 const BattlemapPage: Component = () => {
   let mapDiv = document.createElement("div") as HTMLDivElement;

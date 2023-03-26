@@ -4,6 +4,7 @@ import { CharacterInterface } from "../types/CharacterType";
 import {
   AssetInterface,
   BattlemapInterface,
+  EventDataInterface,
   GridLayerInterface,
   TokenInterface,
   TokenLayerInterface,
@@ -26,6 +27,7 @@ import {
 import { createSignal } from "solid-js";
 import { ImageInterface } from "../types/ImageType";
 import { KonvaInterface } from "../types/KonvaType";
+import { isFogLayerActive } from "./battlemap-utils/booleanRelationshipsUtil";
 
 const maxBounds = [
   [-1, -1],
@@ -49,26 +51,22 @@ export const useBattlemap = (
   map.zoomControl.setPosition("bottomright");
 
   map.on("zoomstart", (e) => {
-    if (
-      battlemap.token.draggingTokenMarker &&
-      battlemap.token.draggingTokenImage
-    ) {
-      battlemap.token.draggingTokenImage.setOpacity(1);
-      battlemap.token.draggingTokenMarker.remove();
+    if (battlemap.events.dragging) {
+      for (const [key, value] of battlemap.events.dragging) {
+        value.overlay.setOpacity(1);
 
-      battlemap.token.draggingTokenImage = undefined;
-      battlemap.token.draggingTokenMarker = undefined;
+        value.dragMarker?.remove();
+        value.dragMarker = undefined;
+        battlemap.events.dragging = undefined;
+      }
     }
   });
 
   map.on("mousedown", (e) => {
     if (e.originalEvent && e.originalEvent.button === 2) return;
-    battlemap.events.dragging = true;
   });
 
-  map.on("mouseup", (e) => {
-    battlemap.events.dragging = false;
-  });
+  map.on("mouseup", (e) => {});
 
   return map;
 };
@@ -77,13 +75,13 @@ export const useBackgroundLayer = (battlemap: BattlemapInterface) => {
   const layer = Leaflet.layerGroup().addTo(battlemap.map);
 
   const image = Leaflet.imageOverlay(
-    "/maps/lowres-maps/Daggerfalls.jpg",
+    "https://firebasestorage.googleapis.com/v0/b/flee-website.appspot.com/o/battlemap%2Fmaps%2Fgreen-forest-1?alt=media&token=ca9c2e6a-f050-4026-bb3e-1eb251de760b",
     battlemap.map.options.maxBounds!
   )
     .bringToFront()
     .addTo(layer);
 
-  const [selected, setSelected] = createSignal<AssetInterface>();
+  const [selected, setSelected] = createSignal<Map<string, AssetInterface>>();
 
   return {
     layer,
@@ -165,7 +163,7 @@ export const useTokenLayer = (
   const layer = Leaflet.layerGroup().addTo(battlemap.map);
   const conditionIconLayer = Leaflet.layerGroup().addTo(battlemap.map);
 
-  const [selected, setSelected] = createSignal<TokenInterface>();
+  const [selected, setSelected] = createSignal<Map<string, TokenInterface>>();
 
   return {
     layer,
@@ -185,9 +183,11 @@ export const useFogLayer = (battlemap: BattlemapInterface) => {
   };
 };
 
-export const useEvents = (battlemap: BattlemapInterface) => {
+export const useEvents = (
+  battlemap: BattlemapInterface
+): EventDataInterface => {
   return {
-    dragging: false,
+    tab: "pages",
   };
 };
 
@@ -270,7 +270,6 @@ export const useCreateBackgroundImage = (
     id: makeid(10),
     overlay: imageOverlay,
     url: imageUrl,
-    bounds: bounds,
     movable: {
       type: "free",
       by: "admin",
@@ -354,70 +353,6 @@ export const useCreateTokenIcon = (
   )
     .bringToFront()
     .addTo(battlemap.token.conditionIconLayer);
-};
-
-export const useAddFog = (
-  battlemap: BattlemapInterface,
-  konva: KonvaInterface
-) => {
-  if (!battlemap.map.hasLayer(battlemap.fog.layer)) return;
-  const canvas = document.createElement("canvas");
-  canvas.width = 2048;
-  canvas.height = 2048;
-
-  const ctx = canvas.getContext("2d");
-  if (!ctx) return;
-
-  if (battlemap.fog.blob) {
-    const image = new Image();
-    image.src = URL.createObjectURL(battlemap.fog.blob);
-    image.onload = () => {
-      ctx.drawImage(image, 0, 0);
-
-      addFogCallback(battlemap, konva, canvas, ctx);
-    };
-
-    return;
-  }
-
-  addFogCallback(battlemap, konva, canvas, ctx);
-};
-
-const addFogCallback = (
-  battlemap: BattlemapInterface,
-  konva: KonvaInterface,
-  canvas: HTMLCanvasElement,
-  ctx: CanvasRenderingContext2D
-) => {
-  const { topLeft, bottomRight } = calculateContainerPointsFromMap(battlemap);
-  const width = bottomRight.x - topLeft.x;
-  const scale = canvas.width / width;
-
-  if (konva.e.shiftKey) ctx.globalCompositeOperation = "destination-out";
-  else ctx.globalCompositeOperation = "source-over";
-
-  ctx.scale(scale, scale);
-  ctx.drawImage(konva.canvas, -topLeft.x, -topLeft.y);
-
-  canvas.toBlob((blob) => {
-    if (!blob) return;
-    const imageUrl = URL.createObjectURL(blob);
-    battlemap.fog.blob = blob;
-
-    const prev = battlemap.fog.image;
-
-    battlemap.fog.image = Leaflet.imageOverlay(
-      imageUrl,
-      battlemap.map.options.maxBounds!,
-      {
-        opacity: 0.5,
-      }
-    )
-      .bringToFront()
-      .addTo(battlemap.fog.layer);
-
-    prev?.remove();
-  });
 };
 
 //! REMOVE

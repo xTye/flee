@@ -4,8 +4,8 @@ import { Accessor, Setter } from "solid-js";
 export interface AssetInterface {
   id: string;
   overlay: Leaflet.ImageOverlay;
+  dragMarker?: Leaflet.Marker;
   url: string;
-  bounds: Leaflet.LatLngBounds;
   movable: {
     type: MovableType;
     by: MovableByType;
@@ -18,6 +18,7 @@ export interface TokenInterface {
   id: string;
   characterId: string;
   overlay: Leaflet.ImageOverlay;
+  dragMarker?: Leaflet.Marker;
   url: string;
   movable: {
     type: MovableType;
@@ -34,6 +35,7 @@ export interface ConditionIconInterface {
   overlay: Leaflet.ImageOverlay;
 }
 
+export type TabType = "pages" | "background" | "grid" | "token" | "fog";
 export type ImageOverlayType = "asset" | "token";
 export type MovableType = "none" | "free" | "grid";
 export type MovableByType = "all" | string;
@@ -92,16 +94,14 @@ export interface BattlemapInterface {
   grid: GridLayerInterface;
   token: TokenLayerInterface;
   fog: FogLayerInterface;
-  events: {
-    dragging: boolean;
-  };
+  events: EventDataInterface;
 }
 
 export interface BackgroundLayerInterface {
   layer: Leaflet.LayerGroup;
   image: Leaflet.ImageOverlay;
-  selected: Accessor<AssetInterface | undefined>;
-  setSelected: Setter<AssetInterface | undefined>;
+  selected: Accessor<Map<string, AssetInterface> | undefined>;
+  setSelected: Setter<Map<string, AssetInterface> | undefined>;
   assets: Map<string, AssetInterface>;
 }
 
@@ -129,10 +129,8 @@ export interface GridLayerInterface {
 export interface TokenLayerInterface {
   layer: Leaflet.LayerGroup;
   conditionIconLayer: Leaflet.LayerGroup;
-  draggingTokenImage?: Leaflet.ImageOverlay;
-  draggingTokenMarker?: Leaflet.Marker;
-  selected: Accessor<TokenInterface | undefined>;
-  setSelected: Setter<TokenInterface | undefined>;
+  selected: Accessor<Map<string, TokenInterface> | undefined>;
+  setSelected: Setter<Map<string, TokenInterface> | undefined>;
   tokens: Map<string, TokenInterface>;
   conditionIcons: Map<string, Map<string, ConditionIconInterface>>;
 }
@@ -142,3 +140,10 @@ export interface FogLayerInterface {
   blob?: Blob;
   image?: Leaflet.ImageOverlay;
 }
+
+export interface EventDataInterface {
+  tab: TabType;
+  dragging?: Map<string, TokenInterface | AssetInterface>;
+}
+
+interface GetSet<T> {}

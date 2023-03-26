@@ -2,6 +2,7 @@ import { Stage } from "konva/lib/Stage";
 import { Setter, onCleanup } from "solid-js";
 import { BattlemapInterface } from "../types/BattlemapType";
 import { KonvaInterface } from "../types/KonvaType";
+import { isFogLayerActive } from "../hooks/battlemap-utils/booleanRelationshipsUtil";
 
 export const toggleKonva = (
   battlemap: BattlemapInterface,
@@ -9,14 +10,24 @@ export const toggleKonva = (
   setShow: Setter<boolean>
 ) => {
   const onDrag = (e: MouseEvent) => {
-    if (e.button !== 2 || battlemap.events.dragging) return;
+    if (
+      battlemap.events.tab !== "fog" &&
+      battlemap.events.tab !== "background" &&
+      battlemap.events.tab !== "token"
+    )
+      return;
+    if (
+      e.button !== 2 ||
+      battlemap.events.dragging ||
+      !isFogLayerActive(battlemap)
+    )
+      return;
     konva.e = e;
     setShow(true);
     konva.stage.fire("mousedown");
   };
 
   const onDragEnd = (e: any) => {
-    if (e.button !== 2 || battlemap.events.dragging) return;
     setShow(false);
   };
 

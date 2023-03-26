@@ -88,11 +88,11 @@ export const calculateBoundsFromFree = (
   height: number,
   scale = 1
 ) => {
-  const lat = pos.lat - height / 2;
-  const lng = pos.lng - width / 2;
-
-  const southWest = Leaflet.latLng(lat, lng);
-  const northEast = Leaflet.latLng(lat + height * scale, lng + width * scale);
+  const southWest = Leaflet.latLng(pos.lat, pos.lng);
+  const northEast = Leaflet.latLng(
+    pos.lat + height * scale,
+    pos.lng + width * scale
+  );
 
   return Leaflet.latLngBounds(southWest, northEast);
 };
