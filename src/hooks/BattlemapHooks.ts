@@ -73,6 +73,7 @@ export const useBattlemap = (
 
 export const useBackgroundLayer = (battlemap: BattlemapInterface) => {
   const layer = Leaflet.layerGroup().addTo(battlemap.map);
+  const borderLayer = Leaflet.layerGroup().addTo(battlemap.map);
 
   const image = Leaflet.imageOverlay(
     "https://firebasestorage.googleapis.com/v0/b/flee-website.appspot.com/o/battlemap%2Fmaps%2Fgreen-forest-1?alt=media&token=ca9c2e6a-f050-4026-bb3e-1eb251de760b",
@@ -85,6 +86,7 @@ export const useBackgroundLayer = (battlemap: BattlemapInterface) => {
 
   return {
     layer,
+    borderLayer,
     image,
     selected,
     setSelected,
@@ -162,12 +164,14 @@ export const useTokenLayer = (
 ): TokenLayerInterface => {
   const layer = Leaflet.layerGroup().addTo(battlemap.map);
   const conditionIconLayer = Leaflet.layerGroup().addTo(battlemap.map);
+  const borderLayer = Leaflet.layerGroup().addTo(battlemap.map);
 
   const [selected, setSelected] = createSignal<Map<string, TokenInterface>>();
 
   return {
     layer,
     conditionIconLayer,
+    borderLayer,
     selected,
     setSelected,
     tokens: new Map(),
@@ -327,6 +331,7 @@ export const resizeImage = (
   }
 
   overlay.setBounds(newBounds);
+  image.border?.setBounds(newBounds);
 };
 
 export const rotateImage = () => {};

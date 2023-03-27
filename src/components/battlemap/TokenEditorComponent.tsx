@@ -292,6 +292,18 @@ const TokenEditorComponent: Component<{ battlemap: BattlemapInterface }> = (
                   }}
                 />
               </div>
+              <div class="flex items-center gap-4">
+                <button
+                  class="w-full p-2 bg-yellow hover:bg-red rounded-full"
+                  onClick={() => {
+                    for (const [key, token] of insTokens) {
+                      token.overlay.bringToFront();
+                    }
+                  }}
+                >
+                  Bring to Front
+                </button>
+              </div>
             </>
           );
         }}

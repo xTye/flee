@@ -155,6 +155,27 @@ export const selectTokens = (
     else tokens.set(singleToken.id, singleToken);
   }
 
+  if (prevTokens) {
+    for (const [key, token] of prevTokens) {
+      if (tokens.has(key)) continue;
+
+      if (token.border) {
+        token.border.remove();
+        token.border = undefined;
+      }
+    }
+  }
+
+  for (const [key, token] of tokens) {
+    if (prevTokens && prevTokens.has(token.id)) continue;
+
+    token.border = new Leaflet.Rectangle(token.overlay.getBounds(), {
+      color: "#0000ff",
+      weight: 1,
+      interactive: false,
+    }).addTo(battlemap.token.borderLayer);
+  }
+
   if (tokens.size === 0) battlemap.token.setSelected();
   else battlemap.token.setSelected(tokens);
 };
@@ -219,6 +240,6 @@ const addFogCallback = (
       .bringToFront()
       .addTo(battlemap.fog.layer);
 
-    prev?.remove();
+    if (prev) battlemap.fog.layer.removeLayer(prev);
   });
 };

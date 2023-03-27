@@ -123,6 +123,8 @@ export const addImageOverlayMoveListener = (
 
         value.overlay.setOpacity(1);
         value.overlay.setBounds(bounds);
+
+        value.border?.setBounds(bounds);
       }
 
       image.dragMarker?.remove();

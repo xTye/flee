@@ -4,6 +4,7 @@ import { Accessor, Setter } from "solid-js";
 export interface AssetInterface {
   id: string;
   overlay: Leaflet.ImageOverlay;
+  border?: Leaflet.Rectangle;
   dragMarker?: Leaflet.Marker;
   url: string;
   movable: {
@@ -18,6 +19,7 @@ export interface TokenInterface {
   id: string;
   characterId: string;
   overlay: Leaflet.ImageOverlay;
+  border?: Leaflet.Rectangle;
   dragMarker?: Leaflet.Marker;
   url: string;
   movable: {
@@ -99,6 +101,7 @@ export interface BattlemapInterface {
 
 export interface BackgroundLayerInterface {
   layer: Leaflet.LayerGroup;
+  borderLayer: Leaflet.LayerGroup;
   image: Leaflet.ImageOverlay;
   selected: Accessor<Map<string, AssetInterface> | undefined>;
   setSelected: Setter<Map<string, AssetInterface> | undefined>;
@@ -129,6 +132,7 @@ export interface GridLayerInterface {
 export interface TokenLayerInterface {
   layer: Leaflet.LayerGroup;
   conditionIconLayer: Leaflet.LayerGroup;
+  borderLayer: Leaflet.LayerGroup;
   selected: Accessor<Map<string, TokenInterface> | undefined>;
   setSelected: Setter<Map<string, TokenInterface> | undefined>;
   tokens: Map<string, TokenInterface>;

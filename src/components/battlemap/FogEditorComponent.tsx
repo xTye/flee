@@ -6,7 +6,7 @@ const FogEditorComponent: Component<{
   battlemap: BattlemapInterface;
 }> = (props) => {
   const [options, setOptions] = createSignal({
-    fog: true,
+    fog: props.battlemap.map.hasLayer(props.battlemap.fog.layer),
   });
 
   return (
