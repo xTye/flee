@@ -29,9 +29,7 @@ const TokenEditorComponent: Component<{ battlemap: BattlemapInterface }> = (
   const [session, actions] = useSession();
   const battlemap = props.battlemap;
 
-  const [options, setOptions] = createSignal<
-    Partial<TokenInterface> & { movable: Partial<TokenInterface["movable"]> }
-  >({
+  const [options, setOptions] = createSignal<Partial<TokenInterface>>({
     movable: {
       type: "none",
       by: "grid",
@@ -50,7 +48,7 @@ const TokenEditorComponent: Component<{ battlemap: BattlemapInterface }> = (
         {(insTokens) => {
           const startToken = [...insTokens.values()][0] as TokenInterface;
 
-          let movable: Partial<TokenInterface["movable"]> = startToken.movable;
+          let movable = startToken.movable;
           let scale: number | undefined = startToken.scale;
           let rotation: number | undefined = startToken.rotation;
 
@@ -58,8 +56,10 @@ const TokenEditorComponent: Component<{ battlemap: BattlemapInterface }> = (
           } else if (insTokens.size > 1) {
             for (const [key, token] of insTokens) {
               if (!movable.type && token.movable.type !== movable.type)
+                //@ts-ignore
                 movable.type = undefined;
               if (!movable.by && token.movable.by !== movable.by)
+                //@ts-ignore
                 movable.by = undefined;
               if (!movable && token.scale !== scale) scale = undefined;
               if (!movable && token.rotation !== rotation) rotation = undefined;
@@ -167,6 +167,7 @@ const TokenEditorComponent: Component<{ battlemap: BattlemapInterface }> = (
                     });
                   }}
                 >
+                  <option value={undefined}>{""}</option>
                   <option
                     selected={options().movable?.by === "all"}
                     value="all"

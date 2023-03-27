@@ -53,7 +53,7 @@ const HomePage: Component = () => {
         >
           <section
             ref={splideRef}
-            class="splide w-full md:w-4/5 lg:w-3/5 h-[500px]"
+            class="splide w-full md:w-4/5 lg:w-3/5 h-[500px] md:mt-4 p-10 rounded-md shadow-sm shadow-black bg-gradient-to-tr from-burgandy to-purple"
             aria-label="Splide Basic HTML Example"
           >
             <div class="splide__track h-full">
