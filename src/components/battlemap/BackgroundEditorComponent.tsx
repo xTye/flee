@@ -1,10 +1,14 @@
 import { Component, Setter, createSignal } from "solid-js";
 import { BattlemapInterface } from "../../types/BattlemapType";
 import SearchBarComponent from "../utils/SearchBarComponent";
-import { useFetchImagesQuery } from "../../services/ImageService";
+import {
+  useDeleteImage,
+  useFetchImagesQuery,
+} from "../../services/ImageService";
 import {
   changeBackgroundImage,
   useCreateBackgroundImage,
+  useRemoveBackgroundImage,
 } from "../../hooks/BattlemapHooks";
 import { useModal } from "../utils/ModalContext";
 import QuickCreateCharacterComponent from "./QuickCreateCharacterComponent";
@@ -44,23 +48,23 @@ const BackgroundEditorComponent: Component<{
           itemComponent={(
             backgroundImage: ImageInterface,
             i,
-            setShowResults
+            setShowResults,
+            refetch
           ) => (
             <>
               <div
-                onClick={async () => {
-                  if (queryBegin() !== "maps") return;
-                  changeBackgroundImage(battlemap, backgroundImage);
-                  setShowResults(false);
-                }}
-                draggable={queryBegin() === "assets"}
+                draggable={queryBegin() === "assets" || queryBegin() === "maps"}
                 onDragEnter={(e) => {
-                  if (queryBegin() !== "assets") return;
+                  if (queryBegin() === "assets" || queryBegin() === "maps")
+                    return;
                   setShowResults(false);
                 }}
                 onDragEnd={(e) => {
-                  if (queryBegin() !== "assets") return;
-                  useCreateBackgroundImage(e, battlemap, backgroundImage);
+                  if (queryBegin() === "assets")
+                    useCreateBackgroundImage(e, battlemap, backgroundImage);
+
+                  if (queryBegin() === "maps")
+                    changeBackgroundImage(battlemap, backgroundImage);
                 }}
                 class="w-full h-full select-none"
               >
@@ -73,10 +77,38 @@ const BackgroundEditorComponent: Component<{
                     <div class="text-sm">{backgroundImage.name}</div>
                   </div>
 
-                  <img
-                    src={"/util-images/trash.svg"}
-                    class="w-4 h-4 object-cover hover:bg-red"
-                  />
+                  <button
+                    class="p-1 rounded-md hover:bg-red"
+                    onClick={async () => {
+                      await useDeleteImage(backgroundImage.fullPath);
+
+                      if (queryBegin() === "maps") {
+                        if (battlemap.background.url === backgroundImage.url)
+                          changeBackgroundImage(battlemap, {
+                            url: "/battlemap-images/blank.svg",
+                            name: "Blank",
+                            fullPath: "/",
+                            customMetadata: {
+                              width: "1",
+                              height: "1",
+                            },
+                          });
+
+                        refetch();
+                      } else if (queryBegin() === "assets") {
+                        for (const [key, asset] of battlemap.background.assets)
+                          if (asset.url === backgroundImage.url)
+                            useRemoveBackgroundImage(battlemap, asset);
+
+                        refetch();
+                      }
+                    }}
+                  >
+                    <img
+                      src={"/util-images/trash.svg"}
+                      class="w-4 h-4 object-cover"
+                    />
+                  </button>
                 </div>
               </div>
             </>

@@ -17,12 +17,15 @@ const SearchBarComponent: Component<{
   itemComponent: (
     item: any,
     i: Accessor<number>,
-    setShowResults: Setter<boolean>
+    setShowResults: Setter<boolean>,
+    refetch: (query?: string) => void
   ) => JSX.Element;
 }> = (props) => {
   const [showResults, setShowResults] = createSignal(false);
   const [results, setResults] = createSignal<any[]>([]);
   const [fetching, setFetching] = createSignal(false);
+
+  let input = "";
 
   let fetchRef: NodeJS.Timeout | undefined = undefined;
   const fetch = (query: string) => {
@@ -57,7 +60,8 @@ const SearchBarComponent: Component<{
             setShowResults(true);
           }}
           onInput={(e) => {
-            fetch(props.queryBegin || "" + e.currentTarget.value);
+            input = props.queryBegin || "" + e.currentTarget.value;
+            fetch(input);
           }}
         />
         <Show when={showResults()}>
@@ -74,7 +78,9 @@ const SearchBarComponent: Component<{
                         i() === results().length - 1 ? "" : "border-b-2"
                       } hover:bg-white p-2`}
                     >
-                      {props.itemComponent(result, i, setShowResults)}
+                      {props.itemComponent(result, i, setShowResults, (query) =>
+                        fetch(query || input)
+                      )}
                     </div>
                   )}
                 </For>

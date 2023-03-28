@@ -39,11 +39,6 @@ const CreateBackgrouundImageComponent: Component<{
                   canvas?.toBlob(async (blob: Blob | null) => {
                     let res;
 
-                    console.log(
-                      canvas.width.toString(),
-                      canvas.height.toString()
-                    );
-
                     if (blob)
                       res = await useCreateImage(
                         `${image().queryBegin}${image().type}/${image().name}`,

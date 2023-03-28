@@ -21,6 +21,7 @@ export interface TokenInterface {
   overlay: Leaflet.ImageOverlay;
   border?: Leaflet.Rectangle;
   dragMarker?: Leaflet.Marker;
+  conditions: Map<ConditionType, ConditionInterface>;
   url: string;
   movable: {
     type: MovableType;
@@ -30,9 +31,9 @@ export interface TokenInterface {
   rotation: number;
 }
 
-export interface ConditionIconInterface {
+export interface ConditionInterface {
   tokenId: string;
-  type: ConditionIconType;
+  type: ConditionType;
   url: string;
   overlay: Leaflet.ImageOverlay;
 }
@@ -41,7 +42,7 @@ export type TabType = "pages" | "background" | "grid" | "token" | "fog";
 export type ImageOverlayType = "asset" | "token";
 export type MovableType = "none" | "free" | "grid";
 export type MovableByType = "all" | string;
-export type ConditionIconType =
+export type ConditionType =
   | "dead"
   | "blinded"
   | "charmed"
@@ -103,6 +104,7 @@ export interface BackgroundLayerInterface {
   layer: Leaflet.LayerGroup;
   borderLayer: Leaflet.LayerGroup;
   image: Leaflet.ImageOverlay;
+  url: string;
   selected: Accessor<Map<string, AssetInterface> | undefined>;
   setSelected: Setter<Map<string, AssetInterface> | undefined>;
   assets: Map<string, AssetInterface>;
@@ -131,12 +133,11 @@ export interface GridLayerInterface {
 
 export interface TokenLayerInterface {
   layer: Leaflet.LayerGroup;
-  conditionIconLayer: Leaflet.LayerGroup;
+  conditionsLayer: Leaflet.LayerGroup;
   borderLayer: Leaflet.LayerGroup;
   selected: Accessor<Map<string, TokenInterface> | undefined>;
   setSelected: Setter<Map<string, TokenInterface> | undefined>;
   tokens: Map<string, TokenInterface>;
-  conditionIcons: Map<string, Map<string, ConditionIconInterface>>;
 }
 
 export interface FogLayerInterface {

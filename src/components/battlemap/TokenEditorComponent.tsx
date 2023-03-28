@@ -1,5 +1,6 @@
 import {
   Component,
+  For,
   Show,
   createEffect,
   createMemo,
@@ -8,11 +9,19 @@ import {
 } from "solid-js";
 import {
   BattlemapInterface,
+  CONDITION_ICON_URL_IMAGES,
+  ConditionInterface,
+  ConditionType,
   MovableByType,
   MovableType,
   TokenInterface,
 } from "../../types/BattlemapType";
-import { resizeImage } from "../../hooks/BattlemapHooks";
+import {
+  resizeImage,
+  useCreateTokenCondition,
+  useRemoveCharacterImage,
+  useRemoveTokenCondition,
+} from "../../hooks/BattlemapHooks";
 import {
   addImageOverlayMouseOutListener,
   addImageOverlayMouseOverListener,
@@ -29,13 +38,15 @@ const TokenEditorComponent: Component<{ battlemap: BattlemapInterface }> = (
   const [session, actions] = useSession();
   const battlemap = props.battlemap;
 
-  const [options, setOptions] = createSignal<Partial<TokenInterface>>({
+  //! "any" is not good. This will change when I figure out how to type this.
+  const [options, setOptions] = createSignal<any>({
     movable: {
       type: "none",
       by: "grid",
     },
     scale: 1,
     rotation: 0,
+    conditions: new Map<ConditionType, string>(),
   });
 
   return (
@@ -48,21 +59,31 @@ const TokenEditorComponent: Component<{ battlemap: BattlemapInterface }> = (
         {(insTokens) => {
           const startToken = [...insTokens.values()][0] as TokenInterface;
 
-          let movable = startToken.movable;
+          let movable: { type: string | undefined; by: string | undefined } = {
+            ...startToken.movable,
+          };
           let scale: number | undefined = startToken.scale;
           let rotation: number | undefined = startToken.rotation;
+          let conditions = new Map<ConditionType, string>();
+
+          for (const [key, condition] of startToken.conditions) {
+            conditions.set(key, "");
+          }
 
           if (insTokens.size === 1) {
           } else if (insTokens.size > 1) {
             for (const [key, token] of insTokens) {
-              if (!movable.type && token.movable.type !== movable.type)
+              if (movable.type && token.movable.type !== movable.type)
                 //@ts-ignore
                 movable.type = undefined;
-              if (!movable.by && token.movable.by !== movable.by)
+              if (movable.by && token.movable.by !== movable.by)
                 //@ts-ignore
                 movable.by = undefined;
-              if (!movable && token.scale !== scale) scale = undefined;
-              if (!movable && token.rotation !== rotation) rotation = undefined;
+              if (scale && token.scale !== scale) scale = undefined;
+              if (rotation && token.rotation !== rotation) rotation = undefined;
+
+              for (const [key, condition] of conditions)
+                if (!token.conditions.has(key)) conditions.delete(key);
             }
           }
 
@@ -70,6 +91,7 @@ const TokenEditorComponent: Component<{ battlemap: BattlemapInterface }> = (
             movable,
             scale,
             rotation,
+            conditions,
           });
 
           return (
@@ -302,6 +324,83 @@ const TokenEditorComponent: Component<{ battlemap: BattlemapInterface }> = (
                   }}
                 >
                   Bring to Front
+                </button>
+                <button
+                  class="w-full p-2 bg-yellow hover:bg-red rounded-full"
+                  onClick={() => {
+                    for (const [key, token] of insTokens) {
+                      token.overlay.bringToBack();
+                    }
+                  }}
+                >
+                  Bring to Back
+                </button>
+              </div>
+              <div class="inline-grid grid-cols-6 justify-center gap-1">
+                <For each={Object.entries(CONDITION_ICON_URL_IMAGES)}>
+                  {([type, url]) => {
+                    return (
+                      <div class="flex items-center justify-center">
+                        <button
+                          class={`${
+                            options().conditions.has(type) && "bg-red"
+                          } p-2 rounded-md hover:bg-red`}
+                          onClick={() => {
+                            let blockType = type as ConditionType;
+                            let changed = options().conditions.has(blockType)
+                              ? blockType
+                              : undefined;
+
+                            for (const [key, token] of insTokens) {
+                              if (options().conditions.has(blockType)) {
+                                useRemoveTokenCondition(
+                                  battlemap,
+                                  token,
+                                  blockType
+                                );
+
+                                if (changed === undefined) changed = blockType;
+                              } else if (!token.conditions.has(blockType)) {
+                                useCreateTokenCondition(
+                                  battlemap,
+                                  token,
+                                  blockType
+                                );
+
+                                if (changed === undefined) changed = blockType;
+                              }
+                            }
+
+                            if (options().conditions.has(changed))
+                              options().conditions.delete(changed);
+                            else options().conditions.set(changed, "");
+
+                            setOptions({
+                              ...options(),
+                              conditions: new Map(options().conditions),
+                            });
+                          }}
+                        >
+                          <img class="w-4 h-4" src={url} />
+                        </button>
+                      </div>
+                    );
+                  }}
+                </For>
+              </div>
+
+              <div class="flex items-center gap-4">
+                <button
+                  class="w-full p-2 bg-yellow hover:bg-red rounded-full"
+                  onClick={() => {
+                    for (const [key, token] of insTokens) {
+                      useRemoveCharacterImage(battlemap, token);
+                    }
+
+                    battlemap.token.setSelected();
+                  }}
+                >
+                  Remove
                 </button>
               </div>
             </>

@@ -14,6 +14,7 @@ const BattlemapEditorComponent: Component<{
   const battlemap = props.battlemap;
   const konva = props.konva;
 
+  // TODO - make this apart of the battlemap state
   const [selectedTab, setSelectedTab] = createSignal<TabType>("pages");
   const [konvaTool, setKonvaTool] = createSignal<KonvaToolType>("line");
 

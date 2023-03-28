@@ -2,12 +2,15 @@ import Leaflet from "leaflet";
 import {
   AssetInterface,
   BattlemapInterface,
+  ConditionInterface,
+  ConditionType,
   TokenInterface,
 } from "../../types/BattlemapType";
 import {
   calculateBoundsFromGrid,
   calculateBoundsFromFree,
 } from "./calculateUtil";
+import { manageTokenIcons } from "../BattlemapHooks";
 
 export const addImageOverlayMoveListener = (
   battlemap: BattlemapInterface,
@@ -21,7 +24,7 @@ export const addImageOverlayMoveListener = (
       AssetInterface | TokenInterface
     >().set(image.id, image);
 
-    //! This will stay like this until refactor to classes
+    //! This will stay like this until refactor to classes, use impliments
     //@ts-ignore
     if (typeof image.characterId !== "string") {
       const selected = battlemap.background.selected();
@@ -125,6 +128,9 @@ export const addImageOverlayMoveListener = (
         value.overlay.setBounds(bounds);
 
         value.border?.setBounds(bounds);
+
+        // @ts-ignore
+        manageTokenIcons(battlemap, value);
       }
 
       image.dragMarker?.remove();

@@ -1,4 +1,5 @@
 import {
+  deleteObject,
   getDownloadURL,
   getMetadata,
   list,
@@ -54,6 +55,7 @@ export const useFetchImagesQuery = async (query: string) => {
       images.push({
         name: item.name,
         url,
+        fullPath: item.fullPath,
         customMetadata: metadata.customMetadata as {
           width: string;
           height: string;
@@ -62,6 +64,14 @@ export const useFetchImagesQuery = async (query: string) => {
     }
 
     return images;
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const useDeleteImage = async (query: string) => {
+  try {
+    await deleteObject(ref(firebaseStorage, query));
   } catch (e) {
     console.log(e);
   }

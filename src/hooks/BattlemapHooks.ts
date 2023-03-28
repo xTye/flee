@@ -4,6 +4,9 @@ import { CharacterInterface } from "../types/CharacterType";
 import {
   AssetInterface,
   BattlemapInterface,
+  CONDITION_ICON_URL_IMAGES,
+  ConditionInterface,
+  ConditionType,
   EventDataInterface,
   GridLayerInterface,
   TokenInterface,
@@ -75,10 +78,10 @@ export const useBackgroundLayer = (battlemap: BattlemapInterface) => {
   const layer = Leaflet.layerGroup().addTo(battlemap.map);
   const borderLayer = Leaflet.layerGroup().addTo(battlemap.map);
 
-  const image = Leaflet.imageOverlay(
-    "https://firebasestorage.googleapis.com/v0/b/flee-website.appspot.com/o/battlemap%2Fmaps%2Fgreen-forest-1?alt=media&token=ca9c2e6a-f050-4026-bb3e-1eb251de760b",
-    battlemap.map.options.maxBounds!
-  )
+  const url =
+    "https://firebasestorage.googleapis.com/v0/b/flee-website.appspot.com/o/battlemap%2Fmaps%2Fgreen-forest-1?alt=media&token=ca9c2e6a-f050-4026-bb3e-1eb251de760b";
+
+  const image = Leaflet.imageOverlay(url, battlemap.map.options.maxBounds!)
     .bringToFront()
     .addTo(layer);
 
@@ -88,6 +91,7 @@ export const useBackgroundLayer = (battlemap: BattlemapInterface) => {
     layer,
     borderLayer,
     image,
+    url,
     selected,
     setSelected,
     assets: new Map(),
@@ -163,19 +167,18 @@ export const useTokenLayer = (
   battlemap: BattlemapInterface
 ): TokenLayerInterface => {
   const layer = Leaflet.layerGroup().addTo(battlemap.map);
-  const conditionIconLayer = Leaflet.layerGroup().addTo(battlemap.map);
+  const conditionsLayer = Leaflet.layerGroup().addTo(battlemap.map);
   const borderLayer = Leaflet.layerGroup().addTo(battlemap.map);
 
   const [selected, setSelected] = createSignal<Map<string, TokenInterface>>();
 
   return {
     layer,
-    conditionIconLayer,
+    conditionsLayer,
     borderLayer,
     selected,
     setSelected,
     tokens: new Map(),
-    conditionIcons: new Map(),
   };
 };
 
@@ -206,6 +209,7 @@ export const changeBackgroundImage = (
 
   const { bounds } = calculateBackgroundImageBounds(widthNum, heightNum);
 
+  battlemap.background.url = backgroundImage.url;
   battlemap.background.image.setUrl(backgroundImage.url);
   battlemap.background.image.setBounds(bounds);
 };
@@ -229,6 +233,7 @@ export const useCreateCharacterImage = (
     characterId: character.id,
     overlay: imageOverlay,
     url: character.image,
+    conditions: new Map(),
     movable: {
       type: "grid",
       by: "all",
@@ -244,6 +249,20 @@ export const useCreateCharacterImage = (
   addTokenContextMenuListener(battlemap, token);
 
   battlemap.token.tokens.set(token.id, token);
+};
+
+export const useRemoveCharacterImage = (
+  battlemap: BattlemapInterface,
+  token: TokenInterface
+) => {
+  if (token.border) battlemap.token.borderLayer.removeLayer(token.border);
+
+  for (const [key, icon] of token.conditions) {
+    battlemap.token.conditionsLayer.removeLayer(icon.overlay);
+  }
+
+  battlemap.token.layer.removeLayer(token.overlay);
+  battlemap.token.tokens.delete(token.id);
 };
 
 export const useCreateBackgroundImage = (
@@ -291,6 +310,16 @@ export const useCreateBackgroundImage = (
   battlemap.background.assets.set(asset.id, asset);
 };
 
+export const useRemoveBackgroundImage = (
+  battlemap: BattlemapInterface,
+  asset: AssetInterface
+) => {
+  if (asset.border) battlemap.background.borderLayer.removeLayer(asset.border);
+
+  battlemap.background.layer.removeLayer(asset.overlay);
+  battlemap.background.assets.delete(asset.id);
+};
+
 export const toggleGrid = (battlemap: BattlemapInterface, on: boolean) => {
   if (on && battlemap.map.hasLayer(battlemap.grid.layer)) return;
 
@@ -332,32 +361,92 @@ export const resizeImage = (
 
   overlay.setBounds(newBounds);
   image.border?.setBounds(newBounds);
+
+  // @ts-ignore
+  manageTokenIcons(battlemap, image);
 };
 
 export const rotateImage = () => {};
 
-export const useCreateTokenIcon = (
+export const useCreateTokenCondition = (
+  battlemap: BattlemapInterface,
+  token: TokenInterface,
+  type: ConditionType
+) => {
+  if (token.conditions.has(type)) return;
+
+  const bounds = token.overlay.getBounds();
+
+  const url = CONDITION_ICON_URL_IMAGES[type];
+
+  const overlay = Leaflet.imageOverlay(url, bounds).bringToFront();
+
+  const conditionIcon: ConditionInterface = {
+    tokenId: token.id,
+    type,
+    overlay,
+    url,
+  };
+
+  token.conditions.set(type, conditionIcon);
+
+  manageTokenIcons(battlemap, token);
+
+  overlay.addTo(battlemap.token.conditionsLayer);
+};
+
+export const useRemoveTokenCondition = (
+  battlemap: BattlemapInterface,
+  token: TokenInterface,
+  type: ConditionType
+) => {
+  if (!token.conditions.has(type)) return;
+
+  battlemap.token.conditionsLayer.removeLayer(
+    token.conditions.get(type)?.overlay!
+  );
+
+  token.conditions.delete(type);
+
+  manageTokenIcons(battlemap, token);
+};
+
+export const manageTokenIcons = (
   battlemap: BattlemapInterface,
   token: TokenInterface
 ) => {
+  if (!token.conditions) return;
+
   const bounds = token.overlay.getBounds();
 
   const northEast = bounds.getNorthEast();
   const southWest = bounds.getNorthEast();
-  const iconBounds = Leaflet.latLngBounds(
-    [
-      southWest.lat - battlemap.grid.deltaLat / 4,
-      southWest.lng - battlemap.grid.deltaLng / 4,
-    ],
-    northEast
-  );
 
-  const icon = Leaflet.imageOverlay(
-    "/campaign-images/logo-edited.png",
-    iconBounds
-  )
-    .bringToFront()
-    .addTo(battlemap.token.conditionIconLayer);
+  let i = 0;
+
+  for (const [key, condition] of token.conditions) {
+    if (condition.type === "dead") {
+      condition.overlay.setBounds(bounds);
+      continue;
+    }
+
+    let iconBounds = Leaflet.latLngBounds(
+      [
+        southWest.lat - battlemap.grid.deltaLat / 4,
+        southWest.lng -
+          battlemap.grid.deltaLng / 4 -
+          (i * battlemap.grid.deltaLng) / 4,
+      ],
+      [northEast.lat, northEast.lng - (i * battlemap.grid.deltaLng) / 4]
+    );
+
+    if (iconBounds.getWest() < bounds.getWest())
+      iconBounds = Leaflet.latLngBounds([0, 0], [0, 0]);
+
+    condition.overlay.setBounds(iconBounds);
+
+    i++;
+  }
 };
 
 //! REMOVE
