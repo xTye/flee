@@ -1,9 +1,5 @@
 /* @refresh solid */
 
-//! Notes
-// Check why the cat doesn't produce a square.
-// Easily change between battlemaps using the setUrl method.
-
 import { Component, createMemo, onMount } from "solid-js";
 
 import "leaflet/dist/leaflet.css";

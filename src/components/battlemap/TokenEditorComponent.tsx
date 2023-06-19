@@ -7,18 +7,9 @@ import {
   createSignal,
   onMount,
 } from "solid-js";
-import {
-  BattlemapInterface,
-  CONDITION_ICON_URL_IMAGES,
-  ConditionInterface,
-  ConditionType,
-  MovableByType,
-  MovableType,
-  TokenInterface,
-} from "../../types/BattlemapType";
+import { MovableByType, MovableType } from "../../types/BattlemapType";
 import {
   resizeImage,
-  useCreateTokenCondition,
   useRemoveCharacterImage,
   useRemoveTokenCondition,
 } from "../../hooks/BattlemapHooks";
@@ -31,8 +22,9 @@ import {
   removeImageOverlayMoveListener,
 } from "../../hooks/battlemap-utils/eventListenerUtil";
 import { useSession } from "../../auth";
+import { BattlemapClass } from "../../classes/battlemap/BattlemapClass";
 
-const TokenEditorComponent: Component<{ battlemap: BattlemapInterface }> = (
+const TokenEditorComponent: Component<{ battlemap: BattlemapClass }> = (
   props
 ) => {
   const [session, actions] = useSession();

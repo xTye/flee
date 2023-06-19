@@ -1,5 +1,4 @@
 import { Component, Setter, createSignal } from "solid-js";
-import { BattlemapInterface } from "../../types/BattlemapType";
 import SearchBarComponent from "../utils/SearchBarComponent";
 import {
   useDeleteImage,
@@ -7,40 +6,36 @@ import {
 } from "../../services/ImageService";
 import {
   changeBackgroundImage,
-  useCreateBackgroundImage,
   useRemoveBackgroundImage,
 } from "../../hooks/BattlemapHooks";
 import { useModal } from "../utils/ModalContext";
 import QuickCreateCharacterComponent from "./QuickCreateCharacterComponent";
-import CreateBackgrouundImageComponent from "./CreateBackgroundImageComponent";
+import CreateBackgroundImageComponent from "./CreateBackgroundImageComponent";
 import { ImageInterface } from "../../types/ImageType";
+import { BattlemapClass } from "../../classes/battlemap/BattlemapClass";
 
 type BackgroundImageType = "maps" | "assets";
 
 const BackgroundEditorComponent: Component<{
-  battlemap: BattlemapInterface;
+  battlemap: BattlemapClass;
 }> = (props) => {
   const [content, actions] = useModal();
   const battlemap = props.battlemap;
 
   const [queryBegin, setQueryBegin] = createSignal<BackgroundImageType>("maps");
 
+  //! "any" is not good. This will change when I figure out how to type this.
+  const [options, setOptions] = createSignal<any>({
+    movable: {
+      type: "none",
+      by: "grid",
+    },
+    scale: 1,
+    rotation: 0,
+  });
+
   return (
     <>
-      <div class="flex items-center justify-end gap-1">
-        <button
-          class="p-2 bg-yellow rounded-full hover:bg-red"
-          onClick={() => {
-            actions.open(
-              <CreateBackgrouundImageComponent
-                setModal={actions.close as Setter<boolean>}
-              />
-            );
-          }}
-        >
-          <img src="/util-images/plus.svg" class="w-4 h-4" />
-        </button>
-      </div>
       <div class="flex items-center gap-1">
         <SearchBarComponent
           queryBegin={`/battlemap/${queryBegin()}/`}
@@ -127,6 +122,18 @@ const BackgroundEditorComponent: Component<{
             Assets
           </option>
         </select>
+        <button
+          class="p-2 bg-yellow rounded-full hover:bg-red"
+          onClick={() => {
+            actions.open(
+              <CreateBackgroundImageComponent
+                setModal={actions.close as Setter<boolean>}
+              />
+            );
+          }}
+        >
+          <img src="/util-images/plus.svg" class="w-4 h-4" />
+        </button>
       </div>
     </>
   );

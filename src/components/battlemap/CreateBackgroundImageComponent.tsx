@@ -6,7 +6,7 @@ import { useCreateImage } from "../../services/ImageService";
 
 type BackgroundImageType = "maps" | "assets";
 
-const CreateBackgrouundImageComponent: Component<{
+const CreateBackgroundImageComponent: Component<{
   setModal?: Setter<boolean>;
 }> = (props) => {
   const [image, setImage] = createSignal({
@@ -107,4 +107,4 @@ const CreateBackgrouundImageComponent: Component<{
   );
 };
 
-export default CreateBackgrouundImageComponent;
+export default CreateBackgroundImageComponent;
