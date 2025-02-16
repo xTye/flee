@@ -12,7 +12,7 @@ import { connectFunctionsEmulator, getFunctions } from "firebase/functions"
 
 const firebaseConfig = {
   apiKey: "AIzaSyASrzGbTJs9bJwzcLasfpOW1nbq7ymfsyE",
-  authDomain: "fleednd.com",
+  authDomain: "flee-website.firebaseapp.com",
   projectId: "flee-website",
   storageBucket: "flee-website.appspot.com",
   messagingSenderId: "796176359929",
