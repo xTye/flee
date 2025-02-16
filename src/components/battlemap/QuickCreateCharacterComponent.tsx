@@ -31,7 +31,11 @@ const QuickCreateCharacterComponent: Component<{
                   });
 
                   canvas?.toBlob(async (blob: Blob | null) => {
-                    if (blob) await useQuickCreateCharacter(character(), blob);
+                    if (blob)
+                      await useQuickCreateCharacter(character(), blob, {
+                        width: canvas.width.toString(),
+                        height: canvas.height.toString(),
+                      });
 
                     setLoading({
                       ...loading(),

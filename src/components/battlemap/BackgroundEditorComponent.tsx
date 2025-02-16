@@ -4,10 +4,6 @@ import {
   useDeleteImage,
   useFetchImagesQuery,
 } from "../../services/ImageService";
-import {
-  changeBackgroundImage,
-  useRemoveBackgroundImage,
-} from "../../hooks/BattlemapHooks";
 import { useModal } from "../utils/ModalContext";
 import QuickCreateCharacterComponent from "./QuickCreateCharacterComponent";
 import CreateBackgroundImageComponent from "./CreateBackgroundImageComponent";
@@ -56,10 +52,10 @@ const BackgroundEditorComponent: Component<{
                 }}
                 onDragEnd={(e) => {
                   if (queryBegin() === "assets")
-                    useCreateBackgroundImage(e, battlemap, backgroundImage);
+                    battlemap.background.createAsset(e, backgroundImage);
 
                   if (queryBegin() === "maps")
-                    changeBackgroundImage(battlemap, backgroundImage);
+                    battlemap.background.changeBackground(backgroundImage);
                 }}
                 class="w-full h-full select-none"
               >
@@ -79,7 +75,7 @@ const BackgroundEditorComponent: Component<{
 
                       if (queryBegin() === "maps") {
                         if (battlemap.background.url === backgroundImage.url)
-                          changeBackgroundImage(battlemap, {
+                          battlemap.background.changeBackground({
                             url: "/battlemap-images/blank.svg",
                             name: "Blank",
                             fullPath: "/",
@@ -93,7 +89,7 @@ const BackgroundEditorComponent: Component<{
                       } else if (queryBegin() === "assets") {
                         for (const [key, asset] of battlemap.background.assets)
                           if (asset.url === backgroundImage.url)
-                            useRemoveBackgroundImage(battlemap, asset);
+                            asset.destruct();
 
                         refetch();
                       }

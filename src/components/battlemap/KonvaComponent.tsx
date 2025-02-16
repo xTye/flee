@@ -1,13 +1,11 @@
 import { Component, createSignal, onMount } from "solid-js";
-import { removeContextMenu } from "../../utils/removeContextMenu";
-import { toggleKonva } from "../../utils/toggleKonva";
-import { useKonvaStage } from "../../hooks/KonvaHooks";
-import { BattlemapInterface } from "../../types/BattlemapType";
-import { KonvaInterface } from "../../types/KonvaType";
+import { removeContextMenu } from "@/utils/removeContextMenu";
+import { BattlemapClass } from "@/classes/battlemap/BattlemapClass";
+import { KonvaClass } from "@/classes/konva/KonvaClass";
 
 const KonvaComponent: Component<{
-  battlemap: BattlemapInterface;
-  konva: KonvaInterface;
+  battlemap: BattlemapClass;
+  konva: KonvaClass;
 }> = (props) => {
   let konvaDiv = document.createElement("div") as HTMLDivElement;
   const [show, setShow] = createSignal(false);
@@ -15,9 +13,9 @@ const KonvaComponent: Component<{
   onMount(() => {
     removeContextMenu();
 
-    useKonvaStage(konvaDiv, props.konva, props.battlemap);
+    props.konva = new KonvaClass(konvaDiv, props.battlemap);
 
-    toggleKonva(props.battlemap, props.konva, setShow);
+    props.konva.toggle(setShow);
   });
 
   return (

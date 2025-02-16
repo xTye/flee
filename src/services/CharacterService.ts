@@ -115,7 +115,11 @@ export const useUpdateDatabaseCharacter = async (
 
 export const useQuickCreateCharacter = async (
   character: CharacterInterface,
-  blob: Blob
+  blob: Blob,
+  customMetadata?: {
+    width: string;
+    height: string;
+  }
 ) => {
   try {
     const doc = await addDoc(
@@ -125,7 +129,11 @@ export const useQuickCreateCharacter = async (
 
     const imageRes = await useCreateImage(
       "characters/character-images/" + doc.id,
-      blob
+      blob,
+      {
+        width: customMetadata?.width || "100",
+        height: customMetadata?.height || "100",
+      }
     );
 
     if (!imageRes) throw new Error("No image response.");

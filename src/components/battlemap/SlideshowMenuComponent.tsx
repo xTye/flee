@@ -6,15 +6,12 @@ import {
 import LoadingRingComponent from "../utils/LoadingRingComponent";
 import { CharacterInterface } from "../../types/CharacterType";
 import SearchBarComponent from "../utils/SearchBarComponent";
-import ModalComponent from "../ModalComponent";
-import ImageCropperEditorComponent from "../utils/ImageCropperEditorComponent";
 import QuickCreateCharacterComponent from "./QuickCreateCharacterComponent";
 import { useModal } from "../utils/ModalContext";
-import { useCreateCharacterImage } from "../../hooks/BattlemapHooks";
-import { BattlemapInterface } from "../../types/BattlemapType";
+import { BattlemapClass } from "../../classes/battlemap/BattlemapClass";
 
 const SlideshowMenuComponent: Component<{
-  battlemap: BattlemapInterface;
+  battlemap: BattlemapClass;
 }> = (props) => {
   const [content, actions] = useModal();
   const [selectedCharacter, setSelectedCharacter] =
@@ -45,7 +42,7 @@ const SlideshowMenuComponent: Component<{
                   }}
                   onDragEnd={(e) => {
                     if (character)
-                      useCreateCharacterImage(e, character, props.battlemap);
+                      props.battlemap.token.createToken(e, character);
                   }}
                   class="w-full h-full select-none"
                 >

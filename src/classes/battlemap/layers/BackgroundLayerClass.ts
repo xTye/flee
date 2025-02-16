@@ -1,9 +1,9 @@
 import Leaflet from "leaflet";
 import { Accessor, Setter, createSignal } from "solid-js";
 import { BattlemapClass } from "../BattlemapClass";
-import { AssetClass } from "../movables/AssetClass";
-import { ImageInterface } from "../../../types/ImageType";
-import { calculateBackgroundImageBounds } from "../../../hooks/battlemap-utils/calculateUtil";
+import { AssetInteractiveClass } from "../interactive/AssetInteractiveClass";
+import { ImageInterface } from "@/types/ImageType";
+import { calculateBackgroundImageBounds } from "@/hooks/battlemap-utils/calculateUtil";
 
 export class BackgroundLayerClass {
   private _battlemap: BattlemapClass;
@@ -11,9 +11,9 @@ export class BackgroundLayerClass {
   private _borderLayer: Leaflet.LayerGroup;
   private _image: Leaflet.ImageOverlay;
   private _url: string;
-  private _selected: Accessor<Map<string, AssetClass> | undefined>;
-  private _setSelected: Setter<Map<string, AssetClass> | undefined>;
-  private _assets: Map<string, AssetClass>;
+  private _selected: Accessor<Map<string, AssetInteractiveClass> | undefined>;
+  private _setSelected: Setter<Map<string, AssetInteractiveClass> | undefined>;
+  private _assets: Map<string, AssetInteractiveClass>;
 
   constructor(battlemap: BattlemapClass) {
     const layer = Leaflet.layerGroup().addTo(battlemap.map);
@@ -26,7 +26,8 @@ export class BackgroundLayerClass {
       .bringToFront()
       .addTo(layer);
 
-    const [selected, setSelected] = createSignal<Map<string, AssetClass>>();
+    const [selected, setSelected] =
+      createSignal<Map<string, AssetInteractiveClass>>();
 
     this._layer = layer;
     this._borderLayer = borderLayer;
@@ -52,6 +53,10 @@ export class BackgroundLayerClass {
     this._image.setBounds(bounds);
   }
 
+  createAsset(e: DragEvent, backgroundImage: ImageInterface) {
+    new AssetInteractiveClass(e, this._battlemap, backgroundImage);
+  }
+
   get layer(): Leaflet.LayerGroup {
     return this._layer;
   }
@@ -68,15 +73,15 @@ export class BackgroundLayerClass {
     return this._url;
   }
 
-  get selected(): Map<string, AssetClass> | undefined {
-    return this._selected();
+  get selected(): Accessor<Map<string, AssetInteractiveClass> | undefined> {
+    return this._selected;
   }
 
-  get setSelected(): Setter<Map<string, AssetClass> | undefined> {
+  get setSelected(): Setter<Map<string, AssetInteractiveClass> | undefined> {
     return this._setSelected;
   }
 
-  get assets(): Map<string, AssetClass> {
+  get assets(): Map<string, AssetInteractiveClass> {
     return this._assets;
   }
 }

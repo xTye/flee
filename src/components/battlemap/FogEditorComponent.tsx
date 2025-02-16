@@ -1,9 +1,8 @@
+import { BattlemapClass } from "@/classes/battlemap/BattlemapClass";
 import { Component, createSignal } from "solid-js";
-import { toggleFog } from "../../hooks/BattlemapHooks";
-import { BattlemapInterface } from "../../types/BattlemapType";
 
 const FogEditorComponent: Component<{
-  battlemap: BattlemapInterface;
+  battlemap: BattlemapClass;
 }> = (props) => {
   const [options, setOptions] = createSignal({
     fog: props.battlemap.map.hasLayer(props.battlemap.fog.layer),
@@ -17,7 +16,7 @@ const FogEditorComponent: Component<{
           checked={options().fog}
           class="w-4 h-4"
           onInput={() => {
-            toggleFog(props.battlemap, !options().fog);
+            props.battlemap.fog.toggle(!options().fog);
 
             setOptions({
               ...options(),

@@ -1,28 +1,15 @@
-import {
-  Component,
-  For,
-  Show,
-  createEffect,
-  createMemo,
-  createSignal,
-  onMount,
-} from "solid-js";
-import { MovableByType, MovableType } from "../../types/BattlemapType";
-import {
-  resizeImage,
-  useRemoveCharacterImage,
-  useRemoveTokenCondition,
-} from "../../hooks/BattlemapHooks";
-import {
-  addImageOverlayMouseOutListener,
-  addImageOverlayMouseOverListener,
-  addImageOverlayMoveListener,
-  removeImageOverlayMouseOutListener,
-  removeImageOverlayMouseOverListener,
-  removeImageOverlayMoveListener,
-} from "../../hooks/battlemap-utils/eventListenerUtil";
+import { Component, For, Show, createSignal } from "solid-js";
 import { useSession } from "../../auth";
 import { BattlemapClass } from "../../classes/battlemap/BattlemapClass";
+import { TokenInteractiveClass } from "../../classes/battlemap/interactive/TokenInteractiveClass";
+import {
+  CONDITION_ICON_URL_IMAGES,
+  ConditionType,
+} from "../../classes/battlemap/utils/ConditionManagerClass";
+import {
+  MovableByType,
+  MovableType,
+} from "@/classes/battlemap/interactive/InteractiveClass";
 
 const TokenEditorComponent: Component<{ battlemap: BattlemapClass }> = (
   props
@@ -49,7 +36,9 @@ const TokenEditorComponent: Component<{ battlemap: BattlemapClass }> = (
         keyed
       >
         {(insTokens) => {
-          const startToken = [...insTokens.values()][0] as TokenInterface;
+          const startToken = [
+            ...insTokens.values(),
+          ][0] as TokenInteractiveClass;
 
           let movable: { type: string | undefined; by: string | undefined } = {
             ...startToken.movable,
@@ -58,7 +47,7 @@ const TokenEditorComponent: Component<{ battlemap: BattlemapClass }> = (
           let rotation: number | undefined = startToken.rotation;
           let conditions = new Map<ConditionType, string>();
 
-          for (const [key, condition] of startToken.conditions) {
+          for (const [key, condition] of startToken.conditions.conditions) {
             conditions.set(key, "");
           }
 
@@ -96,23 +85,23 @@ const TokenEditorComponent: Component<{ battlemap: BattlemapClass }> = (
                     const value = e.currentTarget.value as MovableType;
                     if (value === undefined) return;
 
-                    let movable = {} as TokenInterface["movable"];
+                    let movable = {} as TokenInteractiveClass["movable"];
 
                     for (const [key, token] of insTokens) {
                       token.movable.type = value;
 
                       if (value === "none") {
-                        removeImageOverlayMoveListener(token);
-                        removeImageOverlayMouseOverListener(token);
-                        removeImageOverlayMouseOutListener(token);
+                        token.removeMouseDownListener();
+                        token.removeMouseOverListener();
+                        token.removeMouseOutListener();
                       }
                       if (
                         value !== "none" &&
                         !token.overlay.listens("mousedown")
                       ) {
-                        addImageOverlayMoveListener(battlemap, token);
-                        addImageOverlayMouseOverListener(battlemap, token);
-                        addImageOverlayMouseOutListener(battlemap, token);
+                        token.addImageOverlayMoveListener();
+                        token.addImageOverlayMouseOverListener();
+                        token.addImageOverlayMouseOutListener();
                       }
 
                       movable = token.movable;
@@ -153,23 +142,23 @@ const TokenEditorComponent: Component<{ battlemap: BattlemapClass }> = (
                     const value = e.currentTarget.value as MovableByType;
                     if (value === undefined) return;
 
-                    let movable = {} as TokenInterface["movable"];
+                    let movable = {} as TokenInteractiveClass["movable"];
 
                     for (const [key, token] of insTokens) {
                       token.movable.by = value;
 
                       if (value !== "all" && session().user?.uid !== value) {
-                        removeImageOverlayMoveListener(token);
-                        removeImageOverlayMouseOverListener(token);
-                        removeImageOverlayMouseOutListener(token);
+                        token.removeMouseDownListener();
+                        token.removeMouseOverListener();
+                        token.removeMouseOutListener();
                       }
                       if (
                         value === "all" &&
                         !token.overlay.listens("mousedown")
                       ) {
-                        addImageOverlayMoveListener(battlemap, token);
-                        addImageOverlayMouseOverListener(battlemap, token);
-                        addImageOverlayMouseOutListener(battlemap, token);
+                        token.addImageOverlayMoveListener();
+                        token.addImageOverlayMouseOverListener();
+                        token.addImageOverlayMouseOutListener();
                       }
 
                       movable = token.movable;
@@ -222,7 +211,7 @@ const TokenEditorComponent: Component<{ battlemap: BattlemapClass }> = (
 
                     for (const [key, token] of insTokens) {
                       token.scale = value;
-                      resizeImage(battlemap, token);
+                      token.resizeImage();
                       scale = token.scale;
                     }
 
@@ -245,7 +234,7 @@ const TokenEditorComponent: Component<{ battlemap: BattlemapClass }> = (
 
                     for (const [key, token] of insTokens) {
                       token.scale = value;
-                      resizeImage(battlemap, token);
+                      token.resizeImage();
                       scale = token.scale;
                     }
 
@@ -272,7 +261,7 @@ const TokenEditorComponent: Component<{ battlemap: BattlemapClass }> = (
 
                     for (const [key, token] of insTokens) {
                       token.rotation = value;
-                      resizeImage(battlemap, token);
+                      token.resizeImage();
                       rotation = token.rotation;
                     }
 
@@ -295,7 +284,7 @@ const TokenEditorComponent: Component<{ battlemap: BattlemapClass }> = (
 
                     for (const [key, token] of insTokens) {
                       token.rotation = value;
-                      resizeImage(battlemap, token);
+                      token.resizeImage();
                       rotation = token.rotation;
                     }
 
@@ -345,19 +334,11 @@ const TokenEditorComponent: Component<{ battlemap: BattlemapClass }> = (
 
                             for (const [key, token] of insTokens) {
                               if (options().conditions.has(blockType)) {
-                                useRemoveTokenCondition(
-                                  battlemap,
-                                  token,
-                                  blockType
-                                );
+                                token.conditions.removeCondition(blockType);
 
                                 if (changed === undefined) changed = blockType;
                               } else if (!token.conditions.has(blockType)) {
-                                useCreateTokenCondition(
-                                  battlemap,
-                                  token,
-                                  blockType
-                                );
+                                token.conditions.addCondition(blockType);
 
                                 if (changed === undefined) changed = blockType;
                               }
@@ -386,7 +367,7 @@ const TokenEditorComponent: Component<{ battlemap: BattlemapClass }> = (
                   class="w-full p-2 bg-yellow hover:bg-red rounded-full"
                   onClick={() => {
                     for (const [key, token] of insTokens) {
-                      useRemoveCharacterImage(battlemap, token);
+                      token.destruct();
                     }
 
                     battlemap.token.setSelected();

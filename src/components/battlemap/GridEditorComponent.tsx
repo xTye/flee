@@ -1,12 +1,7 @@
+import { BattlemapClass } from "@/classes/battlemap/BattlemapClass";
 import { Component, createSignal, onCleanup } from "solid-js";
-import { BattlemapInterface } from "../../types/BattlemapType";
-import {
-  resizeImage,
-  toggleGrid,
-  useGridLayer,
-} from "../../hooks/BattlemapHooks";
 
-const GridEditorComponent: Component<{ battlemap: BattlemapInterface }> = (
+const GridEditorComponent: Component<{ battlemap: BattlemapClass }> = (
   props
 ) => {
   const battlemap = props.battlemap;
@@ -21,15 +16,14 @@ const GridEditorComponent: Component<{ battlemap: BattlemapInterface }> = (
     if (resizeGridRef) clearTimeout(resizeGridRef);
     resizeGridRef = setTimeout(async () => {
       if (battlemap.grid.cellSize === value) return;
-      battlemap.grid.layer.removeFrom(battlemap.map);
-      battlemap.grid = useGridLayer(battlemap, value);
+
+      battlemap.newGrid(value);
       resizeGridRef = undefined;
 
-      for (const [id, token] of battlemap.token.tokens)
-        resizeImage(battlemap, token);
+      for (const [id, token] of battlemap.token.tokens) token.resizeImage();
 
       for (const [id, asset] of battlemap.background.assets)
-        resizeImage(battlemap, asset);
+        asset.resizeImage();
     }, 500);
   };
 
@@ -45,7 +39,7 @@ const GridEditorComponent: Component<{ battlemap: BattlemapInterface }> = (
           checked={options().grid}
           class="w-4 h-4"
           onInput={() => {
-            toggleGrid(battlemap, !options().grid);
+            battlemap.grid.toggle(!options().grid);
 
             setOptions({
               ...options(),

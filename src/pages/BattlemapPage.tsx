@@ -1,44 +1,32 @@
 /* @refresh solid */
 
-import { Component, createMemo, onMount } from "solid-js";
+import { Component, Show, createMemo, createSignal, onMount } from "solid-js";
 
 import "leaflet/dist/leaflet.css";
-
-import {
-  useBackgroundLayer,
-  useBattlemap,
-  useEvents,
-  useFogLayer,
-  useGridLayer,
-  useTokenLayer,
-} from "../hooks/BattlemapHooks";
 
 import { navbarHeight } from "../components/navbar/NavbarComponent";
 import BattlemapMediaPlayerComponent from "../components/battlemap/BattlemapMediaPlayerComponent";
 import BattlemapSlideshowComponent from "../components/battlemap/BattlemapSlideshowComponent";
-import { BattlemapInterface } from "../types/BattlemapType";
 import BattlemapEditorComponent from "../components/battlemap/BattlemapEditorComponent";
 import { ModalProvider } from "../components/utils/ModalContextProvider";
 import KonvaComponent from "../components/battlemap/KonvaComponent";
-import { KonvaInterface } from "../types/KonvaType";
+import { BattlemapClass } from "../classes/battlemap/BattlemapClass";
+import { KonvaClass } from "@/classes/konva/KonvaClass";
 
 const BattlemapPage: Component = () => {
   let mapDiv = document.createElement("div") as HTMLDivElement;
-  const battlemap = {} as BattlemapInterface;
-  const konva = {} as KonvaInterface;
+  let battlemap = undefined as unknown as BattlemapClass;
+  let konva = undefined as unknown as KonvaClass;
+  const [loaded, setLoaded] = createSignal(false);
 
-  onMount(async () => {
-    battlemap.map = useBattlemap(mapDiv, battlemap);
-    battlemap.background = useBackgroundLayer(battlemap);
-    battlemap.grid = useGridLayer(battlemap);
-    battlemap.token = useTokenLayer(battlemap);
-    battlemap.fog = useFogLayer(battlemap);
-    battlemap.events = useEvents(battlemap);
+  onMount(() => {
+    battlemap = new BattlemapClass(mapDiv);
+    setLoaded(true);
   });
 
   createMemo(() => {
     mapDiv.style.height = window.innerHeight - navbarHeight.height + "px";
-    if (!battlemap.map) return;
+    if (!battlemap || !battlemap.map) return;
     setTimeout(() => battlemap.map.invalidateSize(), 1);
   });
 
@@ -51,12 +39,14 @@ const BattlemapPage: Component = () => {
         }}
         class="relative bg-lightPurple select-none"
       >
-        <ModalProvider>
-          <BattlemapEditorComponent battlemap={battlemap} konva={konva} />
-          <BattlemapSlideshowComponent battlemap={battlemap} />
-          {/* <BattlemapMediaPlayerComponent /> */}
-        </ModalProvider>
-        <KonvaComponent battlemap={battlemap} konva={konva} />
+        <Show when={loaded()}>
+          <ModalProvider>
+            <BattlemapEditorComponent battlemap={battlemap} konva={konva} />
+            <BattlemapSlideshowComponent battlemap={battlemap} />
+            {/* <BattlemapMediaPlayerComponent /> */}
+          </ModalProvider>
+          <KonvaComponent battlemap={battlemap} konva={konva} />
+        </Show>
         <div ref={mapDiv}></div>
       </div>
     </>

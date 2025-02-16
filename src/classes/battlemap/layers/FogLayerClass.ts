@@ -21,6 +21,10 @@ export class FogLayerClass {
     else this._layer.removeFrom(this._battlemap.map);
   }
 
+  isActive(): boolean {
+    return this._battlemap.map.hasLayer(this.layer);
+  }
+
   get layer(): Leaflet.LayerGroup {
     return this._layer;
   }

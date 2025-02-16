@@ -132,8 +132,6 @@ export const useUpdateEditMarker = (
     4
   );
 
-  console.log(marker);
-
   setEditMarker({
     ...marker,
     x: leafletEditMarker.getLatLng().lat,
@@ -179,7 +177,6 @@ export const useRemoveEditMarker = (
 };
 
 export const removeAllLeafletListeners = (map: Leaflet.Map) => {
-  console.log(map);
   map.eachLayer((marker) => {
     if (marker instanceof Leaflet.Marker) {
       marker.off();

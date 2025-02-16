@@ -69,7 +69,6 @@ const UserEditorComponent: Component<{
                     onClick={() => {
                       const tools: string[] = [...props.insUser.tools];
                       tools.push("");
-                      console.log(tools);
 
                       props.setUser({ ...props.insUser, tools });
                     }}

@@ -5,13 +5,13 @@ import {
   createEffect,
   createSignal,
 } from "solid-js";
-import { KonvaInterface, KonvaToolType } from "../../types/KonvaType";
 import { BattlemapClass } from "../../classes/battlemap/BattlemapClass";
-import { TabType } from "../../classes/battlemap/EventDataClass";
+import { TabType } from "@/classes/battlemap/interactive/EventDataClass";
+import { KonvaClass, KonvaToolType } from "@/classes/konva/KonvaClass";
 
 const BattlemapEditorMenuComponent: Component<{
   battlemap: BattlemapClass;
-  konva: KonvaInterface;
+  konva: KonvaClass;
   selectedTab: Accessor<TabType>;
   setSelectedTab: Setter<TabType>;
 }> = (props) => {
@@ -123,6 +123,7 @@ const BattlemapEditorMenuComponent: Component<{
                 konvaTool() === "rect" && ""
               } rounded-md hover:bg-lightPurple`}
               onClick={(e) => {
+                console.log(konva);
                 konva.tool = "rect";
                 setKonvaTool("rect");
               }}

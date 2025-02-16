@@ -1,10 +1,20 @@
 import Leaflet from "leaflet";
 
-import { makeid } from "../../../hooks/BattlemapHooks";
 import { BattlemapClass } from "../BattlemapClass";
-import { CharacterInterface } from "../../../types/CharacterType";
+import {
+  calculateBoundsFromFree,
+  calculateImageSize,
+} from "../../../hooks/battlemap-utils/calculateUtil";
+import { ImageInterface } from "../../../types/ImageType";
+import {
+  InteractiveClass,
+  MovableByType,
+  MovableType,
+} from "./InteractiveClass";
+import { makeid } from "../../../utils/makeid";
+import { Accessor } from "solid-js";
 
-export class AssetClass {
+export class AssetInteractiveClass extends InteractiveClass {
   private _battlemap: BattlemapClass;
   private _id: string;
   private _overlay: Leaflet.ImageOverlay;
@@ -20,30 +30,30 @@ export class AssetClass {
 
   constructor(
     e: DragEvent,
-    character: CharacterInterface,
-    battlemap: BattlemapClass
+    battlemap: BattlemapClass,
+    backgroundImage: ImageInterface
   ) {
+    super();
+
+    this._battlemap = battlemap;
+
     const pos = battlemap.map.mouseEventToLatLng(e);
-
     const imageUrl = backgroundImage.url;
-
     const originalWidth = Number.parseFloat(
       backgroundImage.customMetadata.width
     );
     const originalHeight = Number.parseFloat(
       backgroundImage.customMetadata.height
     );
-
     const [width, height] = calculateImageSize(originalWidth, originalHeight);
-
     const bounds = calculateBoundsFromFree(pos, width, height);
-
     const imageOverlay = Leaflet.imageOverlay(imageUrl, bounds, {
       interactive: true,
     })
       .bringToFront()
-      .addTo(this.battlemap.background.layer);
+      .addTo(battlemap.background.layer);
 
+    // Set properties
     this._id = makeid(10);
     this._overlay = imageOverlay;
     this._url = imageUrl;
@@ -55,14 +65,28 @@ export class AssetClass {
     this._rotation = 0;
 
     //TODO Change with permissions
-    addImageOverlayMoveListener(battlemap, asset);
-    addImageOverlayMouseOverListener(battlemap, asset);
-    addImageOverlayMouseOutListener(battlemap, asset);
-    addAssetContextMenuListener(battlemap, asset);
+    this.addImageOverlayMoveListener();
+    this.addImageOverlayMouseOverListener();
+    this.addImageOverlayMouseOutListener();
+    this.addContextMenuListener();
 
-    battlemap.background.assets.set(asset.id, asset);
+    this._battlemap.background.assets.set(this._id, this);
+  }
 
-    this._battlemap = battlemap;
+  destruct(): void {
+    if (this._border)
+      this._battlemap.background.borderLayer.removeLayer(this._border);
+
+    this._battlemap.background.layer.removeLayer(this._overlay);
+    this._battlemap.background.assets.delete(this._id);
+  }
+
+  resizeImage() {
+    return null;
+  }
+
+  get battlemap(): BattlemapClass {
+    return this._battlemap;
   }
 
   get id(): string {
@@ -81,14 +105,15 @@ export class AssetClass {
     return this._dragMarker;
   }
 
+  set dragMarker(marker: Leaflet.Marker | undefined) {
+    this._dragMarker = marker;
+  }
+
   get url(): string {
     return this._url;
   }
 
-  get movable(): {
-    type: MovableType;
-    by: MovableByType;
-  } {
+  get movable(): { type: MovableType; by: MovableByType } {
     return this._movable;
   }
 
@@ -100,7 +125,7 @@ export class AssetClass {
     return this._rotation;
   }
 
-  set dragMarker(marker: Leaflet.Marker | undefined) {
-    this._dragMarker = marker;
+  get selected(): Accessor<Map<string, InteractiveClass> | undefined> {
+    return this._battlemap.background.selected;
   }
 }

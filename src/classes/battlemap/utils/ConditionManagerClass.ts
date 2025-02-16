@@ -1,22 +1,22 @@
 import Leaflet from "leaflet";
-import { TokenClass } from "../movables/TokenClass";
 import { BattlemapClass } from "../BattlemapClass";
+import { TokenInteractiveClass } from "../interactive/TokenInteractiveClass";
 
 export class ConditionManagerClass {
-  private battlemap: BattlemapClass;
-  private token: TokenClass;
-  private conditions: Map<ConditionType, ConditionInterface>;
+  private _battlemap: BattlemapClass;
+  private _token: TokenInteractiveClass;
+  private _conditions: Map<ConditionType, ConditionInterface>;
 
-  constructor(battlemap: BattlemapClass, token: TokenClass) {
-    this.battlemap = battlemap;
-    this.token = token;
-    this.conditions = new Map();
+  constructor(battlemap: BattlemapClass, token: TokenInteractiveClass) {
+    this._battlemap = battlemap;
+    this._token = token;
+    this._conditions = new Map();
   }
 
   addCondition(type: ConditionType) {
     //! Fix this
-    if (this.conditions.has(type)) return;
-    const bounds = this.token.overlay.getBounds();
+    if (this._conditions.has(type)) return;
+    const bounds = this._token.overlay.getBounds();
 
     const url = CONDITION_ICON_URL_IMAGES[type];
 
@@ -28,22 +28,22 @@ export class ConditionManagerClass {
       overlay: overlay,
     };
 
-    this.conditions.set(type, condition);
+    this._conditions.set(type, condition);
 
     this.manageTokenIcons();
 
-    condition.overlay.addTo(this.battlemap.token.conditionsLayer);
+    condition.overlay.addTo(this._battlemap.token.conditionsLayer);
   }
 
   manageTokenIcons() {
-    const bounds = this.token.overlay.getBounds();
+    const bounds = this._token.overlay.getBounds();
 
     const northEast = bounds.getNorthEast();
     const southWest = bounds.getNorthEast();
 
     let i = 0;
 
-    for (const [key, condition] of this.token.conditions) {
+    for (const [key, condition] of this._conditions) {
       if (condition.type === "dead") {
         condition.overlay.setBounds(bounds);
         continue;
@@ -51,12 +51,12 @@ export class ConditionManagerClass {
 
       let iconBounds = Leaflet.latLngBounds(
         [
-          southWest.lat - this.battlemap.grid.deltaLat / 4,
+          southWest.lat - this._battlemap.grid.deltaLat / 4,
           southWest.lng -
-            this.battlemap.grid.deltaLng / 4 -
-            (i * this.battlemap.grid.deltaLng) / 4,
+            this._battlemap.grid.deltaLng / 4 -
+            (i * this._battlemap.grid.deltaLng) / 4,
         ],
-        [northEast.lat, northEast.lng - (i * this.battlemap.grid.deltaLng) / 4]
+        [northEast.lat, northEast.lng - (i * this._battlemap.grid.deltaLng) / 4]
       );
 
       if (iconBounds.getWest() < bounds.getWest())
@@ -66,6 +66,34 @@ export class ConditionManagerClass {
 
       i++;
     }
+  }
+
+  removeCondition(type: ConditionType) {
+    if (!this._conditions.has(type)) return;
+
+    this._battlemap.token.conditionsLayer.removeLayer(
+      this._conditions.get(type)?.overlay!
+    );
+
+    this._conditions.delete(type);
+
+    this.manageTokenIcons();
+  }
+
+  removeAllConditions() {
+    for (const [key, condition] of this._conditions) {
+      this._battlemap.token.conditionsLayer.removeLayer(condition.overlay);
+    }
+
+    this._conditions.clear();
+  }
+
+  get conditions(): Map<ConditionType, ConditionInterface> {
+    return this._conditions;
+  }
+
+  has(type: ConditionType): boolean {
+    return this._conditions.has(type);
   }
 }
 

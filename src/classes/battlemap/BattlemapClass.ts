@@ -3,7 +3,7 @@ import { BackgroundLayerClass } from "./layers/BackgroundLayerClass";
 import { GridLayerClass } from "./layers/GridLayerClass";
 import { TokenLayerClass } from "./layers/TokenLayerClass";
 import { FogLayerClass } from "./layers/FogLayerClass";
-import { EventDataClass } from "./EventDataClass";
+import { EventDataClass } from "./interactive/EventDataClass";
 
 const maxBounds = [
   [-1, -1],
@@ -57,6 +57,11 @@ export class BattlemapClass {
     this._events = new EventDataClass(this);
   }
 
+  newGrid(value: number) {
+    this._grid.layer.removeFrom(this._map);
+    this._grid = new GridLayerClass(this, value);
+  }
+
   get background(): BackgroundLayerClass {
     return this._background;
   }
@@ -78,6 +83,6 @@ export class BattlemapClass {
   }
 
   get map(): Leaflet.Map {
-    return this.map;
+    return this._map;
   }
 }

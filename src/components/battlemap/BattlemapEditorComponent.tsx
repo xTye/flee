@@ -3,15 +3,15 @@ import MapToolComponent from "../utils/MapToolComponent";
 import GridEditorComponent from "./GridEditorComponent";
 import TokenEditorComponent from "./TokenEditorComponent";
 import BackgroundEditorComponent from "./BackgroundEditorComponent";
-import { KonvaInterface, KonvaToolType } from "../../types/KonvaType";
 import FogEditorComponent from "./FogEditorComponent";
 import BattlemapEditorMenuComponent from "./BattlemapEditorMenuComponent";
 import { BattlemapClass } from "../../classes/battlemap/BattlemapClass";
-import { TabType } from "../../classes/battlemap/EventDataClass";
+import { TabType } from "@/classes/battlemap/interactive/EventDataClass";
+import { KonvaClass } from "@/classes/konva/KonvaClass";
 
 const BattlemapEditorComponent: Component<{
   battlemap: BattlemapClass;
-  konva: KonvaInterface;
+  konva: KonvaClass;
 }> = (props) => {
   const battlemap = props.battlemap;
   const konva = props.konva;
